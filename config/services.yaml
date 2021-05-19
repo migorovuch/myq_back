@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
 parameters:
+    app_name: '%env(string:APP_NAME)%'
+    app_email: '%env(string:APP_EMAIL)%'
 
 services:
     # default configuration for services in *this* file
@@ -26,6 +28,51 @@ services:
     App\Controller\:
         resource: '../src/Controller/'
         tags: ['controller.service_arguments']
+    App\Model\Manager\AbstractCRUDManager:
+        abstract: true
+        autowire: true
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Util\DTOExporter\DTOExporterInterface: '@App\Util\DTOExporter\DTOExporter'
+    App\Util\DTOExporter\DTOExporterInterface $userDtoExporter: '@App\Util\DTOExporter\UserDTOExporter'
+
+    App\Util\Adapter\JMS\RelationsHandler:
+        class: App\Util\Adapter\JMS\RelationsHandler
+        autowire: true
+        tags:
+            - { name: jms_serializer.handler, type: Relation, direction: serialization, format: json, method: serializeRelation}
+            - { name: jms_serializer.handler, type: Relation, direction: deserialization, format: json, method: deserializeRelation}
+            - { name: jms_serializer.handler, type: Relation<?>, direction: serialization, format: json, method: serializeRelation}
+            - { name: jms_serializer.handler, type: Relation<?>, direction: deserialization, format: json, method: deserializeRelation}
+
+    App\EventSubscriber\SerializerSubscriber:
+        class: App\EventSubscriber\SerializerSubscriber
+        arguments:
+            - "@validator"
+        tags:
+            - { name: jms_serializer.event_subscriber }
+
+    App\EventSubscriber\ApiExceptionSubscriber:
+        class: App\EventSubscriber\ApiExceptionSubscriber
+        tags:
+            - { name: kernel.event_subscriber, event: kernel.exception }
+        arguments:
+            $appDebug: '%env(int:APP_DEBUG)%'
+
+    App\Util\Request\QueryParamConverter:
+        class: App\Util\Request\QueryParamConverter
+        autowire: true
+        tags:
+            - { name: request.param_converter, priority: 2, converter: query_converter }
+
+    App\Model\Manager\UserManagerInterface:
+        class: App\Model\Manager\UserManager
+        arguments:
+            $appName: '%app_name%'
+            $appEmail: '%app_email%'
+
+    gedmo.listener.timestampable:
+        class: Gedmo\Timestampable\TimestampableListener
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+        calls:
+            - [ setAnnotationReader, [ '@annotation_reader' ] ]

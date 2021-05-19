@@ -20,12 +20,12 @@ services:
     networks:
       - default_network
     environment:
-      PHP_IDE_CONFIG: "serverName=Docker"
-      XDEBUG_CONFIG: "mode=debug start_with_request=yes client_host=localhost"
+      PHP_IDE_CONFIG: "serverName=q.localhost"
+      XDEBUG_CONFIG: "mode=debug start_with_request=yes client_host=host.docker.internal"
   nginx:
     build: docker/nginx
     ports:
-      - "888:80"
+      - "80:80"
     volumes:
       - ./var/logs/nginx:/var/log/nginx:cached
       - ./:/var/www/project:cached
