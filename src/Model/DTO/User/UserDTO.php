@@ -44,9 +44,6 @@ class UserDTO implements DTOInterface
      *     minMessage="Your password must be at least {{ limit }} characters long"
      * )
      * @Assert\Type("string")
-     * @Assert\NotCompromisedPassword(
-     *     message = "This password has previously appeared in a data breach. Please choose a more secure alternative."
-     * )
      * @Assert\NotEqualTo(
      *     propertyPath = "email",
      *     message = "Your password should not be the same as your email."
