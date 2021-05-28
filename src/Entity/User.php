@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
@@ -71,6 +73,16 @@ class User implements UserInterface, EntityInterface
      * @Serializer\Groups({"user"})
      */
     private $dateUpdate;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Company::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $companies;
+
+    public function __construct()
+    {
+        $this->companies = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -217,5 +229,35 @@ class User implements UserInterface, EntityInterface
     public function isRole(string $role)
     {
         return in_array($role, $this->getRoles());
+    }
+
+    /**
+     * @return Collection|Company[]
+     */
+    public function getCompanies(): Collection
+    {
+        return $this->companies;
+    }
+
+    public function addCompany(Company $company): self
+    {
+        if (!$this->companies->contains($company)) {
+            $this->companies[] = $company;
+            $company->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCompany(Company $company): self
+    {
+        if ($this->companies->removeElement($company)) {
+            // set the owning side to null (unless already changed)
+            if ($company->getUser() === $this) {
+                $company->setUser(null);
+            }
+        }
+
+        return $this;
     }
 }
