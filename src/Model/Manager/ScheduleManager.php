@@ -39,6 +39,7 @@ class ScheduleManager extends AbstractCRUDManager implements ScheduleManagerInte
             $this->security->getUser()->getId() == $data->getCompany()->getUser()->getId()
         )) {
             $data = new ScheduleFindDTO(
+                $data->getId(),
                 $data->getCompany(),
                 $data->getName(),
                 true,

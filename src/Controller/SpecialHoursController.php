@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Model\DTO\Schedule\ScheduleFindDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursDTO;
+use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Model\Manager\SpecialHoursManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,14 +31,14 @@ class SpecialHoursController extends AbstractBaseController
 
     /**
      * @Rest\Get("/search/app", name="search")
-     * @ParamConverter("scheduleFindDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
-     * @param ScheduleFindDTO $scheduleFindDTO
+     * @ParamConverter("specialHoursFindDTO", converter="query_converter", options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}})
+     * @param SpecialHoursFindDTO $specialHoursFindDTO
      * @return Response
      */
-    public function search(ScheduleFindDTO $scheduleFindDTO): Response
+    public function search(SpecialHoursFindDTO $specialHoursFindDTO): Response
     {
         return $this->response(
-            $this->specialHoursManager->findByDTO($scheduleFindDTO)
+            $this->specialHoursManager->findByDTO($specialHoursFindDTO)
         );
     }
 

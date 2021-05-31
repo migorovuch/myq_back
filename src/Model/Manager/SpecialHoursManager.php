@@ -35,6 +35,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
             $this->security->getUser()->getId() == $data->getSchedule()->getCompany()->getUser()->getId()
         )) {
             $data = new SpecialHoursFindDTO(
+                $data->getId(),
                 $data->getSchedule(),
                 $data->getRepeatCondition(),
                 $data->getRepeatDay(),

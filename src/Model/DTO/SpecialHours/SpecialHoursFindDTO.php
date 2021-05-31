@@ -11,58 +11,71 @@ use DateTime;
 
 class SpecialHoursFindDTO extends AbstractFindDTO
 {
+
     /**
      * @Assert\Type("string")
-     * @Serializer\Type("App\Entity\Schedule")
+     * @Serializer\Type("string")
      */
-    protected ?Schedule $schedule;
+    protected ?string $id = null;
+
+    /**
+     * @Assert\Type("string")
+     * @Serializer\Type("Relation<App\Entity\Schedule>")
+     */
+    protected ?Schedule $schedule = null;
 
     /**
      * @Assert\Type("smallint")
      * @Serializer\Type("smallint")
      */
-    protected ?int $repeatCondition;
+    protected ?int $repeatCondition = null;
 
     /**
      * @Assert\Type("smallint")
      * @Serializer\Type("smallint")
      */
-    protected ?int $repeatDay;
+    protected ?int $repeatDay = null;
 
     /**
      * @Assert\Type("datetime")
      * @Serializer\Type("datetime")
      */
-    protected ?DateTime $filterRepeatDate;
+    protected ?DateTime $filterRepeatDate = null;
 
     /**
      * @Assert\Type("datetime")
      * @Serializer\Type("datetime")
      */
-    protected ?DateTime $filterFrom;
+    protected ?DateTime $filterFrom = null;
 
     /**
      * @Assert\Type("datetime")
      * @Serializer\Type("datetime")
      */
-    protected ?DateTime $filterTo;
+    protected ?DateTime $filterTo = null;
 
     /**
      * @Assert\Type("bool")
      * @Serializer\Type("bool")
      */
-    protected ?bool $available;
+    protected ?bool $available = null;
 
     /**
      * SpecialHoursFindDTO constructor.
+     * @param string|null $id
      * @param Schedule|null $schedule
      * @param int|null $repeatCondition
      * @param int|null $repeatDay
      * @param DateTime|null $repeatDate
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
+     * @param bool|null $available
+     * @param string|null $sort
+     * @param PageDTO|null $page
+     * @param string $condition
      */
     public function __construct(
+        ?string $id,
         ?Schedule $schedule,
         ?int $repeatCondition,
         ?int $repeatDay,
@@ -82,6 +95,15 @@ class SpecialHoursFindDTO extends AbstractFindDTO
         $this->filterFrom = $filterFrom;
         $this->filterTo = $filterTo;
         $this->available = $available;
+        $this->id = $id;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 
     /**
