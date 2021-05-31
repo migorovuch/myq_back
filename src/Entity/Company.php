@@ -2,73 +2,96 @@
 
 namespace App\Entity;
 
+use App\Model\Model\EntityInterface;
 use App\Repository\CompanyRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
  */
-class Company
+class Company implements EntityInterface
 {
+    const STATUS_OFF = 0;
+    const STATUS_ON = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
+     * @Serializer\Groups({"company"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="companies")
      * @ORM\JoinColumn(nullable=false)
+     * @Serializer\Groups({"company_user"})
      */
     protected $user;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $email;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $phone;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $logo;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $address;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $addressLink;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $description;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
      */
     protected $photos;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Serializer\Groups({"company"})
      */
-    private $status;
+    private $status = self::STATUS_ON;
 
     /**
      * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="company", orphanRemoval=true)
+     * @Serializer\Groups({"company_schedules"})
      */
     private $schedules;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company"})
+     */
+    private $name;
 
     public function __construct()
     {
@@ -85,7 +108,7 @@ class Company
         return $this->user;
     }
 
-    public function setUser(?User $user): self
+    public function setUser(?UserInterface $user): self
     {
         $this->user = $user;
 
@@ -214,6 +237,18 @@ class Company
                 $schedule->setCompany(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
 
         return $this;
     }

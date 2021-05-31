@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\SpecialHours;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Model\DTO\AbstractFindDTO;
+use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
+use App\Util\Factory\PropertyInfoExtractorFactory;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,39 +15,28 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method SpecialHours[]    findAll()
  * @method SpecialHours[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class SpecialHoursRepository extends ServiceEntityRepository
+class SpecialHoursRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PropertyInfoExtractorFactory $propertyInfoExtractorFactory)
     {
-        parent::__construct($registry, SpecialHours::class);
+        parent::__construct($registry, SpecialHours::class, $propertyInfoExtractorFactory);
     }
 
-    // /**
-    //  * @return SpecialHours[] Returns an array of SpecialHours objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Criteria $criteria
+     * @param SpecialHoursFindDTO $data
+     * @return Criteria
+     */
+    public function buildCriteriaByDTO(Criteria $criteria, AbstractFindDTO $data): Criteria
     {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('s.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $criteria = parent::buildCriteriaByDTO($criteria, $data);
+        if ($data->getFilterFrom()) {
+            $criteria->andWhere($criteria->expr()->gte('endDate', $data->getFilterFrom()));
+        }
+        if ($data->getFilterTo()) {
+            $criteria->andWhere($criteria->expr()->lte('startDate', $data->getFilterTo()));
+        }
 
-    /*
-    public function findOneBySomeField($value): ?SpecialHours
-    {
-        return $this->createQueryBuilder('s')
-            ->andWhere('s.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $criteria;
     }
-    */
 }

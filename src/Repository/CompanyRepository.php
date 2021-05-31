@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Company;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Company[]    findAll()
  * @method Company[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class CompanyRepository extends ServiceEntityRepository
+class CompanyRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PropertyInfoExtractorFactory $propertyInfoExtractorFactory)
     {
-        parent::__construct($registry, Company::class);
+        parent::__construct($registry, Company::class, $propertyInfoExtractorFactory);
     }
 
     // /**

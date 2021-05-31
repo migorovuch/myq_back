@@ -79,9 +79,15 @@ class User implements UserInterface, EntityInterface
      */
     private $companies;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="user", orphanRemoval=true)
+     */
+    private $bookings;
+
     public function __construct()
     {
         $this->companies = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -249,12 +255,60 @@ class User implements UserInterface, EntityInterface
         return $this;
     }
 
+    public function getFirstCompany(): ?Company
+    {
+        $companies = $this->getCompanies();
+        if ($companies instanceof Collection) {
+            if ($companies->isEmpty()) {
+                $companies = null;
+            } else {
+                $companies = $companies->first();
+            }
+        } elseif (is_array($companies) && !empty($companies)) {
+            $companies = $companies[array_key_first($companies)];
+        } elseif (!$companies) {
+            $companies = null;
+        }
+
+        return $companies;
+    }
+
     public function removeCompany(Company $company): self
     {
         if ($this->companies->removeElement($company)) {
             // set the owning side to null (unless already changed)
             if ($company->getUser() === $this) {
                 $company->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getUser() === $this) {
+                $booking->setUser(null);
             }
         }
 

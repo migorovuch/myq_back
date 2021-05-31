@@ -8,7 +8,7 @@ namespace App\Model\Model;
 interface EntityInterface
 {
     /**
-     * @return mixed
+     * @return string
      */
     public function getId();
 }

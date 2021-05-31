@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Booking[]    findAll()
  * @method Booking[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class BookingRepository extends ServiceEntityRepository
+class BookingRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PropertyInfoExtractorFactory $propertyInfoExtractorFactory)
     {
-        parent::__construct($registry, Booking::class);
+        parent::__construct($registry, Booking::class, $propertyInfoExtractorFactory);
     }
 
     // /**

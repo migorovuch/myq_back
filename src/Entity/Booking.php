@@ -42,6 +42,22 @@ class Booking
      */
     protected $customerComment;
 
+    /**
+     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bookings")
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $user;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $userName;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $userPhone;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -103,6 +119,42 @@ class Booking
     public function setCustomerComment(?string $customerComment): self
     {
         $this->customerComment = $customerComment;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    public function getUserName(): ?string
+    {
+        return $this->userName;
+    }
+
+    public function setUserName(?string $userName): self
+    {
+        $this->userName = $userName;
+
+        return $this;
+    }
+
+    public function getUserPhone(): ?string
+    {
+        return $this->userPhone;
+    }
+
+    public function setUserPhone(?string $userPhone): self
+    {
+        $this->userPhone = $userPhone;
 
         return $this;
     }

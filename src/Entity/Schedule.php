@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\Model\EntityInterface;
 use App\Repository\ScheduleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass=ScheduleRepository::class)
  */
-class Schedule
+class Schedule implements EntityInterface
 {
     /**
      * @ORM\Id

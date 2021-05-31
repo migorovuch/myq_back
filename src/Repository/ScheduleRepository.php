@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Schedule;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,11 +12,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Schedule[]    findAll()
  * @method Schedule[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class ScheduleRepository extends ServiceEntityRepository
+class ScheduleRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
+    public function __construct(ManagerRegistry $registry, PropertyInfoExtractorFactory $propertyInfoExtractorFactory)
     {
-        parent::__construct($registry, Schedule::class);
+        parent::__construct($registry, Schedule::class, $propertyInfoExtractorFactory);
     }
 
     // /**

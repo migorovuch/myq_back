@@ -53,6 +53,11 @@ class SpecialHours
      */
     protected $repeatDate;
 
+    /**
+     * @ORM\Column(type="boolean", nullable=true)
+     */
+    protected $available = true;
+
     public function getId(): ?string
     {
         return $this->id;
@@ -140,5 +145,21 @@ class SpecialHours
         $this->repeatDate = $repeatDate;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAvailable(): bool
+    {
+        return $this->available;
+    }
+
+    /**
+     * @param bool $available
+     */
+    public function setAvailable(bool $available): void
+    {
+        $this->available = $available;
     }
 }

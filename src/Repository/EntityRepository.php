@@ -25,9 +25,9 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     /**
      * EntityRepository constructor.
      *
-     * @param ManagerRegistry              $registry
-     * @param string                       $entityClass
-     * @param PropertyInfoExtractorFactory $propertyInfoExtractorFactory
+     * @param ManagerRegistry $registry
+     * @param string $entityClass
+     * @param PropertyInfoExtractorFactory|null $propertyInfoExtractorFactory
      */
     public function __construct(
         ManagerRegistry $registry,
