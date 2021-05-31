@@ -47,11 +47,9 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         $exception = $event->getThrowable();
         $code = $exception->getCode();
         $response = [];
-        if ($code < Response::HTTP_BAD_REQUEST || $code > Response::HTTP_FAILED_DEPENDENCY) {
-            $code = Response::HTTP_BAD_REQUEST;
-        }
 //        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         if ($exception instanceof ValidationFailedException) {
+            $code = Response::HTTP_UNPROCESSABLE_ENTITY;
             $errorsList = $exception->getConstraintViolationList();
             $responseErrors = [];
             foreach ($errorsList as $error) {
@@ -65,6 +63,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
                 'errors' => $responseErrors,
             ];
         } elseif ($exception instanceof ApiExceptionInterface) {
+            $code = $code ? $code : Response::HTTP_BAD_REQUEST;
             $response = [
                 'title' => $exception->getMessage(),
             ];
@@ -76,18 +75,16 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         } elseif ($exception instanceof NotFoundHttpException) {
             $code = Response::HTTP_NOT_FOUND;
             $response = [
-                'title' => 'Route not found',
+                'title' => 'Resource not found',
             ];
         } else {
+            $code = $code ? $code : Response::HTTP_INTERNAL_SERVER_ERROR;
             $response = [
                 'title' => $this->appDebug ? $exception->getMessage() : 'Ooops something went wrong!',
             ];
         }
         $event->setResponse(
-            new JsonResponse(
-                $response,
-                $code
-            )
+            new JsonResponse($response, $code)
         );
         $this->log($exception);
 

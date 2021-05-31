@@ -40,7 +40,8 @@ security:
         get_requests:
             pattern: ^/api.*/app
             methods: [GET]
-            security: false
+            stateless: true
+            anonymous: true
         registration:
             pattern: ^/api/registration
             anonymous: true

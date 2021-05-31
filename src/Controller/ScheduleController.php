@@ -2,17 +2,91 @@
 
 namespace App\Controller;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Model\DTO\Schedule\ScheduleDTO;
+use App\Model\DTO\Schedule\ScheduleFindDTO;
+use App\Model\Manager\ScheduleManagerInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\Annotations as Rest;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
-class ScheduleController
+/**
+ * Class ScheduleController.
+ *
+ * @Route("/schedule", name="api_schedule_")
+ */
+class ScheduleController extends AbstractBaseController
 {
+
+    protected ScheduleManagerInterface $scheduleManager;
+
     /**
-     * @return JsonResponse
+     * ScheduleController constructor.
+     * @param ScheduleManagerInterface $scheduleManager
      */
-    #[Route(path: "api/v1/schedule", name: "create_schedule", methods: ["POST"])]
-    public function create(): JsonResponse
+    public function __construct(ScheduleManagerInterface $scheduleManager)
     {
-        return new JsonResponse(['OK']);
+        $this->scheduleManager = $scheduleManager;
+    }
+
+
+    /**
+     * @Rest\Post("/", name="create")
+     * @ParamConverter("scheduleDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     * @param ScheduleDTO $scheduleDTO
+     * @return Response
+     */
+    public function create(ScheduleDTO $scheduleDTO): Response
+    {
+        $schedule = $this->scheduleManager->create($scheduleDTO);
+
+        return $this->response($schedule);
+    }
+
+    /**
+     * @Rest\Put("/{id}", name="update")
+     * @ParamConverter("scheduleDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     * @param string $id
+     * @param ScheduleDTO $scheduleDTO
+     * @return Response
+     */
+    public function update(string $id, ScheduleDTO $scheduleDTO): Response
+    {
+        $schedule = $this->scheduleManager->update($id, $scheduleDTO);
+
+        return $this->response($schedule);
+    }
+
+    /**
+     * @Rest\Get ("/{id}", name="schedule")
+     * @param string $id
+     * @return Response
+     */
+    public function schedule(string $id) : Response
+    {
+        $schedule = $this->scheduleManager->find($id);
+        if (!$schedule) {
+            throw new NotFoundHttpException();
+        }
+
+        return $this->response($schedule);
+    }
+
+    /**
+     * @Rest\Get("/search/app", name="search")
+     * @ParamConverter(
+     *     "scheduleFindDTO",
+     *     converter="query_converter",
+     *     options={"paramName"="filter"}
+     * )
+     * @param ScheduleFindDTO $scheduleFindDTO
+     * @return Response
+     */
+    public function search(ScheduleFindDTO $scheduleFindDTO): Response
+    {
+        return $this->response(
+            $this->scheduleManager->findPublicByDTO($scheduleFindDTO)
+        );
     }
 }

@@ -20,7 +20,7 @@ class UserVoter extends AbstractVoter
      */
     protected function supports($attribute, $subject)
     {
-        if (!\in_array($attribute, [static::VIEW, static::UPDATE, static::DELETE])) {
+        if (!\in_array($attribute, [static::CREATE, static::VIEW, static::UPDATE, static::DELETE])) {
             return false;
         }
         if (!$subject instanceof User) {

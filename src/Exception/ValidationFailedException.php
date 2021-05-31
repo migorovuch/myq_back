@@ -9,8 +9,10 @@ use Symfony\Component\Validator\ConstraintViolationListInterface;
 /**
  * Class ValidationFailedException.
  */
-class ValidationFailedException extends RuntimeException implements ApiExceptionInterface
+class ValidationFailedException extends ApiException implements ApiExceptionInterface
 {
+    const DEFAULT_MSG = 'Validation failed';
+
     /**
      * @var ConstraintViolationListInterface
      */

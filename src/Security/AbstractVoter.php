@@ -5,35 +5,16 @@ namespace App\Security;
 use App\Exception\ApiException;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
+use Symfony\Component\Security\Core\Authorization\Voter\Voter;
 use Symfony\Component\Security\Core\Authorization\Voter\VoterInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
-abstract class AbstractVoter implements VoterInterface
+abstract class AbstractVoter extends Voter implements VoterInterface
 {
     const CREATE = 'create';
     const VIEW = 'view';
     const UPDATE = 'update';
     const DELETE = 'delete';
-
-    /**
-     * @param TokenInterface $token
-     * @param mixed          $subject
-     * @param array          $attributes
-     *
-     * @return int
-     */
-    public function vote(TokenInterface $token, $subject, array $attributes)
-    {
-        return $this->voteOnAttribute(reset($attributes), $subject, $token) ? self::ACCESS_GRANTED : self::ACCESS_DENIED;
-    }
-
-    /**
-     * @param array $attribute
-     * @param mixed $subject
-     *
-     * @return bool
-     */
-    abstract protected function supports($attribute, $subject);
 
     /**
      * @param array          $attributes
@@ -64,33 +45,33 @@ abstract class AbstractVoter implements VoterInterface
 
     /**
      * @param UserInterface   $currentUser
-     * @param EntityInterface $schema
+     * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canCreate(UserInterface $currentUser, EntityInterface $schema): bool;
+    protected abstract function canCreate(UserInterface $currentUser, EntityInterface $subject): bool;
 
     /**
      * @param UserInterface   $currentUser
-     * @param EntityInterface $schema
+     * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canEdit(UserInterface $currentUser, EntityInterface $schema): bool;
+    protected abstract function canEdit(UserInterface $currentUser, EntityInterface $subject): bool;
 
     /**
      * @param UserInterface   $currentUser
-     * @param EntityInterface $schema
+     * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canView(UserInterface $currentUser, EntityInterface $schema): bool;
+    protected abstract function canView(UserInterface $currentUser, EntityInterface $subject): bool;
 
     /**
      * @param UserInterface   $currentUser
-     * @param EntityInterface $schema
+     * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canDelete(UserInterface $currentUser, EntityInterface $schema): bool;
+    protected abstract function canDelete(UserInterface $currentUser, EntityInterface $subject): bool;
 }
