@@ -13,6 +13,15 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Schedule implements EntityInterface
 {
+
+    const ACCEPT_BOOKING_ACCEPT_ALL = 0;
+    const ACCEPT_BOOKING_DECLINE_ALL = 1;
+    const ACCEPT_BOOKING_ACCEPT_APPROVED_USERS = 2;
+    const ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE = 3;
+
+    const BOOKING_CONDITION_ALL_USERS = 0;
+    const BOOKING_CONDITION_AUTHORIZED_USERS = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -34,27 +43,27 @@ class Schedule implements EntityInterface
     /**
      * @ORM\Column(type="boolean")
      */
-    private $enabled;
+    private $enabled = true;
 
     /**
      * @ORM\Column(type="boolean")
      */
-    private $available;
+    private $available = false;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $bookingDuration;
+    private $bookingDuration = 30;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $minBookingTime;
+    private $minBookingTime = 0;
 
     /**
      * @ORM\Column(type="integer")
      */
-    private $maxBookingTime;
+    private $maxBookingTime = 0;
 
     /**
      * @ORM\Column(type="text", nullable=true)
@@ -64,12 +73,12 @@ class Schedule implements EntityInterface
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $bookingCondition;
+    private $bookingCondition = self::BOOKING_CONDITION_ALL_USERS;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
      */
-    private $acceptBookingCondition;
+    private $acceptBookingCondition = self::ACCEPT_BOOKING_ACCEPT_ALL;
 
     /**
      * @ORM\OneToMany(targetEntity=SpecialHours::class, mappedBy="schedule", orphanRemoval=true)

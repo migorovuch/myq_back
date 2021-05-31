@@ -10,6 +10,12 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class SpecialHours
 {
+
+    const REPEAT_EVERY_DAY = 0;
+    const REPEAT_ONCE_A_WEAK = 1;
+    const REPEAT_ONCE_A_MONTH = 2;
+    const REPEAT_ONCE_A_YEAR = 3;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -41,7 +47,7 @@ class SpecialHours
     /**
      * @ORM\Column(type="smallint")
      */
-    protected $repeatCondition;
+    protected $repeatCondition = self::REPEAT_ONCE_A_WEAK;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
