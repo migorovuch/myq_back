@@ -2,13 +2,17 @@
 
 namespace App\Entity;
 
+use App\Model\DTO\SpecialHours\RangeDTO;
+use App\Model\Model\EntityInterface;
 use App\Repository\SpecialHoursRepository;
 use Doctrine\ORM\Mapping as ORM;
+use DateTimeInterface;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=SpecialHoursRepository::class)
  */
-class SpecialHours
+class SpecialHours implements EntityInterface
 {
 
     const REPEAT_EVERY_DAY = 0;
@@ -36,11 +40,13 @@ class SpecialHours
 
     /**
      * @ORM\Column(type="datetime")
+     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
      */
     protected $startDate;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
      */
     protected $endDate;
 
@@ -56,6 +62,7 @@ class SpecialHours
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
+     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
      */
     protected $repeatDate;
 
@@ -88,29 +95,34 @@ class SpecialHours
 
     public function setRanges(array $ranges): self
     {
+        foreach ($ranges as &$range) {
+            if ($range instanceof RangeDTO) {
+                $range = $range->toArray();
+            }
+        }
         $this->ranges = $ranges;
 
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStartDate(): ?DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): self
+    public function setStartDate(DateTimeInterface $startDate): self
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): self
+    public function setEndDate(DateTimeInterface $endDate): self
     {
         $this->endDate = $endDate;
 
@@ -141,12 +153,12 @@ class SpecialHours
         return $this;
     }
 
-    public function getRepeatDate(): ?\DateTimeInterface
+    public function getRepeatDate(): ?DateTimeInterface
     {
         return $this->repeatDate;
     }
 
-    public function setRepeatDate(?\DateTimeInterface $repeatDate): self
+    public function setRepeatDate(?DateTimeInterface $repeatDate): self
     {
         $this->repeatDate = $repeatDate;
 

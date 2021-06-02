@@ -44,7 +44,7 @@ class SpecialHoursController extends AbstractBaseController
 
     /**
      * @Rest\Put("/update-list", name="update_list")
-     * @ParamConverter("list", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     * @ParamConverter("list", class="array<App\Model\DTO\SpecialHours\SpecialHoursDTO>", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      * @param SpecialHoursDTO[] $list
      * @return Response
      */
@@ -52,6 +52,19 @@ class SpecialHoursController extends AbstractBaseController
     {
         return $this->response(
             $this->specialHoursManager->updateList($list)
+        );
+    }
+
+    /**
+     * @Rest\Put("/update/{id}", name="update")
+     * @ParamConverter("specialHoursDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     * @param SpecialHoursDTO $specialHoursDTO
+     * @return Response
+     */
+    public function update(string $id, SpecialHoursDTO $specialHoursDTO): Response
+    {
+        return $this->response(
+            $this->specialHoursManager->update($id, $specialHoursDTO)
         );
     }
 

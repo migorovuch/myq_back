@@ -18,7 +18,7 @@ class ScheduleDTO implements DTOInterface
      * @Assert\Type("boolean")
      * @Serializer\Type("boolean")
      */
-    protected ?string $enabled;
+    protected ?bool $enabled;
 
     /**
      * @Assert\Type("boolean")
@@ -41,7 +41,7 @@ class ScheduleDTO implements DTOInterface
 
     /**
      * @Assert\Type("integer")
-     * @Assert\GreaterThan("minBookingTime")
+     * @Assert\GreaterThanOrEqual(propertyPath="minBookingTime")
      * @Serializer\Type("integer")
      */
     protected ?int $maxBookingTime;
@@ -67,7 +67,7 @@ class ScheduleDTO implements DTOInterface
     /**
      * ScheduleDTO constructor.
      * @param string|null $name
-     * @param string|null $enabled
+     * @param bool|null $enabled
      * @param bool|null $available
      * @param int|null $bookingDuration
      * @param int|null $minBookingTime
@@ -78,7 +78,7 @@ class ScheduleDTO implements DTOInterface
      */
     public function __construct(
         ?string $name,
-        ?string $enabled,
+        ?bool $enabled,
         ?bool $available,
         ?int $bookingDuration,
         ?int $minBookingTime,
@@ -107,9 +107,9 @@ class ScheduleDTO implements DTOInterface
     }
 
     /**
-     * @return string|null
+     * @return bool|null
      */
-    public function getEnabled(): ?string
+    public function getEnabled(): ?bool
     {
         return $this->enabled;
     }

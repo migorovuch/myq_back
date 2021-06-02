@@ -86,7 +86,9 @@ class ScheduleController extends AbstractBaseController
     public function search(ScheduleFindDTO $scheduleFindDTO): Response
     {
         return $this->response(
-            $this->scheduleManager->findPublicByDTO($scheduleFindDTO)
+            $this->scheduleManager->findPublicByDTO($scheduleFindDTO),
+            Response::HTTP_OK,
+            ['schedule']
         );
     }
 }

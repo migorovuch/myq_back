@@ -40,7 +40,7 @@ class ScheduleDTOExporter extends DTOExporter
         $entity = parent::exportDTO($entity, $dto, $setNullProperty);
         /** @var User $user */
         $user = $this->security->getUser();
-        $company = $user->getCompanies()->first();
+        $company = $user->getFirstCompany();
         if (!$company) {
             throw new UserHasNoCompanyException();
         }

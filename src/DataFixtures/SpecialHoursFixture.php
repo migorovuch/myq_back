@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\SpecialHours;
+use App\Model\DTO\SpecialHours\RangeDTO;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -13,7 +14,7 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $defultRanges = ['from' => '09:00', 'to' => '18:00'];
+        $defultRanges = [new RangeDTO('09:00', '18:00')];
 
         $schedule1 = $this->getReference(SchemaFixture::SCHEDULE_1);
         $schedule2 = $this->getReference(SchemaFixture::SCHEDULE_2);

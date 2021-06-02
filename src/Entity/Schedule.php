@@ -7,6 +7,7 @@ use App\Repository\ScheduleRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=ScheduleRepository::class)
@@ -26,67 +27,86 @@ class Schedule implements EntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
+     * @Serializer\Groups({"schedule"})
      */
     private $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="schedules")
      * @ORM\JoinColumn(nullable=false)
+     * @Serializer\Groups({"schedule_company"})
      */
     private $company;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups({"schedule"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Serializer\Groups({"schedule"})
+     * available for booking
      */
     private $enabled = true;
 
     /**
      * @ORM\Column(type="boolean")
+     * @Serializer\Groups({"schedule"})
+     * Always available for booking or only in specialHours
      */
     private $available = false;
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"schedule"})
+     * Seconds, 0 - manual setting for each booking
      */
     private $bookingDuration = 30;
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"schedule"})
+     * available only in case bookingDuration==0
      */
     private $minBookingTime = 0;
 
     /**
      * @ORM\Column(type="integer")
+     * @Serializer\Groups({"schedule"})
+     * available only in case bookingDuration==0, 0 - no limit
      */
     private $maxBookingTime = 0;
 
     /**
      * @ORM\Column(type="text", nullable=true)
+     * @Serializer\Groups({"schedule"})
      */
     private $description;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Serializer\Groups({"schedule"})
+     * Who can book - all users or authenticated only
      */
     private $bookingCondition = self::BOOKING_CONDITION_ALL_USERS;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Serializer\Groups({"schedule"})
      */
     private $acceptBookingCondition = self::ACCEPT_BOOKING_ACCEPT_ALL;
 
     /**
      * @ORM\OneToMany(targetEntity=SpecialHours::class, mappedBy="schedule", orphanRemoval=true)
+     * @Serializer\Groups({"schedule_special_hours"})
      */
     private $specialHours;
 
     /**
      * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="schedule")
+     * @Serializer\Groups({"schedule_bookings"})
      */
     private $bookings;
 

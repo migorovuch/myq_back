@@ -7,7 +7,7 @@ use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\PageDTO;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use DateTime;
+use DateTimeInterface;
 
 class SpecialHoursFindDTO extends AbstractFindDTO
 {
@@ -25,34 +25,34 @@ class SpecialHoursFindDTO extends AbstractFindDTO
     protected ?Schedule $schedule = null;
 
     /**
-     * @Assert\Type("smallint")
-     * @Serializer\Type("smallint")
+     * @Assert\Type("int")
+     * @Serializer\Type("int")
      */
     protected ?int $repeatCondition = null;
 
     /**
-     * @Assert\Type("smallint")
-     * @Serializer\Type("smallint")
+     * @Assert\Type("int")
+     * @Serializer\Type("int")
      */
     protected ?int $repeatDay = null;
 
     /**
-     * @Assert\Type("datetime")
-     * @Serializer\Type("datetime")
+     * @Assert\Type("\DateTimeInterface", groups={"Default"})
+     * @Serializer\Type("DateTimeInterface<'Y-m-d H:i:s'>")
      */
-    protected ?DateTime $filterRepeatDate = null;
+    protected ?DateTimeInterface $filterRepeatDate = null;
 
     /**
-     * @Assert\Type("datetime")
-     * @Serializer\Type("datetime")
+     * @Assert\Type("\DateTimeInterface", groups={"Default"})
+     * @Serializer\Type("DateTimeInterface<'Y-m-d H:i:s'>")
      */
-    protected ?DateTime $filterFrom = null;
+    protected ?DateTimeInterface $filterFrom = null;
 
     /**
-     * @Assert\Type("datetime")
-     * @Serializer\Type("datetime")
+     * @Assert\Type("\DateTimeInterface", groups={"Default"})
+     * @Serializer\Type("DateTimeInterface<'Y-m-d H:i:s'>")
      */
-    protected ?DateTime $filterTo = null;
+    protected ?DateTimeInterface $filterTo = null;
 
     /**
      * @Assert\Type("bool")
@@ -66,9 +66,9 @@ class SpecialHoursFindDTO extends AbstractFindDTO
      * @param Schedule|null $schedule
      * @param int|null $repeatCondition
      * @param int|null $repeatDay
-     * @param DateTime|null $repeatDate
-     * @param DateTime|null $filterFrom
-     * @param DateTime|null $filterTo
+     * @param DateTimeInterface|null $repeatDate
+     * @param DateTimeInterface|null $filterFrom
+     * @param DateTimeInterface|null $filterTo
      * @param bool|null $available
      * @param string|null $sort
      * @param PageDTO|null $page
@@ -79,9 +79,9 @@ class SpecialHoursFindDTO extends AbstractFindDTO
         ?Schedule $schedule,
         ?int $repeatCondition,
         ?int $repeatDay,
-        ?DateTime $repeatDate,
-        ?DateTime $filterFrom,
-        ?DateTime $filterTo,
+        ?DateTimeInterface $repeatDate,
+        ?DateTimeInterface $filterFrom,
+        ?DateTimeInterface $filterTo,
         ?bool $available,
         ?string $sort,
         ?PageDTO $page,
@@ -131,25 +131,25 @@ class SpecialHoursFindDTO extends AbstractFindDTO
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getFilterRepeatDate(): ?DateTime
+    public function getFilterRepeatDate(): ?DateTimeInterface
     {
         return $this->filterRepeatDate;
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getFilterFrom(): ?DateTime
+    public function getFilterFrom(): ?DateTimeInterface
     {
         return $this->filterFrom;
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getFilterTo(): ?DateTime
+    public function getFilterTo(): ?DateTimeInterface
     {
         return $this->filterTo;
     }

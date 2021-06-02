@@ -2,25 +2,31 @@
 
 namespace App\Model\Manager;
 
+use App\Entity\SpecialHours;
 use App\Model\DTO\SpecialHours\SpecialHoursDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Repository\SpecialHoursRepository;
 use App\Security\SpecialHoursVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
 class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursManagerInterface
 {
+    protected SerializerInterface $serializer;
+
     public function __construct(
         EntityManagerInterface $entityManager,
         SpecialHoursRepository $specialHoursRepository,
         Security $security,
         DTOExporterInterface $specialHoursDtoExporter,
+        SerializerInterface $serializer
     ) {
         parent::__construct($entityManager, $specialHoursRepository, $security, $specialHoursDtoExporter);
+        $this->serializer = $serializer;
     }
 
     /**
@@ -74,6 +80,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
                     $entity = $this->DTOExporter->exportDTO($entity, $specialHoursDTO);
                     $this->denyAccessUnlessGranted(SpecialHoursVoter::CREATE, $entity);
                     $this->entityManager->persist($entity);
+                    $result[] = $entity;
                 }
             }
             $this->entityManager->flush();

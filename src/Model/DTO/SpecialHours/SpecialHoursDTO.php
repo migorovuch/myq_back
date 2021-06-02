@@ -6,57 +6,58 @@ use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use DateTime;
+use DateTimeInterface;
 
 class SpecialHoursDTO implements DTOInterface
 {
     /**
-     * @Assert\Type("string")
-     * @Serializer\Type("App\Entity\Schedule")
+     * @Assert\Type("App\Entity\Schedule", groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"})
+     * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
-    protected ?Schedule $schedule;
+    protected ?Schedule $schedule = null;
 
     /**
      * @Assert\Type("string")
      * @Serializer\Type("string")
      */
-    protected ?string $id;
+    protected ?string $id = null;
 
     /**
-     * @Assert\Json()
-     * @Serializer\Type("string")
+     * @Assert\NotBlank(groups={"Default"})
+     * @Serializer\Type("array<App\Model\DTO\SpecialHours\RangeDTO>")
      */
-    protected ?array $ranges = [];
+    protected ?array $ranges = null;
 
     /**
-     * @Assert\Type("datetime")
-     * @Serializer\Type("datetime")
+     * @Assert\Type("\DateTimeInterface", groups={"Default"})
+     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
      */
-    protected ?DateTime $startDate;
+    protected ?DateTimeInterface $startDate;
 
     /**
-     * @Assert\Type("datetime")
-     * @Serializer\Type("datetime")
+     * @Assert\Type("\DateTimeInterface", groups={"Default"})
+     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
      */
-    protected ?DateTime $endDate;
+    protected ?DateTimeInterface $endDate;
 
     /**
-     * @Assert\Type("smallint")
-     * @Serializer\Type("smallint")
+     * @Assert\Type("int", groups={"Default"})
+     * @Serializer\Type("int")
      */
     protected ?int $repeatCondition;
 
     /**
-     * @Assert\Type("smallint")
-     * @Serializer\Type("smallint")
+     * @Assert\Type("int")
+     * @Serializer\Type("int")
      */
     protected ?int $repeatDay;
 
     /**
-     * @Assert\Type("datetime")
-     * @Serializer\Type("datetime")
+     * @Assert\Type("\DateTimeInterface", groups={"Default"})
+     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
      */
-    protected ?DateTime $repeatDate;
+    protected ?DateTimeInterface $repeatDate;
 
     /**
      * @Assert\Type("bool")
@@ -69,21 +70,21 @@ class SpecialHoursDTO implements DTOInterface
      * @param string|null $id
      * @param Schedule|null $schedule
      * @param array|null $ranges
-     * @param DateTime|null $startDate
-     * @param DateTime|null $endDate
+     * @param DateTimeInterface|null $startDate
+     * @param DateTimeInterface|null $endDate
      * @param int|null $repeatCondition
      * @param int|null $repeatDay
-     * @param DateTime|null $repeatDate
+     * @param DateTimeInterface|null $repeatDate
      */
     public function __construct(
         ?string $id,
         ?Schedule $schedule,
         ?array $ranges,
-        ?DateTime $startDate,
-        ?DateTime $endDate,
+        ?DateTimeInterface $startDate,
+        ?DateTimeInterface $endDate,
         ?int $repeatCondition,
         ?int $repeatDay,
-        ?DateTime $repeatDate,
+        ?DateTimeInterface $repeatDate,
         ?bool $available
     ) {
         $this->id = $id;
@@ -122,17 +123,17 @@ class SpecialHoursDTO implements DTOInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getStartDate(): ?DateTime
+    public function getStartDate(): ?DateTimeInterface
     {
         return $this->startDate;
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getEndDate(): ?DateTime
+    public function getEndDate(): ?DateTimeInterface
     {
         return $this->endDate;
     }
@@ -154,9 +155,9 @@ class SpecialHoursDTO implements DTOInterface
     }
 
     /**
-     * @return DateTime|null
+     * @return DateTimeInterface|null
      */
-    public function getRepeatDate(): ?DateTime
+    public function getRepeatDate(): ?DateTimeInterface
     {
         return $this->repeatDate;
     }
