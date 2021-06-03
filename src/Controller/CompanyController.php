@@ -39,7 +39,7 @@ class CompanyController extends AbstractBaseController
     {
         $company = $this->companyManager->create($companyDTO);
 
-        return $this->response($company);
+        return $this->response($company, Response::HTTP_OK, ['company']);
     }
 
     /**
@@ -53,7 +53,7 @@ class CompanyController extends AbstractBaseController
     {
         $company = $this->companyManager->update($id, $companyDTO);
 
-        return $this->response($company);
+        return $this->response($company, Response::HTTP_OK, ['company']);
     }
 
     /**
@@ -77,6 +77,6 @@ class CompanyController extends AbstractBaseController
             throw new NotFoundHttpException();
         }
 
-        return $this->response($company);
+        return $this->response($company, Response::HTTP_OK, ['company']);
     }
 }

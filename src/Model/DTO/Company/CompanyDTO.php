@@ -13,6 +13,12 @@ class CompanyDTO implements DTOInterface
      * @Assert\Type("string")
      * @Serializer\Type("string")
      */
+    protected ?string $name = null;
+
+    /**
+     * @Assert\Type("string")
+     * @Serializer\Type("string")
+     */
     protected ?string $email = null;
 
     /**
@@ -41,6 +47,7 @@ class CompanyDTO implements DTOInterface
 
     /**
      * CompanyDTO constructor.
+     * @param string|null $name
      * @param string|null $email
      * @param string|null $phone
      * @param string|null $address
@@ -48,6 +55,7 @@ class CompanyDTO implements DTOInterface
      * @param string|null $description
      */
     public function __construct(
+        ?string $name,
         ?string $email,
         ?string $phone,
         ?string $address,
@@ -59,6 +67,15 @@ class CompanyDTO implements DTOInterface
         $this->address = $address;
         $this->addressLink = $addressLink;
         $this->description = $description;
+        $this->name = $name;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getName(): ?string
+    {
+        return $this->name;
     }
 
     /**
