@@ -13,3 +13,5 @@
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 /var/logs/
+
+/public/media/

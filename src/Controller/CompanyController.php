@@ -4,7 +4,9 @@ namespace App\Controller;
 
 use App\Model\DTO\Company\CompanyDTO;
 use App\Model\Manager\CompanyManagerInterface;
+use App\Service\FileUploader;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
@@ -78,5 +80,24 @@ class CompanyController extends AbstractBaseController
         }
 
         return $this->response($company, Response::HTTP_OK, ['company']);
+    }
+
+    /**
+     * @Rest\Post("/logo/{id}", name="company_logo")
+     * @param string $id
+     * @param Request $request
+     * @return Response
+     */
+    public function uploadLogo(string $id, Request $request, FileUploader $fileUploader): Response
+    {
+        $files = $request->files->get('logo');
+        $fileName = $fileUploader->upload(
+            $files,
+            '/company',
+            'logo_' . $id
+        );
+        $this->companyManager->update($id, new CompanyDTO(null, null, null, null, null, null, $fileName));
+
+        return $this->response(['fileName' => $fileName]);
     }
 }

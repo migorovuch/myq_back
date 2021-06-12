@@ -46,6 +46,12 @@ class CompanyDTO implements DTOInterface
     protected ?string $description = null;
 
     /**
+     * @Assert\Type("string")
+     * @Serializer\Type("string")
+     */
+    protected ?string $logo = null;
+
+    /**
      * CompanyDTO constructor.
      * @param string|null $name
      * @param string|null $email
@@ -60,7 +66,8 @@ class CompanyDTO implements DTOInterface
         ?string $phone,
         ?string $address,
         ?string $addressLink,
-        ?string $description
+        ?string $description,
+        ?string $logo
     ) {
         $this->email = $email;
         $this->phone = $phone;
@@ -68,6 +75,7 @@ class CompanyDTO implements DTOInterface
         $this->addressLink = $addressLink;
         $this->description = $description;
         $this->name = $name;
+        $this->logo = $logo;
     }
 
     /**
@@ -116,6 +124,14 @@ class CompanyDTO implements DTOInterface
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getLogo(): ?string
+    {
+        return $this->logo;
     }
 
 }

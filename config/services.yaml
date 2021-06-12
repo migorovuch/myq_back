@@ -6,6 +6,7 @@
 parameters:
     app_name: '%env(string:APP_NAME)%'
     app_email: '%env(string:APP_EMAIL)%'
+    upload_directory: '%kernel.project_dir%/public/media'
 
 services:
     # default configuration for services in *this* file
@@ -79,3 +80,7 @@ services:
             - { name: doctrine.event_subscriber, connection: default }
         calls:
             - [ setAnnotationReader, [ '@annotation_reader' ] ]
+
+    App\Service\FileUploader:
+        arguments:
+            $targetDirectory: '%upload_directory%'
