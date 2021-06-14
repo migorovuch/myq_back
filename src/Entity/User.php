@@ -40,49 +40,55 @@ class User implements UserInterface, EntityInterface
      * @ORM\Column(type="string", length=255, unique=true)
      * @Serializer\Groups({"user"})
      */
-    private $nickname;
+    protected $nickname;
 
     /**
      * @ORM\Column(type="json")
      * @Serializer\Groups({"user"})
      */
-    private $roles = [self::ROLE_USER];
+    protected $roles = [self::ROLE_USER];
 
     /**
      * @ORM\Column(type="string", length=255)
      * @Serializer\Groups({"user_password"})
      */
-    private $password;
+    protected $password;
 
     /**
      * @ORM\Column(type="integer")
      * @Serializer\Groups({"user"})
      */
-    private $status = self::STATUS_ON;
+    protected $status = self::STATUS_ON;
+
+    /**
+     * @ORM\Column(type="string")
+     * @Serializer\Groups({"user"})
+     */
+    protected ?string $phone;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="create")
      * @Serializer\Groups({"user"})
      */
-    private $dateCreate;
+    protected $dateCreate;
 
     /**
      * @ORM\Column(type="datetime")
      * @Gedmo\Timestampable(on="update")
      * @Serializer\Groups({"user"})
      */
-    private $dateUpdate;
+    protected $dateUpdate;
 
     /**
      * @ORM\OneToMany(targetEntity=Company::class, mappedBy="user", orphanRemoval=true)
      */
-    private $companies;
+    protected $companies;
 
     /**
      * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="user", orphanRemoval=true)
      */
-    private $bookings;
+    protected $bookings;
 
     public function __construct()
     {
@@ -313,5 +319,24 @@ class User implements UserInterface, EntityInterface
         }
 
         return $this;
+    }
+
+    /**
+     * @param string|null $phone
+     * @return self
+     */
+    public function setPhone(?string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getPhone(): ?string
+    {
+        return $this->phone;
     }
 }

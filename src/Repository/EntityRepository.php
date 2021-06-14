@@ -46,15 +46,17 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
      */
     protected function buildCriteriaByDTO(Criteria $criteria, AbstractFindDTO $data)
     {
-        $criteria
-            ->setMaxResults($data->getPage()->getLimit())
-            ->setFirstResult($data->getPage()->getOffset());
+        if ($data->getPage()) {
+            $criteria
+                ->setMaxResults($data->getPage()->getLimit())
+                ->setFirstResult($data->getPage()->getOffset());
+        }
         if ($data->getSort()) {
             $criteria->orderBy(explode(',', $data->getSort()));
         }
         $propertyInfoExtractor = $this->propertyInfoExtractorFactory->buildPropertyInfoExtractor();
         $abstractClassMetadata = $propertyInfoExtractor->getProperties(AbstractFindDTO::class);
-        $entityProperties = $propertyInfoExtractor->getProperties(\get_class($data));
+        $entityProperties = $propertyInfoExtractor->getProperties($this->getEntityName());
         $findFields = array_diff($entityProperties, $abstractClassMetadata);
 
         $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
@@ -62,7 +64,11 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
             ->getPropertyAccessor();
         $expr = [];
         foreach ($findFields as $key) {
-            if (($value = $propertyAccessor->getValue($data, $key)) && \in_array($key, $entityProperties)) {
+            if (
+                $propertyAccessor->isReadable($data, $key) &&
+                ($value = $propertyAccessor->getValue($data, $key)) &&
+                \in_array($key, $entityProperties)
+            ) {
                 if (\is_array($value)) {
                     $criteria->andWhere($criteria->expr()->in($key, $value));
                 } else {
@@ -83,15 +89,17 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
      */
     protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
     {
-        $queryBuilder
-            ->setMaxResults($data->getPage()->getLimit())
-            ->setFirstResult($data->getPage()->getOffset());
+        if ($data->getPage()) {
+            $queryBuilder
+                ->setMaxResults($data->getPage()->getLimit())
+                ->setFirstResult($data->getPage()->getOffset());
+        }
         if ($data->getSort()) {
             $queryBuilder->orderBy(explode(',', $data->getSort()));
         }
         $propertyInfoExtractor = $this->propertyInfoExtractorFactory->buildPropertyInfoExtractor();
         $abstractClassMetadata = $propertyInfoExtractor->getProperties(AbstractFindDTO::class);
-        $entityProperties = $propertyInfoExtractor->getProperties(\get_class($data));
+        $entityProperties = $propertyInfoExtractor->getProperties($this->getEntityName());
         $findFields = array_diff($entityProperties, $abstractClassMetadata);
 
         $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()

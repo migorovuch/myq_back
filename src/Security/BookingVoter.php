@@ -3,11 +3,29 @@
 namespace App\Security;
 
 use App\Entity\Booking;
+use App\Exception\ApiException;
 use App\Model\Model\EntityInterface;
+use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class BookingVoter extends AbstractVoter
 {
+    /**
+     * @param array          $attributes
+     * @param mixed          $subject
+     * @param TokenInterface $token
+     *
+     * @return bool
+     */
+    protected function voteOnAttribute($attributes, $subject, TokenInterface $token)
+    {
+        $currentUser = $token->getUser();
+        if ($currentUser == 'anon.' && $attributes == static::CREATE) {
+            return true;
+        }
+
+        return parent::voteOnAttribute($attributes, $subject, $token);
+    }
 
     /**
      * @param UserInterface $currentUser

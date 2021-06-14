@@ -3,7 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Model\DTO\AbstractFindDTO;
+use App\Model\DTO\Booking\BookingFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
+use Doctrine\Common\Collections\Criteria;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,32 +22,21 @@ class BookingRepository extends EntityRepository
         parent::__construct($registry, Booking::class, $propertyInfoExtractorFactory);
     }
 
-    // /**
-    //  * @return Booking[] Returns an array of Booking objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @param Criteria $criteria
+     * @param BookingFindDTO $data
+     * @return Criteria
+     */
+    public function buildCriteriaByDTO(Criteria $criteria, AbstractFindDTO $data): Criteria
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('b.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $criteria = parent::buildCriteriaByDTO($criteria, $data);
+        if ($data->getFilterFrom()) {
+            $criteria->andWhere($criteria->expr()->gte('end', $data->getFilterFrom()));
+        }
+        if ($data->getFilterTo()) {
+            $criteria->andWhere($criteria->expr()->lte('start', $data->getFilterTo()));
+        }
 
-    /*
-    public function findOneBySomeField($value): ?Booking
-    {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $criteria;
     }
-    */
 }

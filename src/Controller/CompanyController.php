@@ -3,9 +3,9 @@
 namespace App\Controller;
 
 use App\Model\DTO\Company\CompanyDTO;
+use App\Model\DTO\Company\CompanyFindDTO;
 use App\Model\Manager\CompanyManagerInterface;
 use App\Service\FileUploader;
-use Doctrine\Common\Collections\Collection;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -99,5 +99,24 @@ class CompanyController extends AbstractBaseController
         $this->companyManager->update($id, new CompanyDTO(null, null, null, null, null, null, $fileName));
 
         return $this->response(['fileName' => $fileName]);
+    }
+
+    /**
+     * @Rest\Get("/search/app", name="search")
+     * @ParamConverter(
+     *     "companyFindDTO",
+     *     converter="query_converter",
+     *     options={"paramName"="filter"}
+     * )
+     * @param CompanyFindDTO $companyFindDTO
+     * @return Response
+     */
+    public function search(CompanyFindDTO $companyFindDTO): Response
+    {
+        return $this->response(
+            $this->companyManager->findPublicByDTO($companyFindDTO),
+            Response::HTTP_OK,
+            ['company']
+        );
     }
 }

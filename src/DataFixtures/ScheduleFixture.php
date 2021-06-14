@@ -7,7 +7,7 @@ use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 
-class SchemaFixture extends Fixture implements DependentFixtureInterface
+class ScheduleFixture extends Fixture implements DependentFixtureInterface
 {
 
     const SCHEDULE_1 = 'schedule_1';
@@ -26,7 +26,7 @@ class SchemaFixture extends Fixture implements DependentFixtureInterface
 
         $schedule2 = new Schedule();
         $schedule2
-            ->setName('Schedule 1')
+            ->setName('Schedule 2')
             ->setDescription('schedule 1 test description')
             ->setCompany($company1)
             ->setBookingDuration(0)

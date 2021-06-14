@@ -16,8 +16,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
     {
         $defultRanges = [new RangeDTO('09:00', '18:00')];
 
-        $schedule1 = $this->getReference(SchemaFixture::SCHEDULE_1);
-        $schedule2 = $this->getReference(SchemaFixture::SCHEDULE_2);
+        $schedule1 = $this->getReference(ScheduleFixture::SCHEDULE_1);
+        $schedule2 = $this->getReference(ScheduleFixture::SCHEDULE_2);
 
         $specialHours1 = new SpecialHours();
         $specialHours1
@@ -101,7 +101,7 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            SchemaFixture::class,
+            ScheduleFixture::class,
         ];
     }
 }

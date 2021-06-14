@@ -2,59 +2,81 @@
 
 namespace App\Entity;
 
+use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 
 /**
  * @ORM\Entity(repositoryClass=BookingRepository::class)
  */
-class Booking
+class Booking implements EntityInterface
 {
+
+    const STATUS_NEW = 0;
+    const STATUS_ACCEPTED = 1;
+    const STATUS_DECLINED = 2;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
+     * @Serializer\Groups({"booking"})
      */
     protected $id;
 
     /**
+     * @ORM\Column(type="smallint")
+     * @Serializer\Groups({"booking"})
+     */
+    private $status = self::STATUS_NEW;
+
+    /**
      * @ORM\ManyToOne(targetEntity=Schedule::class, inversedBy="bookings")
+     * @Serializer\Groups({"booking_schedule"})
      */
     protected $schedule;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"booking", "booking_start"})
      */
     protected $start;
 
     /**
      * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"booking", "booking_end"})
      */
     protected $end;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"booking"})
      */
     protected $title;
 
     /**
      * @ORM\Column(type="string", length=500, nullable=true)
+     * @Serializer\Groups({"booking"})
      */
     protected $customerComment;
 
     /**
      * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bookings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @Serializer\Groups({"booking_user"})
      */
     private $user;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"booking"})
      */
     private $userName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"booking"})
      */
     private $userPhone;
 

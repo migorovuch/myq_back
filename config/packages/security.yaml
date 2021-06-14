@@ -42,6 +42,11 @@ security:
             methods: [GET]
             stateless: true
             anonymous: true
+        create_booking:
+            pattern: ^/api/bookings/
+            methods: [POST]
+            stateless: true
+            anonymous: true
         registration:
             pattern: ^/api/registration
             anonymous: true
