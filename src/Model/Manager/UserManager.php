@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ChangePasswordDTO;
+use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -165,8 +166,26 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
 
         $user->setPassword($encodedPassword);
         $this->save($user);
+    }
 
-        // The session is cleaned up after the password has been changed.
-//            $this->cleanSessionAfterReset();
+    /**
+     * @param User $entity
+     * @param DTOInterface $dto
+     * @param bool $setNullProperty
+     * @return EntityInterface
+     */
+    protected function prepareEntity(
+        EntityInterface $entity,
+        DTOInterface $dto,
+        bool $setNullProperty = true
+    ): EntityInterface {
+        $oldStatus = $entity->getStatus();
+        $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
+        $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $entity->getPassword()));
+        if (!$this->security->isGranted(User::ROLE_ADMIN)) {
+            $entity->setStatus($oldStatus);
+        }
+
+        return $entity;
     }
 }

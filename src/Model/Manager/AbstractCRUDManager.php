@@ -160,7 +160,7 @@ abstract class AbstractCRUDManager
     {
         $entityName = $this->entityRepository->getClassName();
         $entity = new $entityName();
-        $entity = $this->DTOExporter->exportDTO($entity, $data);
+        $entity = $this->prepareEntity($entity, $data);
         $this->denyAccessUnlessGranted(AbstractVoter::CREATE, $entity);
         $this->save($entity);
 
@@ -177,9 +177,20 @@ abstract class AbstractCRUDManager
     {
         $entity = $this->find($id);
         $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
-        $entity = $this->DTOExporter->exportDTO($entity, $data, false);
+        $entity = $this->prepareEntity($entity, $data, false);
         $this->save($entity);
 
         return $entity;
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param DTOInterface $dto
+     * @param bool $setNullProperty
+     * @return EntityInterface
+     */
+    protected function prepareEntity(EntityInterface $entity, DTOInterface $dto, bool $setNullProperty = true): EntityInterface
+    {
+        return $this->DTOExporter->exportDTO($entity, $dto, $setNullProperty);
     }
 }

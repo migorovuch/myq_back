@@ -39,9 +39,6 @@ class UserVoter extends AbstractVoter
      */
     protected function voteOnAttribute($attributes, $subject, TokenInterface $token)
     {
-        if (!$subject instanceof User) {
-            return false;
-        }
         $currentUser = $token->getUser();
         if ($attributes === static::CREATE && $currentUser === 'anon.') {
             return true;
@@ -55,7 +52,7 @@ class UserVoter extends AbstractVoter
      *
      * @inheritDoc
      */
-    protected function canCreate(UserInterface $currentUser, EntityInterface $user): bool
+    protected function canCreate(UserInterface|string $currentUser, EntityInterface $user): bool
     {
         return true;
     }
@@ -65,7 +62,7 @@ class UserVoter extends AbstractVoter
      *
      * @inheritDoc
      */
-    protected function canView(UserInterface $currentUser, EntityInterface $user): bool
+    protected function canView(UserInterface|string $currentUser, EntityInterface $user): bool
     {
         return $this->canEdit($currentUser, $user);
     }
@@ -75,10 +72,9 @@ class UserVoter extends AbstractVoter
      *
      * @inheritDoc
      */
-    protected function canEdit(UserInterface $currentUser, EntityInterface $user): bool
+    protected function canEdit(UserInterface|string $currentUser, EntityInterface $user): bool
     {
-        return $currentUser->getId() == $user->getId()
-            || $currentUser->isRole(User::ROLE_ADMIN);
+        return $currentUser->getId() == $user->getId() || $currentUser->isRole(User::ROLE_ADMIN);
     }
 
     /**
@@ -86,7 +82,7 @@ class UserVoter extends AbstractVoter
      *
      * @inheritDoc
      */
-    protected function canDelete(UserInterface $currentUser, EntityInterface $user): bool
+    protected function canDelete(UserInterface|string $currentUser, EntityInterface $user): bool
     {
         return $this->canEdit($currentUser, $user);
     }

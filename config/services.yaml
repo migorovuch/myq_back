@@ -33,13 +33,6 @@ services:
         abstract: true
         autowire: true
 
-    App\Util\DTOExporter\DTOExporterInterface: '@App\Util\DTOExporter\DTOExporter'
-    App\Util\DTOExporter\DTOExporterInterface $userDtoExporter: '@App\Util\DTOExporter\UserDTOExporter'
-    App\Util\DTOExporter\DTOExporterInterface $companyDtoExporter: '@App\Util\DTOExporter\CompanyDTOExporter'
-    App\Util\DTOExporter\DTOExporterInterface $scheduleDtoExporter: '@App\Util\DTOExporter\ScheduleDTOExporter'
-    App\Util\DTOExporter\DTOExporterInterface $specialHoursDtoExporter: '@App\Util\DTOExporter\SpecialHoursDTOExporter'
-    App\Util\DTOExporter\DTOExporterInterface $bookingDtoExporter: '@App\Util\DTOExporter\BookingDTOExporter'
-
     App\Util\Adapter\JMS\RelationsHandler:
         class: App\Util\Adapter\JMS\RelationsHandler
         autowire: true

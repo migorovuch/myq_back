@@ -4,6 +4,8 @@ namespace App\Model\Manager;
 
 use App\Entity\Company;
 use App\Model\DTO\Company\CompanyFindDTO;
+use App\Model\DTO\DTOInterface;
+use App\Model\Model\EntityInterface;
 use App\Repository\CompanyRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -55,5 +57,15 @@ class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterf
         }
 
         return $this->findByDTO($data);
+    }
+
+    protected function prepareEntity(
+        EntityInterface $entity,
+        DTOInterface $dto,
+        bool $setNullProperty = true
+    ): EntityInterface {
+        $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
+
+        return $entity->setUser($this->security->getUser());
     }
 }

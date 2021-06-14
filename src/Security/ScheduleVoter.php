@@ -10,41 +10,41 @@ class ScheduleVoter extends AbstractVoter
 {
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Schedule $subject
      * @return bool
      */
-    protected function canCreate(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return true;
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Schedule $subject
      * @return bool
      */
-    protected function canEdit(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $subject->getCompany()->getUser()->getId() === $currentUser->getId();
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Schedule $subject
      * @return bool
      */
-    protected function canView(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject) || $subject->getEnabled();
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Schedule $subject
      * @return bool
      */
-    protected function canDelete(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject);
     }

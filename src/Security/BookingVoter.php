@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\Booking;
+use App\Entity\Schedule;
 use App\Exception\ApiException;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -11,8 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class BookingVoter extends AbstractVoter
 {
     /**
-     * @param array          $attributes
-     * @param mixed          $subject
+     * @param array $attributes
+     * @param Booking $subject
      * @param TokenInterface $token
      *
      * @return bool
@@ -20,52 +21,72 @@ class BookingVoter extends AbstractVoter
     protected function voteOnAttribute($attributes, $subject, TokenInterface $token)
     {
         $currentUser = $token->getUser();
-        if ($currentUser == 'anon.' && $attributes == static::CREATE) {
-            return true;
+        switch ($attributes) {
+            case static::CREATE:
+                return $this->canCreate($currentUser, $subject);
+            case static::VIEW:
+                return $this->canView($currentUser, $subject);
+            case static::UPDATE:
+                return $this->canEdit($currentUser, $subject);
+            case static::DELETE:
+                return $this->canDelete($currentUser, $subject);
         }
-
-        return parent::voteOnAttribute($attributes, $subject, $token);
+        throw new ApiException('This code should not be reached!');
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Booking $subject
      * @return bool
      */
-    protected function canCreate(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return true;
+        return $currentUser !== 'anon.' ||
+            $subject->getSchedule()->getBookingCondition() === Schedule::BOOKING_CONDITION_ALL_USERS;
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Booking $subject
      * @return bool
      */
-    protected function canEdit(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
-            $subject->getUser()->getId() === $currentUser->getId();
+        return (
+                $currentUser !== 'anon.' && (
+                    $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
+                    $subject->getUser()->getId() === $currentUser->getId()
+                )
+            ) ||
+            (
+                $currentUser === 'anon.' &&
+                !$subject->getUser()
+            );
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param Booking $subject
      * @return bool
      */
-    protected function canView(UserInterface $currentUser, EntityInterface $subject): bool
-    {
-        return $this->canEdit($currentUser, $subject);
-    }
-
-    /**
-     * @param UserInterface $currentUser
-     * @param Booking $subject
-     * @return bool
-     */
-    protected function canDelete(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject);
+    }
+
+    /**
+     * @param UserInterface|string $currentUser
+     * @param Booking $subject
+     * @return bool
+     */
+    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
+    {
+        return (
+            $currentUser !== 'anon.' && (
+                $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
+                $subject->getUser()->getId() === $currentUser->getId()
+            )
+        );
     }
 
     /**

@@ -2,13 +2,20 @@
 
 namespace App\Model\Manager;
 
+use App\Entity\User;
+use App\Exception\UserHasNoCompanyException;
+use App\Model\DTO\DTOInterface;
 use App\Model\DTO\Schedule\ScheduleFindDTO;
+use App\Model\Model\EntityInterface;
 use App\Repository\ScheduleRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Security;
 
+/**
+ * Class ScheduleManager
+ */
 class ScheduleManager extends AbstractCRUDManager implements ScheduleManagerInterface
 {
     /**
@@ -50,5 +57,27 @@ class ScheduleManager extends AbstractCRUDManager implements ScheduleManagerInte
         }
 
         return $this->findByDTO($data);
+    }
+
+    /**
+     * @param EntityInterface $entity
+     * @param DTOInterface $dto
+     * @param bool $setNullProperty
+     * @return EntityInterface
+     */
+    protected function prepareEntity(
+        EntityInterface $entity,
+        DTOInterface $dto,
+        bool $setNullProperty = true
+    ): EntityInterface {
+        $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
+        /** @var User $user */
+        $user = $this->security->getUser();
+        $company = $user->getFirstCompany();
+        if (!$company) {
+            throw new UserHasNoCompanyException();
+        }
+
+        return $entity->setCompany($company);
     }
 }

@@ -2,12 +2,14 @@
 
 namespace App\Model\Manager;
 
+use App\Entity\Schedule;
 use App\Entity\SpecialHours;
 use App\Model\DTO\SpecialHours\SpecialHoursDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Repository\SpecialHoursRepository;
 use App\Security\SpecialHoursVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
+use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -90,5 +92,41 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         }
 
         return $result;
+    }
+
+    /**
+     * @param Schedule $schedule
+     * @param DateTime $start
+     * @param DateTime $end
+     * @return bool
+     */
+    public function checkScheduleAvailability(Schedule $schedule, DateTime $start, DateTime $end): bool
+    {
+        $specialHours = $this->findByDTO(
+            new SpecialHoursFindDTO(null, $schedule, null, null, null, $start, $end, true)
+        );
+        /** @var SpecialHours $item */
+        foreach ($specialHours as $item) {
+            if (
+                $item->getRepeatCondition() === SpecialHours::REPEAT_EVERY_DAY ||
+                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_WEAK && $start->format('w') == $item->getRepeatDay()) ||
+                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_MONTH && $start->format('d') == $item->getRepeatDate()->format('d')) ||
+                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_YEAR && $start->format('md') == $item->getRepeatDate()->format('md'))
+            ) {
+                foreach ($item->getRanges() as $range) {
+                    $comparingDateStart = clone $start;
+                    list($hour, $minute) = explode(':', $range['from']);
+                    $comparingDateStart->setTime($hour, $minute);
+                    $comparingDateEnd = clone $end;
+                    list($hour, $minute) = explode(':', $range['to']);
+                    $comparingDateEnd->setTime($hour, $minute);
+                    if ($start >= $comparingDateStart && $end <= $comparingDateEnd) {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
     }
 }

@@ -8,7 +8,12 @@ use App\Model\DTO\DTOInterface;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\ConstraintBookingAvailability;
 
+/**
+ * Class BookingDTO
+ * @ConstraintBookingAvailability
+ */
 class BookingDTO implements DTOInterface
 {
 

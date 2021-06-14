@@ -75,16 +75,16 @@ class SpecialHoursFindDTO extends AbstractFindDTO
      * @param string $condition
      */
     public function __construct(
-        ?string $id,
-        ?Schedule $schedule,
-        ?int $repeatCondition,
-        ?int $repeatDay,
-        ?DateTimeInterface $repeatDate,
-        ?DateTimeInterface $filterFrom,
-        ?DateTimeInterface $filterTo,
-        ?bool $available,
-        ?string $sort,
-        ?PageDTO $page,
+        ?string $id = null,
+        ?Schedule $schedule = null,
+        ?int $repeatCondition = null,
+        ?int $repeatDay = null,
+        ?DateTimeInterface $repeatDate = null,
+        ?DateTimeInterface $filterFrom = null,
+        ?DateTimeInterface $filterTo = null,
+        ?bool $available = null,
+        ?string $sort = null,
+        ?PageDTO $page = null,
         string $condition = self::CONDITION_AND
     ) {
         parent::__construct($sort, $page, $condition);

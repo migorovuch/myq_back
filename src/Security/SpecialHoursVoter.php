@@ -22,41 +22,41 @@ class SpecialHoursVoter extends AbstractVoter
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param SpecialHours $subject
      * @return bool
      */
-    protected function canCreate(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId();
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param SpecialHours $subject
      * @return bool
      */
-    protected function canEdit(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $this->canCreate($currentUser, $subject);
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param SpecialHours $subject
      * @return bool
      */
-    protected function canView(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return true;
     }
 
     /**
-     * @param UserInterface $currentUser
+     * @param UserInterface|string $currentUser
      * @param SpecialHours $subject
      * @return bool
      */
-    protected function canDelete(UserInterface $currentUser, EntityInterface $subject): bool
+    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
         return $this->canCreate($currentUser, $subject);
     }

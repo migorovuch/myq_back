@@ -21,6 +21,14 @@ class BookingFindDTO extends AbstractFindDTO
     protected ?string $id = null;
 
     /**
+     * @Assert\Type("int")
+     * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected")
+     * @Serializer\Type("integer")
+     * @var int|null
+     */
+    protected ?int $status;
+
+    /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
      * @Assert\NotBlank(groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\Schedule>")
@@ -73,6 +81,7 @@ class BookingFindDTO extends AbstractFindDTO
     /**
      * BookingDTO constructor.
      * @param string|null $id
+     * @param int|null $status
      * @param Schedule|null $schedule
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
@@ -87,6 +96,7 @@ class BookingFindDTO extends AbstractFindDTO
      */
     public function __construct(
         ?string $id = null,
+        ?int $status = null,
         ?Schedule $schedule = null,
         ?DateTime $filterFrom = null,
         ?DateTime $filterTo = null,
@@ -101,6 +111,7 @@ class BookingFindDTO extends AbstractFindDTO
     ) {
         parent::__construct($sort, $page, $condition);
         $this->id = $id;
+        $this->status = $status;
         $this->schedule = $schedule;
         $this->filterFrom = $filterFrom;
         $this->filterTo = $filterTo;

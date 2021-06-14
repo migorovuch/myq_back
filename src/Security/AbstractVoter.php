@@ -44,34 +44,34 @@ abstract class AbstractVoter extends Voter implements VoterInterface
     }
 
     /**
-     * @param UserInterface   $currentUser
+     * @param UserInterface|string   $currentUser
      * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canCreate(UserInterface $currentUser, EntityInterface $subject): bool;
+    protected abstract function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool;
 
     /**
-     * @param UserInterface   $currentUser
+     * @param UserInterface|string   $currentUser
      * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canEdit(UserInterface $currentUser, EntityInterface $subject): bool;
+    protected abstract function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool;
 
     /**
-     * @param UserInterface   $currentUser
+     * @param UserInterface|string   $currentUser
      * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canView(UserInterface $currentUser, EntityInterface $subject): bool;
+    protected abstract function canView(UserInterface|string $currentUser, EntityInterface $subject): bool;
 
     /**
-     * @param UserInterface   $currentUser
+     * @param UserInterface|string   $currentUser
      * @param EntityInterface $subject
      *
      * @return bool
      */
-    protected abstract function canDelete(UserInterface $currentUser, EntityInterface $subject): bool;
+    protected abstract function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool;
 }

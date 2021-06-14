@@ -31,10 +31,10 @@ class BookingRepository extends EntityRepository
     {
         $criteria = parent::buildCriteriaByDTO($criteria, $data);
         if ($data->getFilterFrom()) {
-            $criteria->andWhere($criteria->expr()->gte('end', $data->getFilterFrom()));
+            $criteria->andWhere($criteria->expr()->gt('end', $data->getFilterFrom()));
         }
         if ($data->getFilterTo()) {
-            $criteria->andWhere($criteria->expr()->lte('start', $data->getFilterTo()));
+            $criteria->andWhere($criteria->expr()->lt('start', $data->getFilterTo()));
         }
 
         return $criteria;

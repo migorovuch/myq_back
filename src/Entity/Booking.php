@@ -17,6 +17,12 @@ class Booking implements EntityInterface
     const STATUS_ACCEPTED = 1;
     const STATUS_DECLINED = 2;
 
+    const STATUS_LIST = [
+        self::STATUS_NEW => self::STATUS_NEW,
+        self::STATUS_ACCEPTED => self::STATUS_ACCEPTED,
+        self::STATUS_DECLINED => self::STATUS_DECLINED,
+    ];
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -29,7 +35,7 @@ class Booking implements EntityInterface
      * @ORM\Column(type="smallint")
      * @Serializer\Groups({"booking"})
      */
-    private $status = self::STATUS_NEW;
+    protected $status = self::STATUS_NEW;
 
     /**
      * @ORM\ManyToOne(targetEntity=Schedule::class, inversedBy="bookings")
@@ -51,7 +57,7 @@ class Booking implements EntityInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Serializer\Groups({"booking"})
+     * @Serializer\Groups({"booking_title"})
      */
     protected $title;
 
@@ -177,6 +183,24 @@ class Booking implements EntityInterface
     public function setUserPhone(?string $userPhone): self
     {
         $this->userPhone = $userPhone;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus(): int
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param int $status
+     */
+    public function setStatus(int $status): self
+    {
+        $this->status = $status;
 
         return $this;
     }
