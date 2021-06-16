@@ -193,4 +193,12 @@ class BookingFindDTO extends AbstractFindDTO
     {
         return $this->userPhone;
     }
+
+    /**
+     * @return int|null
+     */
+    public function getStatus(): ?int
+    {
+        return $this->status;
+    }
 }

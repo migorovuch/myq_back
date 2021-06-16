@@ -56,6 +56,7 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
                 ->setCustomerComment('some comment ' . $i)
                 ->setStart($startDate)
                 ->setEnd($endDate)
+                ->setStatus(Booking::STATUS_ACCEPTED)
                 ->setTitle('Title ' . $i);
             if (random_int(0, 1)) {
                 $booking
