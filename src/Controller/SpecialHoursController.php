@@ -2,7 +2,6 @@
 
 namespace App\Controller;
 
-use App\Model\DTO\Schedule\ScheduleFindDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Model\Manager\SpecialHoursManagerInterface;
