@@ -23,6 +23,9 @@ class Schedule implements EntityInterface
     const BOOKING_CONDITION_ALL_USERS = 0;
     const BOOKING_CONDITION_AUTHORIZED_USERS = 1;
 
+    const DEFAULT_BOOKING_DURATION = 30;
+    const DEFAULT_ACCEPT_BOOKING_TIME = 60;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -63,7 +66,7 @@ class Schedule implements EntityInterface
      * @Serializer\Groups({"schedule"})
      * Seconds, 0 - manual setting for each booking
      */
-    private $bookingDuration = 30;
+    private $bookingDuration = self::DEFAULT_BOOKING_DURATION;
 
     /**
      * @ORM\Column(type="integer")
@@ -97,6 +100,12 @@ class Schedule implements EntityInterface
      * @Serializer\Groups({"schedule"})
      */
     private $acceptBookingCondition = self::ACCEPT_BOOKING_ACCEPT_ALL;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     * @Serializer\Groups({"schedule"})
+     */
+    private $acceptBookingTime = self::DEFAULT_ACCEPT_BOOKING_TIME;
 
     /**
      * @ORM\OneToMany(targetEntity=SpecialHours::class, mappedBy="schedule", orphanRemoval=true)
@@ -237,6 +246,24 @@ class Schedule implements EntityInterface
     public function setAcceptBookingCondition(?int $acceptBookingCondition): self
     {
         $this->acceptBookingCondition = $acceptBookingCondition;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getAcceptBookingTime(): int
+    {
+        return $this->acceptBookingTime;
+    }
+
+    /**
+     * @param int $acceptBookingTime
+     */
+    public function setAcceptBookingTime(int $acceptBookingTime): self
+    {
+        $this->acceptBookingTime = $acceptBookingTime;
 
         return $this;
     }

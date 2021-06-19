@@ -7,6 +7,8 @@ use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
 use App\Model\Manager\BookingManagerInterface;
 use App\Model\Manager\SpecialHoursManagerInterface;
+use DateInterval;
+use DateTime;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -48,9 +50,12 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
             throw new UnexpectedValueException($value, BookingDTO::class);
         }
 
+        $now = new DateTime();
+        $now->add(new DateInterval("PT" . $value->getSchedule()->getAcceptBookingTime() . 'M'));
         $result = false;
         if (
             $value->getSchedule()->getEnabled() &&
+            $value->getStart() >= $now &&
             !$value->getSchedule()->getAvailable() &&
             $this->specialHoursManager->checkScheduleAvailability(
                 $value->getSchedule(),

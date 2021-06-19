@@ -65,6 +65,13 @@ class ScheduleDTO implements DTOInterface
     protected ?int $acceptBookingCondition;
 
     /**
+     * @Assert\Type("integer")
+     * @Assert\PositiveOrZero
+     * @Serializer\Type("integer")
+     */
+    protected ?int $acceptBookingTime;
+
+    /**
      * ScheduleDTO constructor.
      * @param string|null $name
      * @param bool|null $enabled
@@ -75,17 +82,19 @@ class ScheduleDTO implements DTOInterface
      * @param string|null $description
      * @param int|null $bookingCondition
      * @param int|null $acceptBookingCondition
+     * @param int|null $acceptBookingTime
      */
     public function __construct(
-        ?string $name,
-        ?bool $enabled,
-        ?bool $available,
-        ?int $bookingDuration,
-        ?int $minBookingTime,
-        ?int $maxBookingTime,
-        ?string $description,
-        ?int $bookingCondition,
-        ?int $acceptBookingCondition
+        ?string $name = null,
+        ?bool $enabled = null,
+        ?bool $available = null,
+        ?int $bookingDuration = null,
+        ?int $minBookingTime = null,
+        ?int $maxBookingTime = null,
+        ?string $description = null,
+        ?int $bookingCondition = null,
+        ?int $acceptBookingCondition = null,
+        ?int $acceptBookingTime = null
     ) {
         $this->name = $name;
         $this->enabled = $enabled;
@@ -96,6 +105,7 @@ class ScheduleDTO implements DTOInterface
         $this->description = $description;
         $this->bookingCondition = $bookingCondition;
         $this->acceptBookingCondition = $acceptBookingCondition;
+        $this->acceptBookingTime = $acceptBookingTime;
     }
 
     /**
@@ -168,5 +178,13 @@ class ScheduleDTO implements DTOInterface
     public function getAcceptBookingCondition(): ?int
     {
         return $this->acceptBookingCondition;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getAcceptBookingTime(): ?int
+    {
+        return $this->acceptBookingTime;
     }
 }
