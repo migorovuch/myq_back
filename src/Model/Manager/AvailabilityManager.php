@@ -44,7 +44,7 @@ class AvailabilityManager implements AvailabilityManagerInterface
                         ];
                         $days[$dayKey][$rangeKay]['to'] = $booking->getStart()->format('H:i');
                     }
-                    if (date('H:i', strtotime($days[$dayKey][$rangeKay]['from'])) > date('H:i', strtotime($days[$dayKey][$rangeKay]['to']))) {
+                    if (date('H:i', strtotime($days[$dayKey][$rangeKay]['from'])) >= date('H:i', strtotime($days[$dayKey][$rangeKay]['to']))) {
                         unset($days[$dayKey][$rangeKay]);
                     }
                 }

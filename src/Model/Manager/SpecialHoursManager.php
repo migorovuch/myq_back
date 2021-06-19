@@ -272,10 +272,13 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
             }
         }
 
+        /** @var DateTime $periodTo */
+        $periodTo =  $data->getFilterTo();
+        $periodTo = $periodTo->add(new DateInterval('P1D'));
         $period = new DatePeriod(
             $data->getFilterFrom(),
             DateInterval::createFromDateString('1 day'),
-            $data->getFilterTo()
+            $periodTo
         );
         $specialHoursPeriod = [];
         foreach ($period as $date) {
@@ -288,7 +291,8 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
                     $specialHoursPeriod[$key][] = $dailySpecialHourItem;
                 }
             }
-            $dayKey = $date->format("w");
+            $dayKey = (int)$date->format("w");
+            $dayKey = $dayKey ? $dayKey - 1 : 6;
             if (isset($weaklySpecialHours[$dayKey])) {
                 $specialHoursPeriod[$key] = $this->addRanges($specialHoursPeriod[$key], $weaklySpecialHours[$dayKey]);
             }

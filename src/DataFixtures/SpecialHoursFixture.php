@@ -14,7 +14,7 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $defultRanges = [new RangeDTO('09:00', '18:00')];
+        $defultRanges = [new RangeDTO('06:00', '15:00')];
 
         $schedule1 = $this->getReference(ScheduleFixture::SCHEDULE_1);
         $schedule2 = $this->getReference(ScheduleFixture::SCHEDULE_2);

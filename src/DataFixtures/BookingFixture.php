@@ -22,7 +22,7 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
         $schedule = $this->getReference(ScheduleFixture::SCHEDULE_1);
 
         $days = [-3, -2, -1, 0, 1, 2, 3, 4];
-        $hours = [9, 10, 11, 12, 13, 14, 15, 16, 17];
+        $hours = [6, 7, 8, 9, 10, 11, 12, 13, 14];
         $minutes = [0, 30];
         $createdBookingsDates = [];
 
