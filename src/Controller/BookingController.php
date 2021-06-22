@@ -38,7 +38,11 @@ class BookingController extends AbstractBaseController
     {
         $company = $this->bookingManager->create($bookingDTO);
 
-        return $this->response($company, Response::HTTP_OK, ['booking']);
+        return $this->response(
+            $company,
+            Response::HTTP_OK,
+            ['booking', 'booking_schedule', 'schedule_name', 'schedule_description']
+        );
     }
 
     /**
@@ -56,12 +60,66 @@ class BookingController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Get("/my", name="my_companies")
+     * @Rest\Get("/search", name="search")
+     * @ParamConverter(
+     *     "bookingFindDTO",
+     *     converter="query_converter",
+     *     options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}}
+     * )
+     * @param BookingFindDTO $bookingFindDTO
      * @return Response
      */
-    public function myCompanies() : Response
+    public function search(BookingFindDTO $bookingFindDTO): Response
     {
-        return $this->response($this->getUser()->getFirstCompany() ?? [], Response::HTTP_OK, ['booking']);
+        return $this->response(
+            $this->bookingManager->findByDTO($bookingFindDTO),
+            Response::HTTP_OK,
+            [
+                'booking',
+                'booking_schedule',
+                'schedule_name',
+                'schedule_description',
+                'booking_user',
+                'user_email',
+                'user_nickname',
+                'user_phone'
+            ]
+        );
+    }
+
+    /**
+     * @Rest\Get("/my", name="my")
+     * @ParamConverter(
+     *     "bookingFindDTO",
+     *     converter="query_converter",
+     *     options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}}
+     * )
+     * @param BookingFindDTO $bookingFindDTO
+     * @return Response
+     */
+    public function myBookings(BookingFindDTO $bookingFindDTO) : Response
+    {
+        $bookingFindDTO = new BookingFindDTO(
+            $bookingFindDTO->getId(),
+            $bookingFindDTO->getStatus(),
+            $bookingFindDTO->getSchedule(),
+            $bookingFindDTO->getCompany(),
+            $bookingFindDTO->getFilterFrom(),
+            $bookingFindDTO->getFilterTo(),
+            $bookingFindDTO->getTitle(),
+            $bookingFindDTO->getCustomerComment(),
+            $this->getUser(),
+            $bookingFindDTO->getUserName(),
+            $bookingFindDTO->getUserPhone(),
+            $bookingFindDTO->getSort(),
+            $bookingFindDTO->getPage(),
+            $bookingFindDTO->getCondition()
+        );
+        return $this->response(
+            $this->bookingManager->findByDTO($bookingFindDTO),
+            Response::HTTP_OK,
+            ['booking', 'booking_schedule', 'schedule_name', 'schedule_description']
+        );
     }
 
     /**
@@ -77,24 +135,5 @@ class BookingController extends AbstractBaseController
         }
 
         return $this->response($company, Response::HTTP_OK, ['booking']);
-    }
-
-    /**
-     * @Rest\Get("/search/app", name="search")
-     * @ParamConverter(
-     *     "bookingFindDTO",
-     *     converter="query_converter",
-     *     options={"paramName"="filter"}
-     * )
-     * @param BookingFindDTO $bookingFindDTO
-     * @return Response
-     */
-    public function search(BookingFindDTO $bookingFindDTO): Response
-    {
-        return $this->response(
-            $this->bookingManager->findByDTO($bookingFindDTO),
-            Response::HTTP_OK,
-            ['booking_start', 'booking_end']
-        );
     }
 }

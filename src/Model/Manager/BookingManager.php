@@ -4,7 +4,10 @@ namespace App\Model\Manager;
 
 use App\Entity\Booking;
 use App\Entity\Schedule;
+use App\Entity\User;
+use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
+use App\Model\DTO\Booking\BookingFindDTO;
 use App\Model\DTO\DTOInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
@@ -13,6 +16,7 @@ use App\Security\BookingVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
@@ -79,7 +83,15 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             $entity->setSchedule($originalSchedule ?? $dto->getSchedule());
         }
         if ($this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)) {
-            $entity->setUser($this->security->getUser());
+            /** @var User $currentUser */
+            $currentUser = $this->security->getUser();
+            $entity->setUser($currentUser);
+            if (!$entity->getUserName()) {
+                $entity->setUserName($currentUser->getUsername());
+            }
+            if (!$entity->getUserPhone()) {
+                $entity->setUserPhone($currentUser->getPhone());
+            }
         } else {
             $entity->setUser(null);
         }

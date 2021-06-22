@@ -20,25 +20,25 @@ abstract class AbstractFindDTO implements DTOInterface
     protected $condition = self::CONDITION_AND;
 
     /**
-     * @var string
-     * @Serializer\Type("string")
+     * @var array|null
+     * @Serializer\Type("array")
      */
-    protected $sort;
+    protected ?array $sort = null;
 
     /**
      * @var PageDTO
      * @Serializer\Type("App\Model\DTO\PageDTO")
      */
-    protected $page;
+    protected $page = null;
 
     /**
      * AbstractFindDTO constructor.
      *
-     * @param string  $sort
-     * @param PageDTO $page
-     * @param string  $condition
+     * @param array|null $sort
+     * @param PageDTO|null $page
+     * @param string $condition
      */
-    public function __construct(string $sort = null, PageDTO $page = null, string $condition = self::CONDITION_AND)
+    public function __construct(array $sort = null, PageDTO $page = null, string $condition = self::CONDITION_AND)
     {
         $this->sort = $sort;
         $this->page = $page;
@@ -53,9 +53,9 @@ abstract class AbstractFindDTO implements DTOInterface
     }
 
     /**
-     * @return string|null
+     * @return array|null
      */
-    public function getSort(): ?string
+    public function getSort(): ?array
     {
         return $this->sort;
     }

@@ -43,7 +43,7 @@ class Schedule implements EntityInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Serializer\Groups({"schedule"})
+     * @Serializer\Groups({"schedule", "schedule_name"})
      */
     private $name;
 
@@ -84,7 +84,7 @@ class Schedule implements EntityInterface
 
     /**
      * @ORM\Column(type="text", nullable=true)
-     * @Serializer\Groups({"schedule"})
+     * @Serializer\Groups({"schedule", "schedule_description"})
      */
     private $description;
 

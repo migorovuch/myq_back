@@ -32,13 +32,13 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-     * @Serializer\Groups({"user"})
+     * @Serializer\Groups({"user", "user_email"})
      */
     protected $email;
 
     /**
      * @ORM\Column(type="string", length=255, unique=true)
-     * @Serializer\Groups({"user"})
+     * @Serializer\Groups({"user", "user_nickname"})
      */
     protected $nickname;
 
@@ -62,7 +62,7 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\Column(type="string")
-     * @Serializer\Groups({"user"})
+     * @Serializer\Groups({"user", "user_phone"})
      */
     protected ?string $phone;
 

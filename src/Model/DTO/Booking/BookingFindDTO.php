@@ -2,6 +2,7 @@
 
 namespace App\Model\DTO\Booking;
 
+use App\Entity\Company;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Model\DTO\AbstractFindDTO;
@@ -21,19 +22,26 @@ class BookingFindDTO extends AbstractFindDTO
     protected ?string $id = null;
 
     /**
-     * @Assert\Type("int")
-     * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected")
+     * @Assert\Type("int", groups={"Default"})
+     * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})
      * @Serializer\Type("integer")
      * @var int|null
      */
-    protected ?int $status;
+    protected ?int $status = null;
 
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"booking_schedule"})
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
+
+    /**
+     * @Assert\Type("App\Entity\Company", groups={"Default"})
+     * @Assert\NotBlank(groups={"booking_company"})
+     * @Serializer\Type("Relation<App\Entity\Company>")
+     */
+    protected ?Company $company = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
@@ -48,32 +56,32 @@ class BookingFindDTO extends AbstractFindDTO
     protected ?DateTime $filterTo = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $title = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $customerComment = null;
 
     /**
      * @Assert\Type("App\Entity\User", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"booking_user"})
      * @Serializer\Type("Relation<App\Entity\User>")
      */
     protected ?User $user = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $userName = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $userPhone = null;
@@ -83,6 +91,7 @@ class BookingFindDTO extends AbstractFindDTO
      * @param string|null $id
      * @param int|null $status
      * @param Schedule|null $schedule
+     * @param Company|null $company
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
      * @param string|null $title
@@ -98,6 +107,7 @@ class BookingFindDTO extends AbstractFindDTO
         ?string $id = null,
         ?int $status = null,
         ?Schedule $schedule = null,
+        ?Company $company = null,
         ?DateTime $filterFrom = null,
         ?DateTime $filterTo = null,
         ?string $title = null,
@@ -105,7 +115,7 @@ class BookingFindDTO extends AbstractFindDTO
         ?User $user = null,
         ?string $userName = null,
         ?string $userPhone = null,
-        ?string $sort = null,
+        ?array $sort = null,
         ?PageDTO $page = null,
         ?string $condition = self::CONDITION_AND
     ) {
@@ -120,6 +130,7 @@ class BookingFindDTO extends AbstractFindDTO
         $this->user = $user;
         $this->userName = $userName;
         $this->userPhone = $userPhone;
+        $this->company = $company;
     }
 
     /**
@@ -136,6 +147,14 @@ class BookingFindDTO extends AbstractFindDTO
     public function getSchedule(): ?Schedule
     {
         return $this->schedule;
+    }
+
+    /**
+     * @return Company|null
+     */
+    public function getCompany(): ?Company
+    {
+        return $this->company;
     }
 
     /**

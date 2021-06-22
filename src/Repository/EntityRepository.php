@@ -51,8 +51,8 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
                 ->setMaxResults($data->getPage()->getLimit())
                 ->setFirstResult($data->getPage()->getOffset());
         }
-        if ($data->getSort()) {
-            $criteria->orderBy(explode(',', $data->getSort()));
+        if (!empty($data->getSort())) {
+            $criteria->orderBy($data->getSort());
         }
         $propertyInfoExtractor = $this->propertyInfoExtractorFactory->buildPropertyInfoExtractor();
         $abstractClassMetadata = $propertyInfoExtractor->getProperties(AbstractFindDTO::class);
@@ -94,12 +94,15 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
                 ->setMaxResults($data->getPage()->getLimit())
                 ->setFirstResult($data->getPage()->getOffset());
         }
-        if ($data->getSort()) {
-            $queryBuilder->orderBy(explode(',', $data->getSort()));
+        if (!empty($data->getSort())) {
+            foreach ($data->getSort() as $key => $val) {
+                $queryBuilder->addOrderBy('t.' . $key, $val);
+            }
         }
         $propertyInfoExtractor = $this->propertyInfoExtractorFactory->buildPropertyInfoExtractor();
         $abstractClassMetadata = $propertyInfoExtractor->getProperties(AbstractFindDTO::class);
         $entityProperties = $propertyInfoExtractor->getProperties($this->getEntityName());
+        $dataProperties = $propertyInfoExtractor->getProperties(get_class($data));
         $findFields = array_diff($entityProperties, $abstractClassMetadata);
 
         $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
@@ -109,7 +112,11 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
         $entityAlias = reset($rootAliases);
         $orStatements = $queryBuilder->expr()->orX();
         foreach ($findFields as $key) {
-            if (($value = $propertyAccessor->getValue($data, $key)) && \in_array($key, $entityProperties)) {
+            if (
+                in_array($key, $dataProperties) &&
+                in_array($key, $entityProperties) &&
+                ($value = $propertyAccessor->getValue($data, $key))
+            ) {
                 if (\is_array($value)) {
                     if ($data->getCondition() === AbstractFindDTO::CONDITION_AND) {
                         $queryBuilder->andWhere($queryBuilder->expr()->in($entityAlias.'.'.$key, ':q'.$key));
@@ -118,12 +125,12 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
                     }
                 } else {
                     if ($data->getCondition() === AbstractFindDTO::CONDITION_AND) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->like($entityAlias.'.'.$key, ':q'.$key));
+                        $queryBuilder->andWhere($queryBuilder->expr()->eq($entityAlias.'.'.$key, ':q'.$key));
                     } elseif ($data->getCondition() === AbstractFindDTO::CONDITION_OR) {
-                        $orStatements->add($queryBuilder->expr()->like($entityAlias.'.'.$key, ':q'.$key));
+                        $orStatements->add($queryBuilder->expr()->eq($entityAlias.'.'.$key, ':q'.$key));
                     }
                 }
-                $queryBuilder->setParameter(':q'.$key, $value);
+                $queryBuilder->setParameter(':q' . $key, $value);
             }
         }
         if($orStatements->count()) {
@@ -140,10 +147,11 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
      */
     public function findByDTO(AbstractFindDTO $data)
     {
-        $criteria = new Criteria();
-        $criteria = $this->buildCriteriaByDTO($criteria, $data);
+        $qb = $this->createQueryBuilder('t');
+        $qb = $this->buildQueryByDTO($qb, $data);
+        $query = $qb->getQuery();
 
-        return $this->matching($criteria)->toArray();
+        return $query->getResult();
     }
 
     /**
