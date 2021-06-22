@@ -7,6 +7,7 @@ use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Common\Collections\Criteria;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -38,5 +39,23 @@ class SpecialHoursRepository extends EntityRepository
         }
 
         return $criteria;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param SpecialHoursFindDTO $data
+     * @return QueryBuilder
+     */
+    protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
+    {
+        $queryBuilder = parent::buildQueryByDTO($queryBuilder, $data);
+        if ($data->getFilterFrom()) {
+            $queryBuilder->andWhere($queryBuilder->expr()->gte('endDate', $data->getFilterFrom()));
+        }
+        if ($data->getFilterTo()) {
+            $queryBuilder->andWhere($queryBuilder->expr()->lte('startDate', $data->getFilterTo()));
+        }
+
+        return $queryBuilder;
     }
 }

@@ -74,7 +74,7 @@ class CompanyFindDTO extends AbstractFindDTO
         string $address = null,
         int $status = null,
         string $user = null,
-        string $sort = null,
+        array $sort = null,
         PageDTO $page = null,
         ?string $condition = self::CONDITION_AND
     ) {

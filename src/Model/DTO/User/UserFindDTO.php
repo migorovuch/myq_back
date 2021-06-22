@@ -92,7 +92,7 @@ class UserFindDTO extends AbstractFindDTO
         ?int $status,
         ?DateTime $dateCreate,
         ?DateTime $dateUpdate,
-        string $sort = null,
+        array $sort = null,
         PageDTO $pageDTO = null,
         string $condition = self::CONDITION_AND
     ) {

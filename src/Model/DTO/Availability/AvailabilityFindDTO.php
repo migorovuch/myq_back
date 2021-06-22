@@ -43,7 +43,7 @@ class AvailabilityFindDTO extends AbstractFindDTO
         ?Schedule $schedule = null,
         ?DateTimeInterface $filterFrom = null,
         ?DateTimeInterface $filterTo = null,
-        string $sort = null,
+        array $sort = null,
         PageDTO $page = null,
         string $condition = self::CONDITION_AND
     ) {

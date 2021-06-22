@@ -63,7 +63,7 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
                 $value->getEnd())
         ) {
             $selectedTimeBookings = $this->bookingManager->findByDTO(
-                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $value->getSchedule(), $value->getStart(), $value->getEnd())
+                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $value->getSchedule(), null, $value->getStart(), $value->getEnd())
             );
             if (empty($selectedTimeBookings)) {
                 $result = true;

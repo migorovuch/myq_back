@@ -83,7 +83,7 @@ class SpecialHoursFindDTO extends AbstractFindDTO
         ?DateTimeInterface $filterFrom = null,
         ?DateTimeInterface $filterTo = null,
         ?bool $available = null,
-        ?string $sort = null,
+        ?array $sort = null,
         ?PageDTO $page = null,
         string $condition = self::CONDITION_AND
     ) {

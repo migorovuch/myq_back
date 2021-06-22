@@ -2,6 +2,7 @@
 
 namespace App\Util\Adapter\JMS;
 
+use App\Exception\EntryNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use JMS\Serializer\JsonDeserializationVisitor;
@@ -111,7 +112,7 @@ class RelationsHandler
         }*/
         $instance = $this->manager->find($className, $identifier);
         if (!$instance) {
-            throw new NotFoundHttpException("Relation {$className}:{$identifier} not found");
+            throw new EntryNotFoundException("Relation {$className}:{$identifier} not found");
         }
 
         return $instance;

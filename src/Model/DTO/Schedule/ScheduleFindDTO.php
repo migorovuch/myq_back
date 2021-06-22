@@ -45,7 +45,7 @@ class ScheduleFindDTO extends AbstractFindDTO
      * @param PageDTO|null $page
      * @param string $condition
      */
-    public function __construct(?string $id, ?Company $company, ?string $name, ?string $enabled, ?string $sort, ?PageDTO $page, string $condition = self::CONDITION_AND)
+    public function __construct(?string $id, ?Company $company, ?string $name, ?string $enabled, ?array $sort, ?PageDTO $page, string $condition = self::CONDITION_AND)
     {
         parent::__construct($sort, $page, $condition);
         $this->company = $company;
