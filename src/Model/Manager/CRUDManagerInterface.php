@@ -58,4 +58,11 @@ interface CRUDManagerInterface
      * @return mixed
      */
     public function delete(string $id);
+
+    /**
+     * @param AbstractFindDTO $data
+     *
+     * @return int
+     */
+    public function countByDTO(AbstractFindDTO $data);
 }

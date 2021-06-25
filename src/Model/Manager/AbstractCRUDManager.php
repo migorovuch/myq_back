@@ -96,9 +96,7 @@ abstract class AbstractCRUDManager
     }
 
     /**
-     * @param AbstractFindDTO $data
-     *
-     * @return int
+     * @inheritDoc
      */
     public function countByDTO(AbstractFindDTO $data)
     {

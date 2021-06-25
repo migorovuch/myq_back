@@ -62,7 +62,7 @@ class CompanyFindDTO extends AbstractFindDTO
      * @param string|null $address
      * @param int|null $status
      * @param string|null $user
-     * @param string|null $sort
+     * @param array|null $sort
      * @param PageDTO|null $page
      * @param string|null $condition
      */

@@ -19,7 +19,7 @@ class SpecialHoursFindDTO extends AbstractFindDTO
     protected ?string $id = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("App\Entity\Schedule")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
@@ -70,7 +70,7 @@ class SpecialHoursFindDTO extends AbstractFindDTO
      * @param DateTimeInterface|null $filterFrom
      * @param DateTimeInterface|null $filterTo
      * @param bool|null $available
-     * @param string|null $sort
+     * @param array|null $sort
      * @param PageDTO|null $page
      * @param string $condition
      */

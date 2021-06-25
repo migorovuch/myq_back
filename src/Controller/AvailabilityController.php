@@ -28,7 +28,7 @@ class AvailabilityController extends AbstractBaseController
 
     /**
      * @Rest\Get("/search/app", name="search")
-     * @ParamConverter("availabilityFindDTO", converter="query_converter", options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}})
+     * @ParamConverter("availabilityFindDTO", converter="query_converter", options={"paramName"="filter", "validationGroups"="Default"})
      * @param AvailabilityFindDTO $availabilityFindDTO
      * @return Response
      */

@@ -99,7 +99,7 @@ class BookingFindDTO extends AbstractFindDTO
      * @param User|null $user
      * @param string|null $userName
      * @param string|null $userPhone
-     * @param string|null $sort
+     * @param array|null $sort
      * @param PageDTO|null $page
      * @param string|null $condition
      */
@@ -219,5 +219,25 @@ class BookingFindDTO extends AbstractFindDTO
     public function getStatus(): ?int
     {
         return $this->status;
+    }
+
+    /**
+     * @param User|null $user
+     */
+    public function setUser(?User $user): self
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $userName
+     */
+    public function setUserName(?string $userName): self
+    {
+        $this->userName = $userName;
+
+        return $this;
     }
 }

@@ -26,7 +26,7 @@ class User implements UserInterface, EntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
-     * @Serializer\Groups({"user"})
+     * @Serializer\Groups({"user", "user_id"})
      */
     protected $id;
 
@@ -37,6 +37,12 @@ class User implements UserInterface, EntityInterface
     protected $email;
 
     /**
+     * @ORM\Column(type="string", length=255)
+     * @Serializer\Groups({"user", "user_fullname"})
+     */
+    protected $fullName;
+
+    /**
      * @ORM\Column(type="string", length=255, unique=true)
      * @Serializer\Groups({"user", "user_nickname"})
      */
@@ -44,7 +50,7 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\Column(type="json")
-     * @Serializer\Groups({"user"})
+     * @Serializer\Groups({"user", "user_roles"})
      */
     protected $roles = [self::ROLE_USER];
 
@@ -56,7 +62,7 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"user"})
+     * @Serializer\Groups({"user", "user_status"})
      */
     protected $status = self::STATUS_ON;
 
@@ -82,11 +88,13 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\OneToMany(targetEntity=Company::class, mappedBy="user", orphanRemoval=true)
+     * @Serializer\Groups({"user_companies"})
      */
     protected $companies;
 
     /**
      * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="user", orphanRemoval=true)
+     * @Serializer\Groups({"user_bookings"})
      */
     protected $bookings;
 
@@ -109,6 +117,25 @@ class User implements UserInterface, EntityInterface
     public function setEmail(string $email): self
     {
         $this->email = $email;
+
+        return $this;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFullName()
+    {
+        return $this->fullName;
+    }
+
+    /**
+     * @param mixed $fullName
+     * @return self
+     */
+    public function setFullName($fullName): self
+    {
+        $this->fullName = $fullName;
 
         return $this;
     }
@@ -140,6 +167,15 @@ class User implements UserInterface, EntityInterface
         $roles[] = self::ROLE_USER;
 
         return array_unique($roles);
+    }
+
+    /**
+     * @param string $role
+     * @return bool
+     */
+    public function hasRole(string $role): bool
+    {
+        return in_array($role, $this->getRoles());
     }
 
     public function setRoles(array $roles): self

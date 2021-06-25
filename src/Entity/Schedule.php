@@ -30,7 +30,7 @@ class Schedule implements EntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
-     * @Serializer\Groups({"schedule"})
+     * @Serializer\Groups({"schedule", "schedule_id"})
      */
     private $id;
 

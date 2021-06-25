@@ -5,6 +5,7 @@ namespace App\Model\Manager;
 use App\Entity\Booking;
 use App\Entity\Schedule;
 use App\Entity\User;
+use App\Exception\AccessDeniedException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
@@ -16,7 +17,6 @@ use App\Security\BookingVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Core\Security;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
@@ -39,7 +39,27 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
     }
 
     /**
-     * @param DTOInterface $data
+     * @param AbstractFindDTO $data
+     * @return array|mixed
+     */
+    public function findByDTO(AbstractFindDTO $data)
+    {
+        $currentUser = $this->security->getUser();
+        if (!(
+            $this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY) && (
+                $data->getSchedule() && $data->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
+                $data->getUser() && $data->getUser()->getId() === $currentUser->getId() ||
+                $this->security->isGranted(User::ROLE_ADMIN)
+            )
+        )) {
+            throw new AccessDeniedException();
+        }
+
+        return parent::findByDTO($data);
+    }
+
+    /**
+     * @param BookingDTO $data
      *
      * @return EntityInterface
      */
@@ -47,7 +67,11 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
     {
         $entityName = $this->entityRepository->getClassName();
         $entity = new $entityName();
+        /** @var Booking $entity */
         $entity = $this->prepareEntity($entity, $data);
+        if (!$entity->getTitle()) {
+            $entity->setTitle($entity->getUserName());
+        }
         switch ($entity->getSchedule()->getAcceptBookingCondition()) {
             case Schedule::ACCEPT_BOOKING_ACCEPT_ALL:
                 $status = Booking::STATUS_ACCEPTED;

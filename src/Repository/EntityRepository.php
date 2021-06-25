@@ -84,10 +84,9 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     /**
      * @param QueryBuilder $queryBuilder
      * @param AbstractFindDTO $data
-     *
      * @return QueryBuilder
      */
-    protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
+    protected function paginationQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
     {
         if ($data->getPage()) {
             $queryBuilder
@@ -96,9 +95,22 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
         }
         if (!empty($data->getSort())) {
             foreach ($data->getSort() as $key => $val) {
+                $key = lcfirst(implode('', array_map('ucfirst', explode('_', $key))));
                 $queryBuilder->addOrderBy('t.' . $key, $val);
             }
         }
+
+        return $queryBuilder;
+    }
+
+    /**
+     * @param QueryBuilder $queryBuilder
+     * @param AbstractFindDTO $data
+     *
+     * @return QueryBuilder
+     */
+    protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
+    {
         $propertyInfoExtractor = $this->propertyInfoExtractorFactory->buildPropertyInfoExtractor();
         $abstractClassMetadata = $propertyInfoExtractor->getProperties(AbstractFindDTO::class);
         $entityProperties = $propertyInfoExtractor->getProperties($this->getEntityName());
@@ -117,18 +129,16 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
                 in_array($key, $entityProperties) &&
                 ($value = $propertyAccessor->getValue($data, $key))
             ) {
+                $expression = $queryBuilder->expr()->like($entityAlias . '.' . $key, ':q' . $key);
                 if (\is_array($value)) {
-                    if ($data->getCondition() === AbstractFindDTO::CONDITION_AND) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->in($entityAlias.'.'.$key, ':q'.$key));
-                    } elseif ($data->getCondition() === AbstractFindDTO::CONDITION_OR) {
-                        $orStatements->add($queryBuilder->expr()->in($entityAlias.'.'.$key, ':q'.$key));
-                    }
-                } else {
-                    if ($data->getCondition() === AbstractFindDTO::CONDITION_AND) {
-                        $queryBuilder->andWhere($queryBuilder->expr()->eq($entityAlias.'.'.$key, ':q'.$key));
-                    } elseif ($data->getCondition() === AbstractFindDTO::CONDITION_OR) {
-                        $orStatements->add($queryBuilder->expr()->eq($entityAlias.'.'.$key, ':q'.$key));
-                    }
+                    $expression = $queryBuilder->expr()->in($entityAlias . '.' . $key, ':q' . $key);
+                } elseif ($value instanceof EntityInterface) {
+                    $expression = $queryBuilder->expr()->eq($entityAlias . '.' . $key, ':q' . $key);
+                }
+                if ($data->getCondition() === AbstractFindDTO::CONDITION_AND) {
+                    $queryBuilder->andWhere($expression);
+                } elseif ($data->getCondition() === AbstractFindDTO::CONDITION_OR) {
+                    $orStatements->add($expression);
                 }
                 $queryBuilder->setParameter(':q' . $key, $value);
             }
@@ -149,6 +159,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     {
         $qb = $this->createQueryBuilder('t');
         $qb = $this->buildQueryByDTO($qb, $data);
+        $qb = $this->paginationQueryByDTO($qb, $data);
         $query = $qb->getQuery();
 
         return $query->getResult();
@@ -159,9 +170,10 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
      */
     public function countByDTO(AbstractFindDTO $data)
     {
-        $criteria = new Criteria();
-        $criteria = $this->buildCriteriaByDTO($criteria, $data);
+        $qb = $this->createQueryBuilder('t');
+        $qb->select('count(t.id)');
+        $qb = $this->buildQueryByDTO($qb, $data);
 
-        return $this->_em->getUnitOfWork()->getEntityPersister($this->_entityName)->count($criteria);
+        return $qb->getQuery()->getSingleScalarResult();
     }
 }

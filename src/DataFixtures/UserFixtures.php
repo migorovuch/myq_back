@@ -43,6 +43,7 @@ class UserFixtures extends Fixture
             ->setRoles([User::ROLE_USER, User::ROLE_ADMIN])
             ->setPassword($this->userPasswordEncoder->encodePassword($admin, $defaultPassword))
             ->setStatus(User::STATUS_ON)
+            ->setFullName('admin 1')
             ->setPhone('123212131');
         $manager->persist($admin);
         // create regular user
@@ -51,6 +52,7 @@ class UserFixtures extends Fixture
             ->setRoles([User::ROLE_USER])
             ->setPassword($this->userPasswordEncoder->encodePassword($user, $defaultPassword))
             ->setNickname('user1')
+            ->setFullName('user 1')
             ->setStatus(User::STATUS_ON)
             ->setPhone('22333112344');
         $manager->persist($user);

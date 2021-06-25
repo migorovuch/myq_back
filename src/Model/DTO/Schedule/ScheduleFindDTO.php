@@ -41,7 +41,7 @@ class ScheduleFindDTO extends AbstractFindDTO
      * @param Company|null $company
      * @param string|null $name
      * @param string|null $enabled
-     * @param string|null $sort
+     * @param array|null $sort
      * @param PageDTO|null $page
      * @param string $condition
      */

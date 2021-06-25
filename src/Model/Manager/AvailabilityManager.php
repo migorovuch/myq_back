@@ -4,6 +4,7 @@ namespace App\Model\Manager;
 
 use App\Entity\Booking;
 use App\Model\DTO\Availability\AvailabilityFindDTO;
+use App\Model\DTO\Booking\BookingFindDTO;
 use App\Repository\BookingRepository;
 
 class AvailabilityManager implements AvailabilityManagerInterface
@@ -22,7 +23,14 @@ class AvailabilityManager implements AvailabilityManagerInterface
      */
     public function findByDTO(AvailabilityFindDTO $data)
     {
-        $bookings = $this->bookingRepository->findByDTO($data);
+        $bookings = $this->bookingRepository->findByDTO(new BookingFindDTO(
+            null,
+            null,
+            $data->getSchedule(),
+            $data->getCompany(),
+            $data->getFilterFrom(),
+            $data->getFilterTo()
+        ));
         $days = $this->specialHoursManager->getPeriodAvailability($data);
         /** @var Booking $booking */
         foreach ($bookings as $booking) {

@@ -50,10 +50,14 @@ class SpecialHoursRepository extends EntityRepository
     {
         $queryBuilder = parent::buildQueryByDTO($queryBuilder, $data);
         if ($data->getFilterFrom()) {
-            $queryBuilder->andWhere($queryBuilder->expr()->gte('endDate', $data->getFilterFrom()));
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->gte('t.endDate', ':filterFrom'))
+                ->setParameter('filterFrom', $data->getFilterFrom());
         }
         if ($data->getFilterTo()) {
-            $queryBuilder->andWhere($queryBuilder->expr()->lte('startDate', $data->getFilterTo()));
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->lte('t.startDate', ':filterTo'))
+                ->setParameter('filterTo', $data->getFilterTo());
         }
 
         return $queryBuilder;

@@ -64,23 +64,33 @@ class BookingController extends AbstractBaseController
      * @ParamConverter(
      *     "bookingFindDTO",
      *     converter="query_converter",
-     *     options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}}
+     *     options={"paramName"="filter", "validationGroups"="Default,booking_company"}
      * )
      * @param BookingFindDTO $bookingFindDTO
      * @return Response
      */
     public function search(BookingFindDTO $bookingFindDTO): Response
     {
+        $data = $this->bookingManager->findByDTO($bookingFindDTO);
+        $total = $this->bookingManager->countByDTO($bookingFindDTO);
+
         return $this->response(
-            $this->bookingManager->findByDTO($bookingFindDTO),
+            [
+                'data' => $data,
+                'total' => $total,
+            ],
             Response::HTTP_OK,
             [
                 'booking',
                 'booking_schedule',
+                'schedule_id',
                 'schedule_name',
                 'schedule_description',
                 'booking_user',
+                'booking_title',
+                'user_id',
                 'user_email',
+                'user_fullname',
                 'user_nickname',
                 'user_phone'
             ]
@@ -92,7 +102,7 @@ class BookingController extends AbstractBaseController
      * @ParamConverter(
      *     "bookingFindDTO",
      *     converter="query_converter",
-     *     options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}}
+     *     options={"paramName"="filter", "validationGroups"="Default"}
      * )
      * @param BookingFindDTO $bookingFindDTO
      * @return Response
@@ -115,8 +125,14 @@ class BookingController extends AbstractBaseController
             $bookingFindDTO->getPage(),
             $bookingFindDTO->getCondition()
         );
+        $result = $this->bookingManager->findByDTO($bookingFindDTO);
+        $total = $this->bookingManager->countByDTO($bookingFindDTO);
+
         return $this->response(
-            $this->bookingManager->findByDTO($bookingFindDTO),
+            [
+                'data' => $result,
+                'total' => $total
+            ],
             Response::HTTP_OK,
             ['booking', 'booking_schedule', 'schedule_name', 'schedule_description']
         );

@@ -2,6 +2,7 @@
 
 namespace App\Model\DTO\Availability;
 
+use App\Entity\Company;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\PageDTO;
 use JMS\Serializer\Annotation as Serializer;
@@ -13,11 +14,17 @@ class AvailabilityFindDTO extends AbstractFindDTO
 {
 
     /**
-     * @Assert\Type("string", groups={"Default"})
+     * @Assert\Type("App\Entity\Schedule", groups={"Default"})
      * @Assert\NotBlank(groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
+
+    /**
+     * @Assert\Type("App\Entity\Company", groups={"Default"})
+     * @Serializer\Type("Relation<App\Entity\Company>")
+     */
+    protected ?Company $company = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
@@ -36,11 +43,16 @@ class AvailabilityFindDTO extends AbstractFindDTO
     /**
      * AvailabilityFindDTO constructor.
      * @param Schedule|null $schedule
+     * @param Company|null $company
      * @param DateTimeInterface|null $filterFrom
      * @param DateTimeInterface|null $filterTo
+     * @param array|null $sort
+     * @param PageDTO|null $page
+     * @param string $condition
      */
     public function __construct(
         ?Schedule $schedule = null,
+        ?Company $company = null,
         ?DateTimeInterface $filterFrom = null,
         ?DateTimeInterface $filterTo = null,
         array $sort = null,
@@ -51,6 +63,7 @@ class AvailabilityFindDTO extends AbstractFindDTO
         $this->schedule = $schedule;
         $this->filterFrom = $filterFrom;
         $this->filterTo = $filterTo;
+        $this->company = $company;
     }
 
     /**
@@ -75,6 +88,14 @@ class AvailabilityFindDTO extends AbstractFindDTO
     public function getFilterTo(): ?DateTimeInterface
     {
         return $this->filterTo;
+    }
+
+    /**
+     * @return Company|null
+     */
+    public function getCompany(): ?Company
+    {
+        return $this->company;
     }
 
 }

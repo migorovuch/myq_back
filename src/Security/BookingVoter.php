@@ -4,6 +4,7 @@ namespace App\Security;
 
 use App\Entity\Booking;
 use App\Entity\Schedule;
+use App\Entity\User;
 use App\Exception\ApiException;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -46,7 +47,7 @@ class BookingVoter extends AbstractVoter
     }
 
     /**
-     * @param UserInterface|string $currentUser
+     * @param User|string $currentUser
      * @param Booking $subject
      * @return bool
      */
@@ -55,9 +56,20 @@ class BookingVoter extends AbstractVoter
         return (
                 $currentUser !== 'anon.' && (
                     $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
-                    $subject->getUser()->getId() === $currentUser->getId()
+                    $subject->getUser()->getId() === $currentUser->getId() ||
+                    $currentUser->hasRole(User::ROLE_ADMIN)
                 )
-            ) ||
+            );
+    }
+
+    /**
+     * @param UserInterface|string $currentUser
+     * @param Booking $subject
+     * @return bool
+     */
+    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
+    {
+        return $this->canEdit($currentUser, $subject) ||
             (
                 $currentUser === 'anon.' &&
                 !$subject->getUser()
@@ -69,24 +81,9 @@ class BookingVoter extends AbstractVoter
      * @param Booking $subject
      * @return bool
      */
-    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
-    {
-        return $this->canEdit($currentUser, $subject);
-    }
-
-    /**
-     * @param UserInterface|string $currentUser
-     * @param Booking $subject
-     * @return bool
-     */
     protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return (
-            $currentUser !== 'anon.' && (
-                $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
-                $subject->getUser()->getId() === $currentUser->getId()
-            )
-        );
+        return $this->canEdit($currentUser, $subject);
     }
 
     /**

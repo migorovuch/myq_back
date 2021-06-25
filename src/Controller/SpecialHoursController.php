@@ -30,7 +30,7 @@ class SpecialHoursController extends AbstractBaseController
 
     /**
      * @Rest\Get("/search/app", name="search")
-     * @ParamConverter("specialHoursFindDTO", converter="query_converter", options={"paramName"="filter", "deserializationContext"={"validationGroups"="Default"}})
+     * @ParamConverter("specialHoursFindDTO", converter="query_converter", options={"paramName"="filter", "validationGroups"="Default"})
      * @param SpecialHoursFindDTO $specialHoursFindDTO
      * @return Response
      */
