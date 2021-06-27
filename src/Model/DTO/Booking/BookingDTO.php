@@ -2,6 +2,7 @@
 
 namespace App\Model\DTO\Booking;
 
+use App\Entity\Booking;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Model\DTO\DTOInterface;
@@ -16,6 +17,21 @@ use App\Validator\ConstraintBookingAvailability;
  */
 class BookingDTO implements DTOInterface
 {
+
+    /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     * @var string|null
+     */
+    protected ?string $id = null;
+
+    /**
+     * @Assert\Type("int", groups={"Default"})
+     * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})
+     * @Serializer\Type("integer")
+     * @var int|null
+     */
+    protected ?int $status = Booking::STATUS_NEW;
 
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
@@ -69,6 +85,7 @@ class BookingDTO implements DTOInterface
     /**
      * BookingDTO constructor.
      * @param string|null $id
+     * @param int|null $status
      * @param Schedule|null $schedule
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
@@ -80,6 +97,7 @@ class BookingDTO implements DTOInterface
      */
     public function __construct(
         ?string $id = null,
+        ?int $status = Booking::STATUS_NEW,
         ?Schedule $schedule = null,
         ?DateTime $filterFrom = null,
         ?DateTime $filterTo = null,
@@ -98,6 +116,15 @@ class BookingDTO implements DTOInterface
         $this->user = $user;
         $this->userName = $userName;
         $this->userPhone = $userPhone;
+        $this->status = $status;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 
     /**
@@ -106,6 +133,14 @@ class BookingDTO implements DTOInterface
     public function getSchedule(): ?Schedule
     {
         return $this->schedule;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getStatus(): ?int
+    {
+        return $this->status;
     }
 
     /**

@@ -8,11 +8,9 @@ use App\Entity\User;
 use App\Exception\AccessDeniedException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
-use App\Model\DTO\Booking\BookingFindDTO;
 use App\Model\DTO\DTOInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
-use App\Security\AbstractVoter;
 use App\Security\BookingVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
@@ -84,28 +82,6 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             default:
                 $status = Booking::STATUS_DECLINED;
         }
-        $entity->setStatus($status);
-        $this->denyAccessUnlessGranted(BookingVoter::CREATE, $entity);
-        $this->save($entity);
-
-        return $entity;
-    }
-
-    /**
-     * @param Booking $entity
-     * @param BookingDTO $dto
-     * @param bool $setNullProperty
-     * @return EntityInterface
-     */
-    protected function prepareEntity(EntityInterface $entity, DTOInterface $dto, bool $setNullProperty = true): EntityInterface
-    {
-        $originalSchedule = $entity->getSchedule();
-        $originalStatus = $entity->getStatus();
-        /** @var Booking $entity */
-        $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
-        if ($dto->getSchedule()) {
-            $entity->setSchedule($originalSchedule ?? $dto->getSchedule());
-        }
         if ($this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)) {
             /** @var User $currentUser */
             $currentUser = $this->security->getUser();
@@ -119,7 +95,9 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         } else {
             $entity->setUser(null);
         }
-        $entity->setStatus($originalStatus);
+        $entity->setStatus($status);
+        $this->denyAccessUnlessGranted(BookingVoter::CREATE, $entity);
+        $this->save($entity);
 
         return $entity;
     }

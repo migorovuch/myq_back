@@ -5,8 +5,8 @@ namespace App\Validator;
 use App\Entity\Booking;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
-use App\Model\Manager\BookingManagerInterface;
 use App\Model\Manager\SpecialHoursManagerInterface;
+use App\Repository\BookingRepository;
 use DateInterval;
 use DateTime;
 use Symfony\Component\Validator\Constraint;
@@ -17,17 +17,17 @@ use Symfony\Component\Validator\Exception\UnexpectedValueException;
 class ConstraintBookingAvailabilityValidator extends ConstraintValidator
 {
     protected SpecialHoursManagerInterface $specialHoursManager;
-    protected BookingManagerInterface $bookingManager;
+    protected BookingRepository $bookingRepository;
 
     /**
      * ConstraintBookingAvailabilityValidator constructor.
      */
     public function __construct(
         SpecialHoursManagerInterface $specialHoursManager,
-        BookingManagerInterface $bookingManager
+        BookingRepository $bookingRepository
     ) {
         $this->specialHoursManager = $specialHoursManager;
-        $this->bookingManager = $bookingManager;
+        $this->bookingRepository = $bookingRepository;
     }
 
     /**
@@ -62,10 +62,10 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
                 $value->getStart(),
                 $value->getEnd())
         ) {
-            $selectedTimeBookings = $this->bookingManager->findByDTO(
+            $selectedTimeBookings = $this->bookingRepository->findByDTO(
                 new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $value->getSchedule(), null, $value->getStart(), $value->getEnd())
             );
-            if (empty($selectedTimeBookings)) {
+            if (empty($selectedTimeBookings) || (!isset($selectedTimeBookings[1]) && $value->getId() && $value->getId() === reset($selectedTimeBookings)->getId())) {
                 $result = true;
             }
         }

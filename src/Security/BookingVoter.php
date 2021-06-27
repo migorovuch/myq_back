@@ -56,7 +56,7 @@ class BookingVoter extends AbstractVoter
         return (
                 $currentUser !== 'anon.' && (
                     $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
-                    $subject->getUser()->getId() === $currentUser->getId() ||
+//                    $subject->getUser()->getId() === $currentUser->getId() ||
                     $currentUser->hasRole(User::ROLE_ADMIN)
                 )
             );

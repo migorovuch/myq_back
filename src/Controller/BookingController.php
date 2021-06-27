@@ -46,7 +46,7 @@ class BookingController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Put("/{id}", name="update")
+     * @Rest\Patch("/{id}", name="update")
      * @ParamConverter("bookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      * @param string $id
      * @param BookingDTO $bookingDTO
