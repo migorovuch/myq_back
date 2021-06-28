@@ -53,23 +53,34 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
         $now = new DateTime();
         $now->add(new DateInterval("PT" . $value->getSchedule()->getAcceptBookingTime() . 'M'));
         $result = false;
+        $schedule = $value->getSchedule();
+        $bookingDatesDifferent = abs($value->getStart()->getTimestamp() - $value->getEnd()->getTimestamp()) / 60;
         if (
-            $value->getSchedule()->getEnabled() &&
+            (
+                $schedule->getBookingDuration() === $bookingDatesDifferent ||
+                (
+                    $schedule->getMinBookingTime() &&
+                    $schedule->getMinBookingTime() <= $bookingDatesDifferent &&
+                    $schedule->getMaxBookingTime() &&
+                    $schedule->getMaxBookingTime() >= $bookingDatesDifferent
+                )
+            ) &&
+            $schedule->getEnabled() &&
             $value->getStart() >= $now &&
-            !$value->getSchedule()->getAvailable() &&
+            !$schedule->getAvailable() &&
             $this->specialHoursManager->checkScheduleAvailability(
-                $value->getSchedule(),
+                $schedule,
                 $value->getStart(),
                 $value->getEnd()
             )
         ) {
             $filterFrom = clone $value->getStart();
             $filterTo = clone $value->getEnd();
-            $interval = new DateInterval("PT" . $value->getSchedule()->getTimeBetweenBookings() . 'M');
-            $filterFrom->sub($interval);
-            $filterTo->add($interval);
+            $timeBetweenBookingsInterval = new DateInterval("PT" . $schedule->getTimeBetweenBookings() . 'M');
+            $filterFrom->sub($timeBetweenBookingsInterval);
+            $filterTo->add($timeBetweenBookingsInterval);
             $selectedTimeBookings = $this->bookingRepository->findByDTO(
-                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $value->getSchedule(), null, $filterFrom, $filterTo)
+                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $schedule, null, $filterFrom, $filterTo)
             );
             if (empty($selectedTimeBookings) || (!isset($selectedTimeBookings[1]) && $value->getId() && $value->getId() === reset($selectedTimeBookings)->getId())) {
                 $result = true;
