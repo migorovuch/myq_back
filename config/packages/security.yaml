@@ -37,16 +37,6 @@ security:
                 success_handler: lexik_jwt_authentication.handler.authentication_success
                 failure_handler: lexik_jwt_authentication.handler.authentication_failure
                 provider: users
-        get_requests:
-            pattern: ^/api.*/app
-            methods: [GET]
-            stateless: true
-            anonymous: true
-        create_booking:
-            pattern: ^/api/bookings/
-            methods: [POST]
-            stateless: true
-            anonymous: true
         registration:
             pattern: ^/api/registration
             anonymous: true
@@ -56,10 +46,10 @@ security:
         reset_password_reset:
             pattern: ^/api/reset-password/reset
             anonymous: true
-        main:
+        default:
             pattern:  ^/api
             stateless: true
-            anonymous: false
+            anonymous: true
             provider: users
             guard:
                 authenticators:
@@ -72,3 +62,6 @@ security:
         - { path: ^/api/registration, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/reset-password/request, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/reset-password/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/bookings/, roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY], methods: [POST] }
+        - { path: ^/api.*/app, roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY], methods: [GET] }
+        - { path: ^/api/, roles: [IS_AUTHENTICATED_FULLY] }
