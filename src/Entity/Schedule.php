@@ -25,6 +25,7 @@ class Schedule implements EntityInterface
 
     const DEFAULT_BOOKING_DURATION = 30;
     const DEFAULT_ACCEPT_BOOKING_TIME = 60;
+    const DEFAULT_TIME_BETWEEN_BOOKINGS = 0;
 
     /**
      * @ORM\Id
@@ -102,10 +103,18 @@ class Schedule implements EntityInterface
     private $acceptBookingCondition = self::ACCEPT_BOOKING_ACCEPT_ALL;
 
     /**
+     * Time from now to booking
      * @ORM\Column(type="integer", nullable=true)
      * @Serializer\Groups({"schedule"})
      */
     private $acceptBookingTime = self::DEFAULT_ACCEPT_BOOKING_TIME;
+
+    /**
+     * Time between bookings
+     * @ORM\Column(type="integer", nullable=true)
+     * @Serializer\Groups({"schedule"})
+     */
+    private $timeBetweenBookings = self::DEFAULT_TIME_BETWEEN_BOOKINGS;
 
     /**
      * @ORM\OneToMany(targetEntity=SpecialHours::class, mappedBy="schedule", orphanRemoval=true)
@@ -266,6 +275,24 @@ class Schedule implements EntityInterface
         $this->acceptBookingTime = $acceptBookingTime;
 
         return $this;
+    }
+
+    /**
+     * @param int $timeBetweenBookings
+     */
+    public function setTimeBetweenBookings(int $timeBetweenBookings): self
+    {
+        $this->timeBetweenBookings = $timeBetweenBookings;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getTimeBetweenBookings(): int
+    {
+        return $this->timeBetweenBookings;
     }
 
     /**

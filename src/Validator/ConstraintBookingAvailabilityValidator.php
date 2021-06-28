@@ -60,10 +60,16 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
             $this->specialHoursManager->checkScheduleAvailability(
                 $value->getSchedule(),
                 $value->getStart(),
-                $value->getEnd())
+                $value->getEnd()
+            )
         ) {
+            $filterFrom = clone $value->getStart();
+            $filterTo = clone $value->getEnd();
+            $interval = new DateInterval("PT" . $value->getSchedule()->getTimeBetweenBookings() . 'M');
+            $filterFrom->sub($interval);
+            $filterTo->add($interval);
             $selectedTimeBookings = $this->bookingRepository->findByDTO(
-                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $value->getSchedule(), null, $value->getStart(), $value->getEnd())
+                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, $value->getSchedule(), null, $filterFrom, $filterTo)
             );
             if (empty($selectedTimeBookings) || (!isset($selectedTimeBookings[1]) && $value->getId() && $value->getId() === reset($selectedTimeBookings)->getId())) {
                 $result = true;

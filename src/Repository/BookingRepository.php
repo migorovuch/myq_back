@@ -60,12 +60,12 @@ class BookingRepository extends EntityRepository
         $queryBuilder = parent::buildQueryByDTO($queryBuilder, $data);
         if ($data->getFilterFrom()) {
             $queryBuilder
-                ->andWhere($queryBuilder->expr()->gte('t.end', ':filterFrom'))
+                ->andWhere($queryBuilder->expr()->gt('t.end', ':filterFrom'))
                 ->setParameter('filterFrom', $data->getFilterFrom());
         }
         if ($data->getFilterTo()) {
             $queryBuilder
-                ->andWhere($queryBuilder->expr()->lte('t.start', ':filterTo'))
+                ->andWhere($queryBuilder->expr()->lt('t.start', ':filterTo'))
                 ->setParameter('filterTo', $data->getFilterTo());
         }
         if ($data->getCompany()) {

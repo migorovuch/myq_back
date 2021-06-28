@@ -72,6 +72,13 @@ class ScheduleDTO implements DTOInterface
     protected ?int $acceptBookingTime;
 
     /**
+     * Time between bookings
+     * @Assert\Type("integer")
+     * @Serializer\Type("integer")
+     */
+    protected ?int $timeBetweenBookings;
+
+    /**
      * ScheduleDTO constructor.
      * @param string|null $name
      * @param bool|null $enabled
@@ -94,7 +101,8 @@ class ScheduleDTO implements DTOInterface
         ?string $description = null,
         ?int $bookingCondition = null,
         ?int $acceptBookingCondition = null,
-        ?int $acceptBookingTime = null
+        ?int $acceptBookingTime = null,
+        ?int $timeBetweenBookings = null
     ) {
         $this->name = $name;
         $this->enabled = $enabled;
@@ -106,6 +114,7 @@ class ScheduleDTO implements DTOInterface
         $this->bookingCondition = $bookingCondition;
         $this->acceptBookingCondition = $acceptBookingCondition;
         $this->acceptBookingTime = $acceptBookingTime;
+        $this->timeBetweenBookings = $timeBetweenBookings;
     }
 
     /**
@@ -186,5 +195,13 @@ class ScheduleDTO implements DTOInterface
     public function getAcceptBookingTime(): ?int
     {
         return $this->acceptBookingTime;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTimeBetweenBookings(): ?int
+    {
+        return $this->timeBetweenBookings;
     }
 }
