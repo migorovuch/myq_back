@@ -4,10 +4,12 @@ namespace App\Entity;
 
 use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
+use DateTime;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass=BookingRepository::class)
  */
 class Booking implements EntityInterface
@@ -72,19 +74,31 @@ class Booking implements EntityInterface
      * @ORM\JoinColumn(nullable=true)
      * @Serializer\Groups({"booking_user"})
      */
-    private $user;
+    protected $user;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Groups({"booking"})
      */
-    private $userName;
+    protected $userName;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Groups({"booking"})
      */
-    private $userPhone;
+    protected $userPhone;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"booking_created"})
+     */
+    protected ?DateTime $createdAt = null;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"booking_updated"})
+     */
+    protected ?DateTime $updatedAt = null;
 
     public function getId(): ?string
     {
@@ -203,5 +217,54 @@ class Booking implements EntityInterface
         $this->status = $status;
 
         return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     */
+    public function setCreatedAt(DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime $updatedAt
+     * @return Booking
+     */
+    public function setUpdatedAt(DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps(): void
+    {
+        $this->setUpdatedAt(new DateTime('now'));
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt(new DateTime('now'));
+        }
     }
 }

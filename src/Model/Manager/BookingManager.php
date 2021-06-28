@@ -71,6 +71,9 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             $entity->setTitle($entity->getUserName());
         }
         switch ($entity->getSchedule()->getAcceptBookingCondition()) {
+            case Schedule::ACCEPT_BOOKING_DO_NOTHING:
+                $status = Booking::STATUS_NEW;
+                break;
             case Schedule::ACCEPT_BOOKING_ACCEPT_ALL:
                 $status = Booking::STATUS_ACCEPTED;
                 break;

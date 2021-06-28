@@ -15,10 +15,11 @@ use JMS\Serializer\Annotation as Serializer;
 class Schedule implements EntityInterface
 {
 
-    const ACCEPT_BOOKING_ACCEPT_ALL = 0;
-    const ACCEPT_BOOKING_DECLINE_ALL = 1;
-    const ACCEPT_BOOKING_ACCEPT_APPROVED_USERS = 2;
-    const ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE = 3;
+    const ACCEPT_BOOKING_DO_NOTHING = 0;
+    const ACCEPT_BOOKING_ACCEPT_ALL = 1;
+    const ACCEPT_BOOKING_DECLINE_ALL = 2;
+    const ACCEPT_BOOKING_ACCEPT_APPROVED_USERS = 3;
+    const ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE = 4;
 
     const BOOKING_CONDITION_ALL_USERS = 0;
     const BOOKING_CONDITION_AUTHORIZED_USERS = 1;
@@ -100,7 +101,7 @@ class Schedule implements EntityInterface
      * @ORM\Column(type="smallint", nullable=true)
      * @Serializer\Groups({"schedule"})
      */
-    private $acceptBookingCondition = self::ACCEPT_BOOKING_ACCEPT_ALL;
+    private $acceptBookingCondition = self::ACCEPT_BOOKING_DO_NOTHING;
 
     /**
      * Time from now to booking
