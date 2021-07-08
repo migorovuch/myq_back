@@ -65,22 +65,22 @@ class Schedule implements EntityInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"schedule"})
-     * Seconds, 0 - manual setting for each booking
+     * @Serializer\Groups({"schedule", "schedule_booking_duration"})
+     * Minutes, 0 - manual setting for each booking
      */
     private $bookingDuration = self::DEFAULT_BOOKING_DURATION;
 
     /**
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"schedule"})
-     * available only in case bookingDuration==0
+     * @Serializer\Groups({"schedule", "schedule_min_booking_time"})
+     * Minutes, available only in case bookingDuration==0
      */
     private $minBookingTime = 0;
 
     /**
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"schedule"})
-     * available only in case bookingDuration==0, 0 - no limit
+     * @Serializer\Groups({"schedule", "schedule_max_booking_time"})
+     * Minutes, available only in case bookingDuration==0, 0 - no limit
      */
     private $maxBookingTime = 0;
 

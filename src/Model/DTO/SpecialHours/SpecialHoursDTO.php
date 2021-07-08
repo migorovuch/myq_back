@@ -31,39 +31,45 @@ class SpecialHoursDTO implements DTOInterface
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
-     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
+     * @Serializer\Type("DateTime<'U'>")
      */
-    protected ?DateTimeInterface $startDate;
+    protected ?DateTimeInterface $startDate = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
-     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
+     * @Serializer\Type("DateTime<'U'>")
      */
-    protected ?DateTimeInterface $endDate;
+    protected ?DateTimeInterface $endDate = null;
 
     /**
      * @Assert\Type("int", groups={"Default"})
      * @Serializer\Type("int")
      */
-    protected ?int $repeatCondition;
+    protected ?int $repeatCondition = null;
 
     /**
      * @Assert\Type("int")
      * @Serializer\Type("int")
      */
-    protected ?int $repeatDay;
+    protected ?int $repeatDay = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
-     * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
+     * @Serializer\Type("DateTime<'U'>")
      */
-    protected ?DateTimeInterface $repeatDate;
+    protected ?DateTimeInterface $repeatDate = null;
 
     /**
      * @Assert\Type("bool")
      * @Serializer\Type("bool")
      */
-    protected ?bool $available;
+    protected ?bool $available = null;
+
+    /**
+     * @Assert\Type("bool")
+     * @Serializer\Type("bool")
+     */
+    protected ?bool $deleted = false;
 
     /**
      * SpecialHoursDTO constructor.
@@ -75,17 +81,20 @@ class SpecialHoursDTO implements DTOInterface
      * @param int|null $repeatCondition
      * @param int|null $repeatDay
      * @param DateTimeInterface|null $repeatDate
+     * @param bool|null $available
+     * @param bool|null $deleted
      */
     public function __construct(
-        ?string $id,
-        ?Schedule $schedule,
-        ?array $ranges,
-        ?DateTimeInterface $startDate,
-        ?DateTimeInterface $endDate,
-        ?int $repeatCondition,
-        ?int $repeatDay,
-        ?DateTimeInterface $repeatDate,
-        ?bool $available
+        ?string $id = null,
+        ?Schedule $schedule = null,
+        ?array $ranges = null,
+        ?DateTimeInterface $startDate = null,
+        ?DateTimeInterface $endDate = null,
+        ?int $repeatCondition = null,
+        ?int $repeatDay = null,
+        ?DateTimeInterface $repeatDate = null,
+        ?bool $available = null,
+        ?bool $deleted = false
     ) {
         $this->id = $id;
         $this->schedule = $schedule;
@@ -96,6 +105,7 @@ class SpecialHoursDTO implements DTOInterface
         $this->repeatDay = $repeatDay;
         $this->repeatDate = $repeatDate;
         $this->available = $available;
+        $this->deleted = $deleted;
     }
 
     /**
@@ -168,5 +178,13 @@ class SpecialHoursDTO implements DTOInterface
     public function getAvailable(): ?bool
     {
         return $this->available;
+    }
+
+    /**
+     * @return bool|null
+     */
+    public function getDeleted(): ?bool
+    {
+        return $this->deleted;
     }
 }

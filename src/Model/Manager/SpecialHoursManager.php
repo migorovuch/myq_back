@@ -73,16 +73,19 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         try {
             /** @var SpecialHoursDTO $specialHoursDTO */
             foreach ($list as $specialHoursDTO) {
-                if ($specialHoursDTO->getId()) {
+                if ($specialHoursDTO->getId() && $specialHoursDTO->getDeleted()) {
+                    $entity = $this->find($specialHoursDTO->getId());
+                    $this->entityManager->remove($entity);
+                } elseif ($specialHoursDTO->getId()) {
                     $entity = $this->find($specialHoursDTO->getId());
                     $this->denyAccessUnlessGranted(SpecialHoursVoter::UPDATE, $entity);
-                    $entity = $this->DTOExporter->exportDTO($entity, $specialHoursDTO, false);
+                    $entity = $this->prepareEntity($entity, $specialHoursDTO, false);
                     $this->entityManager->persist($entity);
                     $result[] = $entity;
                 } else {
                     $entityName = $this->entityRepository->getClassName();
                     $entity = new $entityName();
-                    $entity = $this->DTOExporter->exportDTO($entity, $specialHoursDTO);
+                    $entity = $this->prepareEntity($entity, $specialHoursDTO);
                     $this->denyAccessUnlessGranted(SpecialHoursVoter::CREATE, $entity);
                     $this->entityManager->persist($entity);
                     $result[] = $entity;
@@ -244,7 +247,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         foreach ($specialHours as $specialHoursItem) {
             switch ($specialHoursItem->getRepeatCondition()) {
                 case SpecialHours::REPEAT_EVERY_DAY:
-                    $dailySpecialHours[] = $specialHoursItem->getRanges();
+                    $dailySpecialHours[] = $specialHoursItem;
                     break;
                 case SpecialHours::REPEAT_ONCE_A_WEAK:
                     if (!isset($weaklySpecialHours[$specialHoursItem->getRepeatDay()])) {
@@ -288,7 +291,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
             }
             foreach ($dailySpecialHours as $dailySpecialHourItem) {
                 if ($dailySpecialHourItem->getStartDate() <= $date && $dailySpecialHourItem->getEndDate() >= $date) {
-                    $specialHoursPeriod[$key][] = $dailySpecialHourItem;
+                    $specialHoursPeriod[$key][] = $dailySpecialHourItem->getRanges();
                 }
             }
             $dayKey = (int)$date->format("w");
@@ -296,7 +299,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
             if (isset($weaklySpecialHours[$dayKey])) {
                 $specialHoursPeriod[$key] = $this->addRanges($specialHoursPeriod[$key], $weaklySpecialHours[$dayKey]);
             }
-            $monthKey = $date->format("m");
+            $monthKey = $date->format("d");
             if (isset($monthlySpecialHours[$monthKey])) {
                 $specialHoursPeriod[$key] = $this->addRanges($specialHoursPeriod[$key], $monthlySpecialHours[$monthKey]);
             }

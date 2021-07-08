@@ -88,6 +88,7 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
         }
 
         if (!$result) {
+            // TODO: show message corresponding to mistake (invalid date/time/duration)
             $this->context->buildViolation($constraint->getMessage())
                 ->atPath('start')
 //                ->setParameter('{{ string }}', $value)

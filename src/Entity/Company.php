@@ -22,7 +22,7 @@ class Company implements EntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
-     * @Serializer\Groups({"company"})
+     * @Serializer\Groups({"company", "company_id"})
      */
     protected $id;
 
@@ -89,7 +89,7 @@ class Company implements EntityInterface
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
-     * @Serializer\Groups({"company"})
+     * @Serializer\Groups({"company", "company_name"})
      */
     private $name;
 

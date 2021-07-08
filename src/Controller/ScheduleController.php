@@ -74,6 +74,34 @@ class ScheduleController extends AbstractBaseController
     }
 
     /**
+     * @Rest\Get("/search/my", name="search_my")
+     * @ParamConverter(
+     *     "scheduleFindDTO",
+     *     converter="query_converter",
+     *     options={"paramName"="filter"}
+     * )
+     * @param ScheduleFindDTO $scheduleFindDTO
+     * @return Response
+     */
+    public function searchMy(ScheduleFindDTO $scheduleFindDTO): Response
+    {
+        $scheduleFindDTO = new ScheduleFindDTO(
+            $scheduleFindDTO->getId(),
+            $this->getUser()->getFirstCompany(),
+            $scheduleFindDTO->getName(),
+            $scheduleFindDTO->getEnabled(),
+            $scheduleFindDTO->getSort(),
+            $scheduleFindDTO->getPage(),
+            $scheduleFindDTO->getCondition()
+        );
+        return $this->response(
+            $this->scheduleManager->findByDTO($scheduleFindDTO),
+            Response::HTTP_OK,
+            ['schedule']
+        );
+    }
+
+    /**
      * @Rest\Get("/search/app", name="search")
      * @ParamConverter(
      *     "scheduleFindDTO",
