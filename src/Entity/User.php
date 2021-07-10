@@ -64,7 +64,7 @@ class User implements UserInterface, EntityInterface
      * @ORM\Column(type="integer")
      * @Serializer\Groups({"user", "user_status"})
      */
-    protected $status = self::STATUS_ON;
+    protected $status = self::STATUS_OFF;
 
     /**
      * @ORM\Column(type="string")

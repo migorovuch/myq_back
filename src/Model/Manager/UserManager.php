@@ -79,7 +79,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function googleAuthentication(DTOInterface $data)
     {
@@ -97,7 +97,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function loadUserByUsername(string $username)
     {
@@ -105,7 +105,29 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
+     */
+    public function registration(DTOInterface $data):EntityInterface
+    {
+        $user = parent::create($data);
+        $confirmLink= '';
+        $email = (new TemplatedEmail())
+            ->from(new Address($this->appEmail, $this->appName))
+            ->to($user->getEmail())
+            ->subject('Confirm your account on MyQ')
+            ->htmlTemplate('user/registration_email.html.twig')
+            ->context(
+                [
+                    'confirmLink' => $confirmLink,
+                ]
+            );
+        $this->mailer->send($email);
+
+        return $user;
+    }
+
+    /**
+     * @inheritdoc
      */
     public function processSendingPasswordResetEmail(string $emailFormData)
     {
@@ -145,7 +167,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * {@inheritdoc}
+     * @inheritdoc
      */
     public function resetPassword(ChangePasswordDTO $changePasswordDTO)
     {

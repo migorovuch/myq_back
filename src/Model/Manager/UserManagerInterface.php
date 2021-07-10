@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\DTO\User\UserDTO;
+use App\Model\Model\EntityInterface;
 
 /**
  * Interface UserManagerInterface.
@@ -39,4 +40,10 @@ interface UserManagerInterface extends CRUDManagerInterface
      * @param ChangePasswordDTO $changePasswordDTO
      */
     public function resetPassword(ChangePasswordDTO $changePasswordDTO);
+
+    /**
+     * @param DTOInterface $data
+     * @return EntityInterface
+     */
+    public function registration(DTOInterface $data): EntityInterface;
 }

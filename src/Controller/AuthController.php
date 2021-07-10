@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\DTO\User\ResetPasswordDTO;
 use App\Model\DTO\User\UserDTO;
 use App\Model\Manager\UserManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -42,7 +43,7 @@ class AuthController extends AbstractBaseController
      */
     public function registration(UserDTO $registrationDTO)
     {
-        $user = $this->userManager->create($registrationDTO);
+        $user = $this->userManager->registration($registrationDTO);
 
         return $this->response($user);
     }
