@@ -3,10 +3,7 @@
 
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices/configuration.html#application-related-configuration
-parameters:
-    app_name: '%env(string:APP_NAME)%'
-    app_email: '%env(string:APP_EMAIL)%'
-    upload_directory: '%kernel.project_dir%/public/media'
+#parameters:
 
 services:
     # default configuration for services in *this* file
@@ -65,8 +62,10 @@ services:
     App\Model\Manager\UserManagerInterface:
         class: App\Model\Manager\UserManager
         arguments:
-            $appName: '%app_name%'
-            $appEmail: '%app_email%'
+            $appName: '%env(string:APP_NAME)%'
+            $appEmail: '%env(string:APP_EMAIL)%'
+            $appUrl: '%env(string:VUE_APP_APP_URL)%'
+            $signingKey: '%env(string:SIGNING_KEY)%'
 
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
@@ -77,4 +76,4 @@ services:
 
     App\Service\FileUploader:
         arguments:
-            $targetDirectory: '%upload_directory%'
+            $targetDirectory: '%kernel.project_dir%/public/media'

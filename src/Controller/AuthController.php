@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ResetPasswordDTO;
 use App\Model\DTO\User\UserDTO;
 use App\Model\Manager\UserManagerInterface;
@@ -46,6 +47,21 @@ class AuthController extends AbstractBaseController
         $user = $this->userManager->registration($registrationDTO);
 
         return $this->response($user);
+    }
+
+    /**
+     * @Rest\Post("/approve-email", name="approve_email")
+     * @ParamConverter("approveEmailDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
+     * @param ApproveEmailDTO $approveEmailDTO
+     *
+     * @return Response
+     */
+    public function approveEmail(ApproveEmailDTO $approveEmailDTO)
+    {
+        $this->userManager->approveEmail($approveEmailDTO);
+
+        return $this->response([]);
     }
 
     /**

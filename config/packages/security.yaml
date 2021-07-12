@@ -60,6 +60,7 @@ security:
     access_control:
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/registration, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/approve-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/reset-password/request, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/reset-password/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/bookings/, roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY], methods: [POST] }

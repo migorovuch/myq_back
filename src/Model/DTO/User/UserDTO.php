@@ -16,6 +16,14 @@ class UserDTO implements DTOInterface
      * @Serializer\Type("string")
      */
     protected $nickname;
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank
+     * @Assert\Type("string")
+     * @Serializer\Type("string")
+     */
+    protected $fullName;
 
     /**
      * @var string
@@ -69,18 +77,20 @@ class UserDTO implements DTOInterface
      * RegistrationDTO constructor.
      *
      * @param string $nickname
+     * @param string $fullName
      * @param string $email
      * @param string $password
-     * @param array  $roles
+     * @param array $roles
      * @param string $googleTockenId
      */
-    public function __construct(string $nickname, string $email, string $password, array $roles, string $googleTockenId)
+    public function __construct(string $nickname, string $fullName, string $email, string $password, array $roles, string $googleTockenId)
     {
         $this->nickname = $nickname;
         $this->email = $email;
         $this->password = $password;
         $this->roles = $roles;
         $this->googleTockenId = $googleTockenId;
+        $this->fullName = $fullName;
     }
 
     /**
@@ -89,6 +99,14 @@ class UserDTO implements DTOInterface
     public function getNickname(): string
     {
         return $this->nickname;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFullName(): string
+    {
+        return $this->fullName;
     }
 
     /**

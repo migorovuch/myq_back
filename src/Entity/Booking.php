@@ -83,7 +83,7 @@ class Booking implements EntityInterface
     protected $userName;
 
     /**
-     * @ORM\Column(type="string", length=255, nullable=true)
+     * @ORM\Column(type="string", length=255)
      * @Serializer\Groups({"booking"})
      */
     protected $userPhone;

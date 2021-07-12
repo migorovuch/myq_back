@@ -5,6 +5,7 @@ namespace App\Model\Manager;
 use App\Entity\User;
 use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
+use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
@@ -15,6 +16,7 @@ use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 
@@ -47,6 +49,15 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     protected $appEmail;
 
     /**
+     * @var string
+     */
+    protected string $appUrl;
+    /**
+     * @var string
+     */
+    protected string $signingKey;
+
+    /**
      * UserManager constructor.
      *
      * @param EntityManagerInterface       $entityManager
@@ -68,7 +79,9 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         ResetPasswordHelperInterface $resetPasswordHelper,
         MailerInterface $mailer,
         string $appName,
-        string $appEmail
+        string $appEmail,
+        string $appUrl,
+        string $signingKey
     ) {
         parent::__construct($entityManager, $userRepository, $security, $userDtoExporter);
         $this->userPasswordEncoder = $userPasswordEncoder;
@@ -76,6 +89,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->mailer = $mailer;
         $this->appName = $appName;
         $this->appEmail = $appEmail;
+        $this->appUrl = $appUrl;
+        $this->signingKey = $signingKey;
     }
 
     /**
@@ -107,10 +122,10 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     /**
      * @inheritdoc
      */
-    public function registration(DTOInterface $data):EntityInterface
+    public function registration(DTOInterface $data): EntityInterface
     {
         $user = parent::create($data);
-        $confirmLink= '';
+        $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . $this->createToken($user);
         $email = (new TemplatedEmail())
             ->from(new Address($this->appEmail, $this->appName))
             ->to($user->getEmail())
@@ -118,10 +133,28 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
             ->htmlTemplate('user/registration_email.html.twig')
             ->context(
                 [
-                    'confirmLink' => $confirmLink,
+                    'confirmationLink' => $confirmationLink,
                 ]
             );
         $this->mailer->send($email);
+
+        return $user;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function approveEmail(ApproveEmailDTO $approveEmailDTO): ?User
+    {
+        /** @var User $user */
+        $user = $this->entityRepository->findOneBy(['id' => $approveEmailDTO->getId(), 'status' => User::STATUS_OFF]);
+        if ($user) {
+            $checkToken = $this->createToken($user);
+            if (hash_equals($checkToken, $approveEmailDTO->getToken())) {
+                $user->setStatus(User::STATUS_ON);
+                $this->save($user);
+            }
+        }
 
         return $user;
     }
@@ -141,6 +174,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         if ($user) {
             try {
                 $resetToken = $this->resetPasswordHelper->generateResetToken($user);
+                $resetLink = $this->appUrl . '#/reset-password/' . $resetToken->getToken();
                 $email = (new TemplatedEmail())
                     ->from(new Address($this->appEmail, $this->appName))
                     ->to($user->getEmail())
@@ -148,7 +182,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
                     ->htmlTemplate('reset_password/email.html.twig')
                     ->context(
                         [
-                            'resetToken' => $resetToken,
+                            'resetLink' => $resetLink,
                             'tokenLifetime' => $this->resetPasswordHelper->getTokenLifetime(),
                         ]
                     );
@@ -188,6 +222,17 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
 
         $user->setPassword($encodedPassword);
         $this->save($user);
+    }
+
+    /**
+     * @param UserInterface $user
+     * @return string
+     */
+    protected function createToken(UserInterface $user): string
+    {
+        $encodedData = json_encode([$user->getId(), $user->getEmail()]);
+
+        return base64_encode(hash_hmac('sha256', $encodedData, $this->signingKey, true));
     }
 
     /**

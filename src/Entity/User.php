@@ -31,7 +31,7 @@ class User implements UserInterface, EntityInterface
     protected $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      * @Serializer\Groups({"user", "user_email"})
      */
     protected $email;
@@ -67,7 +67,7 @@ class User implements UserInterface, EntityInterface
     protected $status = self::STATUS_OFF;
 
     /**
-     * @ORM\Column(type="string")
+     * @ORM\Column(type="string", nullable=true)
      * @Serializer\Groups({"user", "user_phone"})
      */
     protected ?string $phone;
