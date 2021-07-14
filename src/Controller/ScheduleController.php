@@ -41,7 +41,7 @@ class ScheduleController extends AbstractBaseController
     {
         $schedule = $this->scheduleManager->create($scheduleDTO);
 
-        return $this->response($schedule);
+        return $this->response($schedule, Response::HTTP_OK, ['schedule']);
     }
 
     /**
@@ -55,7 +55,7 @@ class ScheduleController extends AbstractBaseController
     {
         $schedule = $this->scheduleManager->update($id, $scheduleDTO);
 
-        return $this->response($schedule);
+        return $this->response($schedule, Response::HTTP_OK, ['schedule']);
     }
 
     /**
@@ -70,7 +70,7 @@ class ScheduleController extends AbstractBaseController
             throw new NotFoundHttpException();
         }
 
-        return $this->response($schedule);
+        return $this->response($schedule, Response::HTTP_OK, ['schedule']);
     }
 
     /**

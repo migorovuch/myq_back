@@ -60,14 +60,14 @@ class SpecialHoursDTO implements DTOInterface
     protected ?DateTimeInterface $repeatDate = null;
 
     /**
-     * @Assert\Type("bool")
-     * @Serializer\Type("bool")
+     * @Assert\Type("boolean")
+     * @Serializer\Type("boolean")
      */
     protected ?bool $available = null;
 
     /**
-     * @Assert\Type("bool")
-     * @Serializer\Type("bool")
+     * @Assert\Type("boolean")
+     * @Serializer\Type("boolean")
      */
     protected ?bool $deleted = false;
 

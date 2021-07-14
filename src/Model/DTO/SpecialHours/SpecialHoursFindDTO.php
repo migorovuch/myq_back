@@ -55,8 +55,8 @@ class SpecialHoursFindDTO extends AbstractFindDTO
     protected ?DateTimeInterface $filterTo = null;
 
     /**
-     * @Assert\Type("bool")
-     * @Serializer\Type("bool")
+     * @Assert\Type("boolean")
+     * @Serializer\Type("boolean")
      */
     protected ?bool $available = null;
 

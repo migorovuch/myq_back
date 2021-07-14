@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Model\Model\EntityInterface;
 use App\Repository\CompanyRepository;
+use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -11,6 +12,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
+ * @ORM\HasLifecycleCallbacks
  * @ORM\Entity(repositoryClass=CompanyRepository::class)
  */
 class Company implements EntityInterface
@@ -79,19 +81,31 @@ class Company implements EntityInterface
      * @ORM\Column(type="smallint")
      * @Serializer\Groups({"company"})
      */
-    private $status = self::STATUS_ON;
+    protected $status = self::STATUS_ON;
 
     /**
      * @ORM\OneToMany(targetEntity=Schedule::class, mappedBy="company", orphanRemoval=true)
      * @Serializer\Groups({"company_schedules"})
      */
-    private $schedules;
+    protected $schedules;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      * @Serializer\Groups({"company", "company_name"})
      */
-    private $name;
+    protected $name;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"booking_created"})
+     */
+    protected ?DateTime $createdAt = null;
+
+    /**
+     * @ORM\Column(type="datetime")
+     * @Serializer\Groups({"booking_updated"})
+     */
+    protected ?DateTime $updatedAt = null;
 
     public function __construct()
     {
@@ -251,5 +265,55 @@ class Company implements EntityInterface
         $this->name = $name;
 
         return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getCreatedAt(): ?DateTime
+    {
+        return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime|null $createdAt
+     * @return Company
+     */
+    public function setCreatedAt(?DateTime $createdAt): self
+    {
+        $this->createdAt = $createdAt;
+
+        return $this;
+    }
+
+    /**
+     * @return DateTime|null
+     */
+    public function getUpdatedAt(): ?DateTime
+    {
+        return $this->updatedAt;
+    }
+
+    /**
+     * @param DateTime|null $updatedAt
+     * @return Company
+     */
+    public function setUpdatedAt(?DateTime $updatedAt): self
+    {
+        $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps(): void
+    {
+        $this->setUpdatedAt(new DateTime('now'));
+        if ($this->getCreatedAt() === null) {
+            $this->setCreatedAt(new DateTime('now'));
+        }
     }
 }

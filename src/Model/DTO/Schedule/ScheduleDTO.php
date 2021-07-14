@@ -2,6 +2,7 @@
 
 namespace App\Model\DTO\Schedule;
 
+use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -9,74 +10,75 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ScheduleDTO implements DTOInterface
 {
     /**
+     * @Assert\NotBlank
      * @Assert\Type("string")
      * @Serializer\Type("string")
      */
-    protected ?string $name;
+    protected ?string $name = null;
 
     /**
      * @Assert\Type("boolean")
      * @Serializer\Type("boolean")
      */
-    protected ?bool $enabled;
+    protected ?bool $enabled = false;
 
     /**
      * @Assert\Type("boolean")
      * @Serializer\Type("boolean")
      */
-    protected ?bool $available;
+    protected ?bool $available = false;
 
     /**
      * @Assert\Type("integer")
      * @Serializer\Type("integer")
      */
-    protected ?int $bookingDuration;
+    protected ?int $bookingDuration = Schedule::DEFAULT_BOOKING_DURATION;
 
     /**
      * @Assert\Type("integer")
      * @Assert\LessThan("minBookingTime")
      * @Serializer\Type("integer")
      */
-    protected ?int $minBookingTime;
+    protected ?int $minBookingTime = 0;
 
     /**
      * @Assert\Type("integer")
      * @Assert\GreaterThanOrEqual(propertyPath="minBookingTime")
      * @Serializer\Type("integer")
      */
-    protected ?int $maxBookingTime;
+    protected ?int $maxBookingTime = 0;
 
     /**
      * @Assert\Type("string")
      * @Serializer\Type("string")
      */
-    protected ?string $description;
+    protected ?string $description = null;
 
     /**
      * @Assert\Type("integer")
      * @Serializer\Type("integer")
      */
-    protected ?int $bookingCondition;
+    protected ?int $bookingCondition = null;
 
     /**
      * @Assert\Type("integer")
      * @Serializer\Type("integer")
      */
-    protected ?int $acceptBookingCondition;
+    protected ?int $acceptBookingCondition = null;
 
     /**
      * @Assert\Type("integer")
      * @Assert\PositiveOrZero
      * @Serializer\Type("integer")
      */
-    protected ?int $acceptBookingTime;
+    protected ?int $acceptBookingTime = Schedule::DEFAULT_ACCEPT_BOOKING_TIME;
 
     /**
      * Time between bookings
      * @Assert\Type("integer")
      * @Serializer\Type("integer")
      */
-    protected ?int $timeBetweenBookings;
+    protected ?int $timeBetweenBookings = Schedule::DEFAULT_TIME_BETWEEN_BOOKINGS;
 
     /**
      * ScheduleDTO constructor.
