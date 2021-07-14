@@ -19,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class BookingController extends AbstractBaseController
 {
     protected BookingManagerInterface $bookingManager;
+    protected array $serializeGroups;
 
     /**.
      * @param BookingManagerInterface $bookingManager
@@ -26,6 +27,22 @@ class BookingController extends AbstractBaseController
     public function __construct(BookingManagerInterface $bookingManager)
     {
         $this->bookingManager = $bookingManager;
+        $this->serializeGroups = [
+            'booking',
+            'booking_schedule',
+            'schedule_id',
+            'schedule_name',
+            'schedule_description',
+            'schedule_booking_duration',
+            'schedule_min_booking_time',
+            'schedule_max_booking_time',
+            'booking_user',
+            'booking_title',
+            'company_client',
+            'schedule_company',
+            'company_id',
+            'company_name'
+        ];
     }
 
     /**
@@ -36,12 +53,12 @@ class BookingController extends AbstractBaseController
      */
     public function create(BookingDTO $bookingDTO): Response
     {
-        $booking = null;//$this->bookingManager->create($bookingDTO);
+        $booking = $this->bookingManager->create($bookingDTO);
 
         return $this->response(
             $booking,
             Response::HTTP_OK,
-            ['booking', 'booking_schedule', 'schedule_name', 'schedule_description']
+            $this->serializeGroups
         );
     }
 
@@ -56,7 +73,7 @@ class BookingController extends AbstractBaseController
     {
         $company = $this->bookingManager->update($id, $bookingDTO);
 
-        return $this->response($company, Response::HTTP_OK, ['booking']);
+        return $this->response($company, Response::HTTP_OK, $this->serializeGroups);
     }
 
     /**
@@ -80,26 +97,7 @@ class BookingController extends AbstractBaseController
                 'total' => $total,
             ],
             Response::HTTP_OK,
-            [
-                'booking',
-                'booking_schedule',
-                'schedule_id',
-                'schedule_name',
-                'schedule_description',
-                'schedule_booking_duration',
-                'schedule_min_booking_time',
-                'schedule_max_booking_time',
-                'booking_user',
-                'booking_title',
-                'user_id',
-                'user_email',
-                'user_fullname',
-                'user_nickname',
-                'user_phone',
-                'schedule_company',
-                'company_id',
-                'company_name'
-            ]
+            $this->serializeGroups
         );
     }
 
@@ -115,22 +113,7 @@ class BookingController extends AbstractBaseController
      */
     public function myBookings(BookingFindDTO $bookingFindDTO) : Response
     {
-        $bookingFindDTO = new BookingFindDTO(
-            $bookingFindDTO->getId(),
-            $bookingFindDTO->getStatus(),
-            $bookingFindDTO->getSchedule(),
-            $bookingFindDTO->getCompany(),
-            $bookingFindDTO->getFilterFrom(),
-            $bookingFindDTO->getFilterTo(),
-            $bookingFindDTO->getTitle(),
-            $bookingFindDTO->getCustomerComment(),
-            $this->getUser(),
-            $bookingFindDTO->getUserName(),
-            $bookingFindDTO->getUserPhone(),
-            $bookingFindDTO->getSort(),
-            $bookingFindDTO->getPage(),
-            $bookingFindDTO->getCondition()
-        );
+        $bookingFindDTO = $this->bookingManager->buildMyBookingFindDTO($bookingFindDTO);
         $result = $this->bookingManager->findByDTO($bookingFindDTO);
         $total = $this->bookingManager->countByDTO($bookingFindDTO);
 
@@ -140,26 +123,7 @@ class BookingController extends AbstractBaseController
                 'total' => $total
             ],
             Response::HTTP_OK,
-            [
-                'booking',
-                'booking_schedule',
-                'schedule_id',
-                'schedule_name',
-                'schedule_description',
-                'schedule_booking_duration',
-                'schedule_min_booking_time',
-                'schedule_max_booking_time',
-                'booking_user',
-                'booking_title',
-                'user_id',
-                'user_email',
-                'user_fullname',
-                'user_nickname',
-                'user_phone',
-                'schedule_company',
-                'company_id',
-                'company_name'
-            ]
+            $this->serializeGroups
         );
     }
 
@@ -175,6 +139,6 @@ class BookingController extends AbstractBaseController
             throw new NotFoundHttpException();
         }
 
-        return $this->response($company, Response::HTTP_OK, ['booking']);
+        return $this->response($company, Response::HTTP_OK, $this->serializeGroups);
     }
 }

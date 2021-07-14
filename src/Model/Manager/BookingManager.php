@@ -8,6 +8,8 @@ use App\Entity\User;
 use App\Exception\AccessDeniedException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
+use App\Model\DTO\Booking\BookingFindDTO;
+use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Model\DTO\DTOInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
@@ -19,6 +21,7 @@ use Symfony\Component\Security\Core\Security;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
 {
+    protected CompanyClientManagerInterface $companyClientManager;
 
     /**
      * BookingManager constructor.
@@ -26,34 +29,87 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
      * @param BookingRepository $bookingRepository
      * @param Security $security
      * @param DTOExporterInterface $bookingDtoExporter
+     * @param CompanyClientManagerInterface $companyClientManager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         BookingRepository $bookingRepository,
         Security $security,
         DTOExporterInterface $bookingDtoExporter,
+        CompanyClientManagerInterface $companyClientManager
     ) {
         parent::__construct($entityManager, $bookingRepository, $security, $bookingDtoExporter);
+        $this->companyClientManager = $companyClientManager;
     }
 
     /**
-     * @param AbstractFindDTO $data
+     * @param BookingFindDTO $data
      * @return array|mixed
      */
     public function findByDTO(AbstractFindDTO $data)
     {
         $currentUser = $this->security->getUser();
         if (!(
-            $this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY) && (
-                $data->getSchedule() && $data->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
-                $data->getUser() && $data->getUser()->getId() === $currentUser->getId() ||
-                $this->security->isGranted(User::ROLE_ADMIN)
+            (
+                $this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY) &&
+                (
+                    ($data->getSchedule() && $data->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId()) ||
+                    ($data->getUser() && $data->getUser()->getId() === $currentUser->getId()) ||
+                    $this->security->isGranted(User::ROLE_ADMIN)
+                )
+            ) ||
+            (
+                !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY) &&
+                $data->getClient() &&
+                !$data->getClient()->getUser()
             )
         )) {
             throw new AccessDeniedException();
         }
 
         return parent::findByDTO($data);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function buildMyBookingFindDTO(AbstractFindDTO $data): BookingFindDTO
+    {
+        /** @var User $currentUser */
+        $currentUser = $this->security->getUser();
+        $client = $data->getClient();
+        if(
+            !$currentUser &&
+            (
+                ($client && $client->getUser()) ||
+                !$client
+            )
+        ) {
+            throw new AccessDeniedException();
+        }
+        // update client-user relation
+        if($currentUser && ($client = $data->getClient()) && !$client->getUser()) {
+            $client->setUser($currentUser);
+            $this->save($client);
+        }
+
+        return new BookingFindDTO(
+            $data->getId(),
+            $data->getStatus(),
+            $data->getSchedule(),
+            $data->getCompany(),
+            $data->getFilterFrom(),
+            $data->getFilterTo(),
+            $data->getTitle(),
+            $data->getCustomerComment(),
+            $data->getClient(),
+            $currentUser,
+            $data->getUserName(),
+            $data->getUserPhone(),
+            $data->getSort(),
+            $data->getPage(),
+            $data->getCondition()
+        );
     }
 
     /**
@@ -67,9 +123,6 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         $entity = new $entityName();
         /** @var Booking $entity */
         $entity = $this->prepareEntity($entity, $data);
-        if (!$entity->getTitle()) {
-            $entity->setTitle($entity->getUserName());
-        }
         switch ($entity->getSchedule()->getAcceptBookingCondition()) {
             case Schedule::ACCEPT_BOOKING_DO_NOTHING:
                 $status = Booking::STATUS_NEW;
@@ -85,20 +138,33 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             default:
                 $status = Booking::STATUS_DECLINED;
         }
+        $currentUser = null;
         if ($this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)) {
             /** @var User $currentUser */
             $currentUser = $this->security->getUser();
-            $entity->setUser($currentUser);
-            if (!$entity->getUserName()) {
-                $entity->setUserName($currentUser->getUsername());
+            if (!$currentUser->getPhone()) {
+                $currentUser->setPhone($data->getUserPhone());
+                $this->save($currentUser);
             }
-            if (!$entity->getUserPhone()) {
-                $entity->setUserPhone($currentUser->getPhone());
+            if (
+                $data->isNewClient() &&
+                $data->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId()
+            ) {
+                $currentUser = null;
             }
-        } else {
-            $entity->setUser(null);
         }
-        $entity->setStatus($status);
+        $companyClientDTO = new CompanyClientDTO(
+            $data->getClient(),
+            $currentUser,
+            $data->getUserName(),
+            $data->getUserPhone(),
+            $data->getSchedule()->getCompany()
+        );
+        $companyClient = $this->companyClientManager->getByDTO($companyClientDTO);
+        $entity
+            ->setStatus($status)
+            ->setClient($companyClient)
+            ->setTitle($entity->getUserName());
         $this->denyAccessUnlessGranted(BookingVoter::CREATE, $entity);
         $this->save($entity);
 

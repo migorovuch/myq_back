@@ -92,16 +92,9 @@ class User implements UserInterface, EntityInterface
      */
     protected $companies;
 
-    /**
-     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="user", orphanRemoval=true)
-     * @Serializer\Groups({"user_bookings"})
-     */
-    protected $bookings;
-
     public function __construct()
     {
         $this->companies = new ArrayCollection();
-        $this->bookings = new ArrayCollection();
     }
 
     public function getId(): ?string
@@ -321,36 +314,6 @@ class User implements UserInterface, EntityInterface
             // set the owning side to null (unless already changed)
             if ($company->getUser() === $this) {
                 $company->setUser(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Booking[]
-     */
-    public function getBookings(): Collection
-    {
-        return $this->bookings;
-    }
-
-    public function addBooking(Booking $booking): self
-    {
-        if (!$this->bookings->contains($booking)) {
-            $this->bookings[] = $booking;
-            $booking->setUser($this);
-        }
-
-        return $this;
-    }
-
-    public function removeBooking(Booking $booking): self
-    {
-        if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
-            if ($booking->getUser() === $this) {
-                $booking->setUser(null);
             }
         }
 

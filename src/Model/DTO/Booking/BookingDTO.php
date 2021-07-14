@@ -3,8 +3,8 @@
 namespace App\Model\DTO\Booking;
 
 use App\Entity\Booking;
+use App\Entity\CompanyClient;
 use App\Entity\Schedule;
-use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
@@ -65,22 +65,30 @@ class BookingDTO implements DTOInterface
     protected ?string $customerComment = null;
 
     /**
-     * @Assert\Type("App\Entity\User", groups={"Default"})
-     * @Serializer\Type("Relation<App\Entity\User>")
+     * @Assert\Type("App\Entity\CompanyClient", groups={"Default"})
+     * @Serializer\Type("Relation<App\Entity\CompanyClient>")
      */
-    protected ?User $user = null;
+    protected ?CompanyClient $client = null;
 
     /**
+     * @Assert\NotBlank(groups={"Default"})
      * @Assert\Type("string")
      * @Serializer\Type("string")
      */
     protected ?string $userName = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $userPhone = null;
+
+    /**
+     * @Assert\Type("boolean", groups={"Default"})
+     * @Serializer\Type("boolean")
+     */
+    protected ?bool $newClient = false;
 
     /**
      * BookingDTO constructor.
@@ -91,9 +99,10 @@ class BookingDTO implements DTOInterface
      * @param DateTime|null $filterTo
      * @param string|null $title
      * @param string|null $customerComment
-     * @param User|null $user
+     * @param CompanyClient|null $client
      * @param string|null $userName
      * @param string|null $userPhone
+     * @param bool|null $newClient
      */
     public function __construct(
         ?string $id = null,
@@ -103,9 +112,10 @@ class BookingDTO implements DTOInterface
         ?DateTime $filterTo = null,
         ?string $title = null,
         ?string $customerComment = null,
-        ?User $user = null,
+        ?CompanyClient $client = null,
         ?string $userName = null,
-        ?string $userPhone = null
+        ?string $userPhone = null,
+        ?bool $newClient = false
     ) {
         $this->id = $id;
         $this->schedule = $schedule;
@@ -113,10 +123,11 @@ class BookingDTO implements DTOInterface
         $this->end = $filterTo;
         $this->title = $title;
         $this->customerComment = $customerComment;
-        $this->user = $user;
         $this->userName = $userName;
         $this->userPhone = $userPhone;
         $this->status = $status;
+        $this->client = $client;
+        $this->newClient = $newClient;
     }
 
     /**
@@ -176,14 +187,6 @@ class BookingDTO implements DTOInterface
     }
 
     /**
-     * @return User|null
-     */
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    /**
      * @return string|null
      */
     public function getUserName(): ?string
@@ -197,5 +200,21 @@ class BookingDTO implements DTOInterface
     public function getUserPhone(): ?string
     {
         return $this->userPhone;
+    }
+
+    /**
+     * @return CompanyClient|null
+     */
+    public function getClient(): ?CompanyClient
+    {
+        return $this->client;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isNewClient(): bool
+    {
+        return $this->newClient;
     }
 }

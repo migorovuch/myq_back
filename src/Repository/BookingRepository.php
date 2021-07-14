@@ -50,13 +50,28 @@ class BookingRepository extends EntityRepository
      */
     protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
     {
-        if ($data->getUserName()) {
+        if ($data->getUserName() || $data->getUserPhone() || $data->getUser()) {
             $queryBuilder
-                ->leftJoin('t.user', 'u')
-                ->andWhere('t.userName LIKE :userName OR u.fullName LIKE :userName')
-                ->setParameter('userName', $data->getUserName());
-            $data->setUserName(null);
+                ->leftJoin('t.client', 'c');
+            if ($data->getUser()) {
+                $queryBuilder
+                    ->andWhere($queryBuilder->expr()->eq('c.user', ':user'))
+                    ->setParameter('user', $data->getUser());
+            }
+            if ($data->getUserName()) {
+                $queryBuilder
+                    ->andWhere('(t.userName LIKE :userName OR c.name LIKE :userName)')
+                    ->setParameter('userName', $data->getUserName());
+                $data->setUserName(null);
+            }
+            if ($data->getUserPhone()) {
+                $queryBuilder
+                    ->andWhere('(t.userPhone LIKE :userPhone OR c.phone LIKE :userPhone)')
+                    ->setParameter('userPhone', $data->getUserPhone());
+                $data->setUserPhone(null);
+            }
         }
+
         $queryBuilder = parent::buildQueryByDTO($queryBuilder, $data);
         if ($data->getFilterFrom()) {
             $queryBuilder

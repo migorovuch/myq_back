@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Booking;
+use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use DateInterval;
@@ -13,6 +14,7 @@ use DateTime;
 
 class BookingFixture extends Fixture implements DependentFixtureInterface
 {
+    const BOOKINGS_COUNT = 10;
 
     public function load(ObjectManager $manager)
     {
@@ -32,7 +34,8 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
             $startHoursKey = random_int(0, count($hours) - 1);
             $startMinuteKey = random_int(0, count($minutes) - 1);
 
-            return $start->modify($days[$startDayKey].' day')->setTime($hours[$startHoursKey], $minutes[$startMinuteKey]);
+            return $start->modify($days[$startDayKey] . ' day')->setTime($hours[$startHoursKey],
+                $minutes[$startMinuteKey]);
         };
 
         $selectStartDate = function (&$createdBookingsDates) use ($generateStartDate) {
@@ -46,10 +49,13 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
             }
         };
 
-        for ($i = 1; $i <= 10; $i++) {
+        for ($i = 1; $i <= self::BOOKINGS_COUNT; $i++) {
             $startDate = $selectStartDate($createdBookingsDates);
             $endDate = clone $startDate;
             $endDate = $endDate->add(new DateInterval('PT30M'));
+            $clientNumber = random_int(1, CompanyClientFixture::CLIENTS_COUNT);
+            /** @var CompanyClient $client */
+            $client = $this->getReference(CompanyClientFixture::COMPANY_CLIENT_ . $clientNumber);
             $booking = new Booking();
             $booking
                 ->setSchedule($schedule)
@@ -57,27 +63,19 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
                 ->setStart($startDate)
                 ->setEnd($endDate)
                 ->setStatus(Booking::STATUS_ACCEPTED)
-                ->setTitle('Title ' . $i);
-            if (random_int(0, 1)) {
-                $booking
-                    ->setUser($user)
-                    ->setUserName($user->getUsername())
-                    ->setUserPhone($user->getPhone());
-            } else {
-                $booking
-                    ->setUserName('Test User name' . $i)
-                    ->setUserPhone('11111' . $i);
-            }
+                ->setClient($client)
+                ->setUserName($client->getName())
+                ->setUserPhone($client->getPhone())
+                ->setTitle($client->getName());
             $manager->persist($booking);
         }
         $manager->flush();
-
     }
 
     public function getDependencies()
     {
         return [
-            UserFixtures::class,
+            CompanyClientFixture::class,
             ScheduleFixture::class,
         ];
     }

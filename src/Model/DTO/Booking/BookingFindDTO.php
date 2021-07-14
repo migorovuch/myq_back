@@ -3,6 +3,7 @@
 namespace App\Model\DTO\Booking;
 
 use App\Entity\Company;
+use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Model\DTO\AbstractFindDTO;
@@ -42,6 +43,12 @@ class BookingFindDTO extends AbstractFindDTO
      * @Serializer\Type("Relation<App\Entity\Company>")
      */
     protected ?Company $company = null;
+
+    /**
+     * @Assert\Type("App\Entity\CompanyClient", groups={"Default"})
+     * @Serializer\Type("Relation<App\Entity\CompanyClient>")
+     */
+    protected ?CompanyClient $client = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
@@ -96,7 +103,7 @@ class BookingFindDTO extends AbstractFindDTO
      * @param DateTime|null $filterTo
      * @param string|null $title
      * @param string|null $customerComment
-     * @param User|null $user
+     * @param CompanyClient|null $client
      * @param string|null $userName
      * @param string|null $userPhone
      * @param array|null $sort
@@ -112,6 +119,7 @@ class BookingFindDTO extends AbstractFindDTO
         ?DateTime $filterTo = null,
         ?string $title = null,
         ?string $customerComment = null,
+        ?CompanyClient $client = null,
         ?User $user = null,
         ?string $userName = null,
         ?string $userPhone = null,
@@ -131,6 +139,7 @@ class BookingFindDTO extends AbstractFindDTO
         $this->userName = $userName;
         $this->userPhone = $userPhone;
         $this->company = $company;
+        $this->client = $client;
     }
 
     /**
@@ -190,6 +199,14 @@ class BookingFindDTO extends AbstractFindDTO
     }
 
     /**
+     * @return CompanyClient|null
+     */
+    public function getClient(): ?CompanyClient
+    {
+        return $this->client;
+    }
+
+    /**
      * @return User|null
      */
     public function getUser(): ?User
@@ -237,6 +254,16 @@ class BookingFindDTO extends AbstractFindDTO
     public function setUserName(?string $userName): self
     {
         $this->userName = $userName;
+
+        return $this;
+    }
+
+    /**
+     * @param string|null $userPhone
+     */
+    public function setUserPhone(?string $userPhone): self
+    {
+        $this->userPhone = $userPhone;
 
         return $this;
     }

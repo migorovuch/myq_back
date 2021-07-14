@@ -70,11 +70,11 @@ class Booking implements EntityInterface
     protected $customerComment;
 
     /**
-     * @ORM\ManyToOne(targetEntity=User::class, inversedBy="bookings")
-     * @ORM\JoinColumn(nullable=true)
-     * @Serializer\Groups({"booking_user"})
+     * @ORM\ManyToOne(targetEntity=CompanyClient::class)
+     * @ORM\JoinColumn(nullable=false)
+     * @Serializer\Groups({"booking_client"})
      */
-    protected $user;
+    protected $client;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -165,18 +165,6 @@ class Booking implements EntityInterface
         return $this;
     }
 
-    public function getUser(): ?User
-    {
-        return $this->user;
-    }
-
-    public function setUser(?User $user): self
-    {
-        $this->user = $user;
-
-        return $this;
-    }
-
     public function getUserName(): ?string
     {
         return $this->userName;
@@ -252,6 +240,25 @@ class Booking implements EntityInterface
     public function setUpdatedAt(DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
+
+        return $this;
+    }
+
+    /**
+     * @return null|CompanyClient
+     */
+    public function getClient()
+    {
+        return $this->client;
+    }
+
+    /**
+     * @param CompanyClient $client
+     * @return Booking
+     */
+    public function setClient(CompanyClient $client): self
+    {
+        $this->client = $client;
 
         return $this;
     }
