@@ -3,6 +3,7 @@
 namespace App\Model\Manager;
 
 use App\Entity\CompanyClient;
+use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Repository\CompanyClientRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
@@ -38,7 +39,7 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
             $companyClient = $this->entityRepository->findOneBy(
                 [
                     'user' => $companyClientDTO->getUser(),
-                    'company' => $companyClientDTO->getCompany()
+                    'company' => $companyClientDTO->getCompany(),
                 ]);
             if (
                 !$companyClient &&

@@ -358,6 +358,18 @@ class Schedule implements EntityInterface
         return $this;
     }
 
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getSchedule() === $this) {
+                $booking->setSchedule(null);
+            }
+        }
+
+        return $this;
+    }
+
     /**
      * @return DateTime|null
      */
@@ -392,18 +404,6 @@ class Schedule implements EntityInterface
     public function setUpdatedAt(?DateTime $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
-
-        return $this;
-    }
-
-    public function removeBooking(Booking $booking): self
-    {
-        if ($this->bookings->removeElement($booking)) {
-            // set the owning side to null (unless already changed)
-            if ($booking->getSchedule() === $this) {
-                $booking->setSchedule(null);
-            }
-        }
 
         return $this;
     }

@@ -6,6 +6,8 @@ use App\Model\Model\EntityInterface;
 use App\Repository\CompanyClientRepository;
 use DateTime;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -77,6 +79,26 @@ class CompanyClient implements EntityInterface
      * @Serializer\Groups({"company_client"})
      */
     protected ?DateTimeInterface $updatedAt = null;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="client")
+     * @Serializer\Groups({"company_client_bookings"})
+     */
+    private $bookings;
+
+    /**
+     * @var int
+     * @Serializer\Groups({"company_client_number_of_bookings"})
+     */
+    protected int $numberOfBookings = 0;
+
+    /**
+     * CompanyClient constructor.
+     */
+    public function __construct()
+    {
+        $this->bookings = new ArrayCollection();
+    }
 
     public function getId(): ?string
     {
@@ -202,5 +224,54 @@ class CompanyClient implements EntityInterface
         if ($this->getCreatedAt() === null) {
             $this->setCreatedAt(new DateTime('now'));
         }
+    }
+
+    /**
+     * @return int
+     */
+    public function getNumberOfBookings(): int
+    {
+        return $this->numberOfBookings;
+    }
+
+    /**
+     * @param int $numberOfBookings
+     * @return CompanyClient
+     */
+    public function setNumberOfBookings(int $numberOfBookings): self
+    {
+        $this->numberOfBookings = $numberOfBookings;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Booking[]
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): self
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings[] = $booking;
+            $booking->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): self
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getClient() === $this) {
+                $booking->setClient(null);
+            }
+        }
+
+        return $this;
     }
 }

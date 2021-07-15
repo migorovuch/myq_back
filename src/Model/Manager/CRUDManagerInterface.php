@@ -2,6 +2,7 @@
 
 namespace App\Model\Manager;
 
+use App\Exception\AccessDeniedException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\Model\EntityInterface;
@@ -36,6 +37,14 @@ interface CRUDManagerInterface
      * @return mixed
      */
     public function findAll();
+
+    /**
+     * @param mixed $attributes
+     * @param EntityInterface $subject
+     *
+     * @throws AccessDeniedException
+     */
+    public function denyAccessUnlessGranted($attributes, $subject = null);
 
     /**
      * @param $data

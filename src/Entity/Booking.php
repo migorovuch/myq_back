@@ -70,7 +70,7 @@ class Booking implements EntityInterface
     protected $customerComment;
 
     /**
-     * @ORM\ManyToOne(targetEntity=CompanyClient::class)
+     * @ORM\ManyToOne(targetEntity=CompanyClient::class, inversedBy="bookings")
      * @ORM\JoinColumn(nullable=false)
      * @Serializer\Groups({"booking_client"})
      */
