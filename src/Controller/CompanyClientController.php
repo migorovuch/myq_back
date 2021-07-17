@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CompanyClient;
 use App\Exception\AccessDeniedException;
+use App\Model\DTO\CompanyClient\ChangeCompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientFindDTO;
 use App\Model\Manager\CompanyClientManagerInterface;
@@ -79,13 +80,13 @@ class CompanyClientController extends AbstractBaseController
     /**
      * @Rest\Patch ("/{id}", name="change")
      * @ParamConverter("companyClientDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
-     * @param CompanyClientDTO $companyClientDTO
+     * @param ChangeCompanyClientDTO $companyClientDTO
      * @return Response
      */
-    public function change(string $id, CompanyClientDTO $companyClientDTO)
+    public function change(string $id, ChangeCompanyClientDTO $companyClientDTO)
     {
         return $this->response(
-            $this->companyClientManager->update($id, $companyClientDTO),
+            $this->companyClientManager->change($id, $companyClientDTO),
             Response::HTTP_OK,
             ['company_client', 'company_client_number_of_bookings', 'company_client_status', 'company_client_pseudonym']
         );

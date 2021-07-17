@@ -56,14 +56,14 @@ class RelationsHandler
      */
     public function deserializeRelation(JsonDeserializationVisitor $visitor, $relation, array $type)
     {
-        $className = isset($type['params'][0]['name']) ? $type['params'][0]['name'] : null;
+        $className = $type['params'][0]['name'] ?? null;
+        $required = !((isset($type['params'][1]) && $type['params'][1] === 'notrequired'));
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Class name should be explicitly set for deserialization');
         }
-        /** @var ClassMetadata $metadata */
         $metadata = $this->manager->getClassMetadata($className);
         if (!\is_array($relation)) {
-            return $this->deserializeIdentifier($className, $relation);
+            return $this->deserializeIdentifier($className, $relation, $required);
         }
         $single = false;
         if ($metadata->isIdentifierComposite) {
@@ -73,11 +73,11 @@ class RelationsHandler
             }
         }
         if ($single) {
-            return $this->deserializeIdentifier($className, $relation);
+            return $this->deserializeIdentifier($className, $relation, $required);
         }
         $objects = [];
         foreach ($relation as $idSet) {
-            $objects[] = $this->deserializeIdentifier($className, $idSet);
+            $objects[] = $this->deserializeIdentifier($className, $idSet, $required);
         }
 
         return $objects;
@@ -101,17 +101,17 @@ class RelationsHandler
 
     /**
      * @param string $className
-     * @param mixed  $identifier
-     *
+     * @param mixed $identifier
+     * @param bool $required
      * @return object
      */
-    private function deserializeIdentifier($className, $identifier)
+    private function deserializeIdentifier(string $className, string $identifier, bool $required= true)
     {
         /*if (method_exists($this->manager, 'getReference')) {
             return $this->manager->getReference($className, $identifier);
         }*/
         $instance = $this->manager->find($className, $identifier);
-        if (!$instance) {
+        if (!$instance && $required) {
             throw new EntryNotFoundException("Relation {$className}:{$identifier} not found");
         }
 

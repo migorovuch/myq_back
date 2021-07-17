@@ -25,12 +25,6 @@ class CompanyClientDTO implements DTOInterface
     protected ?string $phone = null;
 
     /**
-     * @Assert\Type("App\Entity\CompanyClient", groups={"Default"})
-     * @Serializer\Type("Relation<App\Entity\CompanyClient>")
-     */
-    protected ?CompanyClient $client = null;
-
-    /**
      * @Assert\Type("App\Entity\User", groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\User>")
      */
@@ -56,7 +50,6 @@ class CompanyClientDTO implements DTOInterface
 
     /**
      * CompanyClientDTO constructor.
-     * @param CompanyClient|null $client
      * @param User|null $user
      * @param string|null $name
      * @param string|null $phone
@@ -65,7 +58,6 @@ class CompanyClientDTO implements DTOInterface
      * @param string|null $pseudonym
      */
     public function __construct(
-        CompanyClient $client = null,
         User $user = null,
         string $name = null,
         string $phone = null,
@@ -79,15 +71,6 @@ class CompanyClientDTO implements DTOInterface
         $this->company = $company;
         $this->status = $status;
         $this->pseudonym = $pseudonym;
-        $this->client = $client;
-    }
-
-    /**
-     * @return CompanyClient|null
-     */
-    public function getClient(): ?CompanyClient
-    {
-        return $this->client;
     }
 
     /**

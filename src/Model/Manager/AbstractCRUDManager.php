@@ -175,6 +175,22 @@ abstract class AbstractCRUDManager
     {
         $entity = $this->find($id);
         $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
+        $entity = $this->prepareEntity($entity, $data);
+        $this->save($entity);
+
+        return $entity;
+    }
+
+    /**
+     * @param string $id
+     * @param DTOInterface $data
+     *
+     * @return EntityInterface
+     */
+    public function change(string $id, DTOInterface $data): EntityInterface
+    {
+        $entity = $this->find($id);
+        $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $entity = $this->prepareEntity($entity, $data, false);
         $this->save($entity);
 

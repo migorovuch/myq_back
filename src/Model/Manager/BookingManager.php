@@ -3,6 +3,7 @@
 namespace App\Model\Manager;
 
 use App\Entity\Booking;
+use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Exception\AccessDeniedException;
@@ -130,37 +131,65 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             case Schedule::ACCEPT_BOOKING_ACCEPT_ALL:
                 $status = Booking::STATUS_ACCEPTED;
                 break;
-            case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS; // TODO
+            case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS;
+                if (
+                    $entity->getClient() &&
+                    $entity->getSchedule()->getCompany()->getId() === $entity->getClient()->getCompany()->getId() &&
+                    $entity->getClient()->getStatus() === CompanyClient::STATUS_ON
+                ) {
+                    $status = Booking::STATUS_ACCEPTED;
+                } else {
+                    $status = Booking::STATUS_NEW;
+                }
+                break;
             case Schedule::ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE; // TODO
             case Schedule::ACCEPT_BOOKING_DECLINE_ALL;
                 $status = Booking::STATUS_DECLINED;
                 break;
             default:
-                $status = Booking::STATUS_DECLINED;
+                $status = Booking::STATUS_NEW;
         }
-        $currentUser = null;
+        $currentUser = $companyClient = null;
         if ($this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)) {
             /** @var User $currentUser */
             $currentUser = $this->security->getUser();
-            if (!$currentUser->getPhone()) {
-                $currentUser->setPhone($data->getUserPhone());
-                $this->save($currentUser);
-            }
+            // Company manager can create new booking as new client
             if (
                 $data->isNewClient() &&
                 $data->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId()
             ) {
                 $currentUser = null;
+            } else {
+                $companyClient = $this->companyClientManager->findOneBy([
+                    'user' => $currentUser,
+                    'company' => $data->getSchedule()->getCompany(),
+                ]);
+            }
+            // update user phone if it wasn't configured
+            if ($currentUser && !$currentUser->getPhone()) {
+                $currentUser->setPhone($data->getUserPhone());
+                $this->save($currentUser);
             }
         }
-        $companyClientDTO = new CompanyClientDTO(
-            $data->getClient(),
-            $currentUser,
-            $data->getUserName(),
-            $data->getUserPhone(),
-            $data->getSchedule()->getCompany()
-        );
-        $companyClient = $this->companyClientManager->getByDTO($companyClientDTO);
+        if (
+            (!$companyClient && !$entity->getClient()) ||
+            (
+                !$companyClient &&
+                $entity->getClient() &&
+                !($companyClient = $this->companyClientManager->checkExistingClientForBooking($entity->getClient(), $currentUser))
+            )
+        ) {
+            $companyClientDTO = new CompanyClientDTO(
+                $currentUser,
+                $data->getUserName(),
+                $data->getUserPhone(),
+                $data->getSchedule()->getCompany(),
+                $entity->getSchedule()->getAcceptBookingCondition() === Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS ?
+                    CompanyClient::STATUS_OFF :
+                    CompanyClient::STATUS_ON
+            );
+            $companyClient = $this->companyClientManager->create($companyClientDTO);
+        }
         $entity
             ->setStatus($status)
             ->setClient($companyClient)

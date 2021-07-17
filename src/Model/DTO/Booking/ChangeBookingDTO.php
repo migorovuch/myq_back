@@ -12,10 +12,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use App\Validator\ConstraintBookingAvailability;
 
 /**
- * Class BookingDTO
+ * Class ChangeBookingDTO
  * @ConstraintBookingAvailability
  */
-class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
+class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 {
 
     /**
@@ -59,49 +59,19 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
     protected ?string $title = null;
 
     /**
-     * @Assert\Type("string")
-     * @Serializer\Type("string")
-     */
-    protected ?string $customerComment = null;
-
-    /**
-     * @Assert\Type("App\Entity\CompanyClient", groups={"Default"})
-     * @Serializer\Type("Relation<App\Entity\CompanyClient, 'notrequired'>")
-     */
-    protected ?CompanyClient $client = null;
-
-    /**
-     * @Assert\NotBlank(groups={"Default"})
-     * @Assert\Type("string")
-     * @Serializer\Type("string")
-     */
-    protected ?string $userName = null;
-
-    /**
-     * @Assert\NotBlank(groups={"Default"})
-     * @Assert\Type("string", groups={"Default"})
-     * @Serializer\Type("string")
-     */
-    protected ?string $userPhone = null;
-
-    /**
      * @Assert\Type("boolean", groups={"Default"})
      * @Serializer\Type("boolean")
      */
     protected ?bool $newClient = false;
 
     /**
-     * BookingDTO constructor.
+     * ChangeBookingDTO constructor.
      * @param string|null $id
      * @param int|null $status
      * @param Schedule|null $schedule
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
      * @param string|null $title
-     * @param string|null $customerComment
-     * @param CompanyClient|null $client
-     * @param string|null $userName
-     * @param string|null $userPhone
      * @param bool|null $newClient
      */
     public function __construct(
@@ -111,10 +81,6 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
         ?DateTime $filterFrom = null,
         ?DateTime $filterTo = null,
         ?string $title = null,
-        ?string $customerComment = null,
-        ?CompanyClient $client = null,
-        ?string $userName = null,
-        ?string $userPhone = null,
         ?bool $newClient = false
     ) {
         $this->id = $id;
@@ -122,11 +88,7 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
         $this->start = $filterFrom;
         $this->end = $filterTo;
         $this->title = $title;
-        $this->customerComment = $customerComment;
-        $this->userName = $userName;
-        $this->userPhone = $userPhone;
         $this->status = $status;
-        $this->client = $client;
         $this->newClient = $newClient;
     }
 
@@ -176,38 +138,6 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
     public function getTitle(): ?string
     {
         return $this->title;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getCustomerComment(): ?string
-    {
-        return $this->customerComment;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUserName(): ?string
-    {
-        return $this->userName;
-    }
-
-    /**
-     * @return string|null
-     */
-    public function getUserPhone(): ?string
-    {
-        return $this->userPhone;
-    }
-
-    /**
-     * @return CompanyClient|null
-     */
-    public function getClient(): ?CompanyClient
-    {
-        return $this->client;
     }
 
     /**

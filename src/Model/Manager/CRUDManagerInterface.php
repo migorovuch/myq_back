@@ -63,6 +63,14 @@ interface CRUDManagerInterface
 
     /**
      * @param string $id
+     * @param DTOInterface $data
+     *
+     * @return EntityInterface
+     */
+    public function change(string $id, DTOInterface $data): EntityInterface;
+
+    /**
+     * @param string $id
      *
      * @return mixed
      */

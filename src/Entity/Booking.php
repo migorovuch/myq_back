@@ -253,10 +253,10 @@ class Booking implements EntityInterface
     }
 
     /**
-     * @param CompanyClient $client
+     * @param CompanyClient|null $client
      * @return Booking
      */
-    public function setClient(CompanyClient $client): self
+    public function setClient(?CompanyClient $client): self
     {
         $this->client = $client;
 

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Model\DTO\Booking\ChangeBookingDTO;
 use App\Model\Manager\BookingManagerInterface;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
@@ -36,12 +37,12 @@ class BookingController extends AbstractBaseController
             'schedule_booking_duration',
             'schedule_min_booking_time',
             'schedule_max_booking_time',
-            'booking_user',
+            'booking_client',
             'booking_title',
             'company_client',
             'schedule_company',
             'company_id',
-            'company_name'
+            'company_name',
         ];
     }
 
@@ -63,7 +64,7 @@ class BookingController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Patch("/{id}", name="update")
+     * @Rest\Put("/{id}", name="update")
      * @ParamConverter("bookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      * @param string $id
      * @param BookingDTO $bookingDTO
@@ -72,6 +73,20 @@ class BookingController extends AbstractBaseController
     public function update(string $id, BookingDTO $bookingDTO): Response
     {
         $company = $this->bookingManager->update($id, $bookingDTO);
+
+        return $this->response($company, Response::HTTP_OK, $this->serializeGroups);
+    }
+
+    /**
+     * @Rest\Patch("/{id}", name="change")
+     * @ParamConverter("changeBookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     * @param string $id
+     * @param ChangeBookingDTO $changeBookingDTO
+     * @return Response
+     */
+    public function change(string $id, ChangeBookingDTO $changeBookingDTO): Response
+    {
+        $company = $this->bookingManager->change($id, $changeBookingDTO);
 
         return $this->response($company, Response::HTTP_OK, $this->serializeGroups);
     }

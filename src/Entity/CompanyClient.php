@@ -134,14 +134,16 @@ class CompanyClient implements EntityInterface
         return $this->user;
     }
 
-    public function setUser(User $user): self
+    public function setUser(?User $user): self
     {
-        $this->user = $user;
-        if ($user->getPhone()) {
-            $this->setPhone($user->getPhone());
-        }
-        if ($user->getFullName()) {
-            $this->setName($user->getFullName());
+        if ($user) {
+            $this->user = $user;
+            if ($user->getPhone()) {
+                $this->setPhone($user->getPhone());
+            }
+            if ($user->getFullName()) {
+                $this->setName($user->getFullName());
+            }
         }
 
         return $this;

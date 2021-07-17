@@ -3,6 +3,7 @@
 namespace App\Validator;
 
 use App\Entity\Booking;
+use App\Model\DTO\Booking\BookingAvailabilityDTOInterface;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
 use App\Model\Manager\SpecialHoursManagerInterface;
@@ -46,7 +47,7 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
             return;
         }
 
-        if (!$value instanceof BookingDTO) {
+        if (!$value instanceof BookingAvailabilityDTOInterface) {
             throw new UnexpectedValueException($value, BookingDTO::class);
         }
 

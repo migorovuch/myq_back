@@ -96,7 +96,7 @@ class CompanyController extends AbstractBaseController
             '/company',
             'logo_' . $id
         );
-        $this->companyManager->update($id, new CompanyDTO(null, null, null, null, null, null, $fileName));
+        $this->companyManager->change($id, new CompanyDTO(null, null, null, null, null, null, $fileName));
 
         return $this->response(['fileName' => $fileName]);
     }
