@@ -46,7 +46,7 @@ class AuthController extends AbstractBaseController
     {
         $user = $this->userManager->registration($registrationDTO);
 
-        return $this->response($user);
+        return $this->response($user, Response::HTTP_OK, ['user']);
     }
 
     /**

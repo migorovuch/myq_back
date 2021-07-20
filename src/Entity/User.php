@@ -62,7 +62,7 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @ORM\Column(type="integer")
-     * @Serializer\Groups({"user", "user_status"})
+     * @Serializer\Groups({"user_status"})
      */
     protected $status = self::STATUS_OFF;
 
@@ -70,7 +70,7 @@ class User implements UserInterface, EntityInterface
      * @ORM\Column(type="string", nullable=true)
      * @Serializer\Groups({"user", "user_phone"})
      */
-    protected ?string $phone;
+    protected ?string $phone = null;
 
     /**
      * @ORM\Column(type="datetime")
