@@ -150,6 +150,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         foreach ($rangesArray2 as $range) {
             $result = $this->addRange($result, $range);
         }
+        $result = $this->sortRanges($result);
 
         return $this->mergeRanges($result);
     }
@@ -179,26 +180,39 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
      */
     protected function addRange(array $rangesArray, array $range): array
     {
-        foreach ($rangesArray as $range2) {
+        $removeKeys = [];
+        foreach ($rangesArray as $range2Key => &$range2) {
             if (
-                date('H:i', strtotime($range['to'])) < date('H:i', strtotime($range2['to'])) &&
-                date('H:i', strtotime($range['to'])) >= date('H:i', strtotime($range2['from']))
+                date('H:i', strtotime($range['from'])) >= date('H:i', strtotime($range2['from'])) &&
+                date('H:i', strtotime($range['to'])) <= date('H:i', strtotime($range2['to']))
             ) {
-                $range['to'] = $range2['from'];
+                $range = null;
+                break;
             }
             if (
-                date('H:i', strtotime($range['from'])) > date('H:i', strtotime($range2['from'])) &&
-                date('H:i', strtotime($range['from'])) <= date('H:i', strtotime($range2['to']))
+                date('H:i', strtotime($range['to'])) > date('H:i', strtotime($range2['from'])) &&
+                date('H:i', strtotime($range['from'])) <= date('H:i', strtotime($range2['from']))
             ) {
-                $range['from'] = $range2['to'];
+                $range2['from'] = $range['to'];
             }
             if (
-                date('H:i', strtotime($range['from'])) >= date('H:i', strtotime($range['to']))
+                date('H:i', strtotime($range['from'])) < date('H:i', strtotime($range2['to'])) &&
+                date('H:i', strtotime($range['to'])) >= date('H:i', strtotime($range2['to']))
             ) {
-                return $rangesArray;
+                $range2['to'] = $range['from'];
+            }
+            if (
+                date('H:i', strtotime($range2['from'])) >= date('H:i', strtotime($range2['to']))
+            ) {
+                $removeKeys[] = $range2Key;
             }
         }
-        $rangesArray[] = $range;
+        foreach ($removeKeys as $removeKey) {
+            array_splice($rangesArray, $removeKey, 1);
+        }
+        if ($range) {
+            $rangesArray[] = $range;
+        }
 
         return $rangesArray;
     }
@@ -217,11 +231,11 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
             foreach ($result as &$range2) {
                 $range2From = date('H:i', strtotime($range2['from']));
                 $range2To = date('H:i', strtotime($range2['to']));
-                if ($range2From > $range1From && $range2To >= $range1From) {
+                if ($range2From > $range1From && $range2From <= $range1To) {
                     $range2['from'] = $range1['from'];
                     $changed = true;
                 }
-                if ($range2To < $range1To && $range2To >= $range1From) {
+                if ($range2To >= $range1From && $range2To < $range1To) {
                     $range2['to'] = $range1['to'];
                     $changed = true;
                 }
