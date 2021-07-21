@@ -3,6 +3,7 @@
 namespace App\Tests\Functional\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Client;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -11,6 +12,13 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class AbstractBaseController extends WebTestCase
 {
+    protected static KernelBrowser $client;
+
+    public static function setUpBeforeClass(): void
+    {
+        self::$client = static::createClient();
+    }
+
     /**
      * @param array $data
      *
@@ -18,71 +26,78 @@ class AbstractBaseController extends WebTestCase
      */
     protected function login(array $data)
     {
-        $client = $this->sendPostRequest('/api/login', [], $data);
-        $response = $client->getResponse();
-        $content = $response->getContent();
+        $this->sendPostRequest('/api/login_check', [], $data);
+        $response = self::$client->getResponse();
+        $this->assertSuccessResponse($response);
+        $content = json_decode($response->getContent(), true);
+        $this->assertArrayHasKey('token', $content);
 
-        return json_decode($content, true);
+        return $content['token'];
     }
 
     /**
      * @param string $url
-     * @param array  $parameters
-     * @param array  $data
-     *
-     * @return Client
+     * @param array $parameters
+     * @param array $data
+     * @return Response
      */
     protected function sendGetRequest(string $url, array $parameters = [], array $data = [])
     {
-        return $this->sendRequest('GET', $url, $parameters, $data);
+        $this->sendRequest('GET', $url, $parameters, $data);
+
+        return self::$client->getResponse();
     }
 
     /**
      * @param string $url
-     * @param array  $parameters
-     * @param $data
-     *
-     * @return Client
+     * @param array $parameters
+     * @param array $data
+     * @return Response
      */
     protected function sendPostRequest(string $url, array $parameters, array $data)
     {
-        return $this->sendRequest('POST', $url, $parameters, $data);
+        $this->sendRequest('POST', $url, $parameters, $data);
+
+        return self::$client->getResponse();
     }
 
     /**
      * @param string $url
-     * @param array  $parameters
-     * @param $data
-     *
-     * @return Client
+     * @param array $parameters
+     * @param array $data
+     * @return Response
      */
     protected function sendPutRequest(string $url, array $parameters, array $data)
     {
-        return $this->sendRequest('PUT', $url, $parameters, $data);
+        $this->sendRequest('PUT', $url, $parameters, $data);
+
+        return self::$client->getResponse();
     }
 
     /**
      * @param string $url
-     * @param array  $parameters
-     * @param $data
-     *
-     * @return Client
+     * @param array $parameters
+     * @param array $data
+     * @return Response
      */
     protected function sendPatchRequest(string $url, array $parameters, array $data)
     {
-        return $this->sendRequest('PATCH', $url, $parameters, $data);
+        $this->sendRequest('PATCH', $url, $parameters, $data);
+
+        return self::$client->getResponse();
     }
 
     /**
      * @param string $url
-     * @param array  $parameters
-     * @param $data
-     *
-     * @return Client
+     * @param array $parameters
+     * @param array $data
+     * @return Response
      */
     protected function sendDeleteRequest(string $url, array $parameters = [], array $data = [])
     {
-        return $this->sendRequest('DELETE', $url, $parameters, $data);
+        $this->sendRequest('DELETE', $url, $parameters, $data);
+
+        return self::$client->getResponse();
     }
 
     /**
@@ -90,18 +105,15 @@ class AbstractBaseController extends WebTestCase
      * @param string $url
      * @param array  $parameters
      * @param array  $data
-     *
-     * @return Client
      */
     protected function sendRequest(string $method, string $url, array $parameters = [], array $data = [])
     {
-        $client = static::createClient();
         $headerData = ['CONTENT_TYPE' => 'application/json'];
         if (!empty($data['token'])) {
             $headerData['HTTP_Authorization'] = 'Bearer '.$data['token'];
             unset($data['token']);
         }
-        $client->request(
+        self::$client->request(
             $method,
             $url,
             $parameters,
@@ -109,8 +121,6 @@ class AbstractBaseController extends WebTestCase
             $headerData,
             json_encode($data)
         );
-
-        return $client;
     }
 
     /**
@@ -119,7 +129,23 @@ class AbstractBaseController extends WebTestCase
     protected function assertSuccessResponse(Response $response)
     {
         $content = json_decode($response->getContent(), true);
-        $errorMsg = isset($content['title']) ? $content['title'] : 'Incorrect response code';
+        $errorMsg = $content['title'] ?? 'Incorrect response code';
         $this->assertEquals(200, $response->getStatusCode(), $errorMsg);
+    }
+
+    /**
+     * @param Response $response
+     * @return array
+     */
+    protected function assertSuccessEntitiesArray(Response $response): array
+    {
+        $this->assertSuccessResponse($response);
+        $listContent = json_decode($response->getContent(), true);
+        $this->assertIsArray($listContent);
+        $this->assertNotEmpty($listContent);
+        $firstKey = array_key_first($listContent);
+        $this->assertArrayHasKey('id', $listContent[$firstKey]);
+
+        return $listContent;
     }
 }

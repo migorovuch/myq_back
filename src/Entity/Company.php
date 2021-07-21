@@ -97,13 +97,13 @@ class Company implements EntityInterface
 
     /**
      * @ORM\Column(type="datetime")
-     * @Serializer\Groups({"booking_created"})
+     * @Serializer\Groups({"company_created"})
      */
     protected ?DateTime $createdAt = null;
 
     /**
      * @ORM\Column(type="datetime")
-     * @Serializer\Groups({"booking_updated"})
+     * @Serializer\Groups({"company_updated"})
      */
     protected ?DateTime $updatedAt = null;
 

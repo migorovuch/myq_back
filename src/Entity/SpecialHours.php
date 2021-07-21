@@ -24,50 +24,59 @@ class SpecialHours implements EntityInterface
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
      * @ORM\Column(type="guid")
+     * @Serializer\Groups({"special_hours", "special_hours_id"})
      */
     protected $id;
 
     /**
      * @ORM\ManyToOne(targetEntity=Schedule::class, inversedBy="specialHours")
      * @ORM\JoinColumn(nullable=false)
+     * @Serializer\Groups({"special_hours_schedule"})
      */
     protected $schedule;
 
     /**
      * @ORM\Column(type="json")
+     * @Serializer\Groups({"special_hours", "special_hours_ranges"})
      */
     protected $ranges = [];
 
     /**
      * @ORM\Column(type="datetime")
      * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
+     * @Serializer\Groups({"special_hours"})
      */
     protected $startDate;
 
     /**
      * @ORM\Column(type="datetime")
      * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
+     * @Serializer\Groups({"special_hours"})
      */
     protected $endDate;
 
     /**
      * @ORM\Column(type="smallint")
+     * @Serializer\Groups({"special_hours"})
      */
     protected $repeatCondition = self::REPEAT_ONCE_A_WEAK;
 
     /**
      * @ORM\Column(type="smallint", nullable=true)
+     * @Serializer\Groups({"special_hours"})
      */
     protected $repeatDay;
 
     /**
      * @ORM\Column(type="datetime", nullable=true)
      * @Serializer\Type("DateTime<'Y-m-d H:i:s'>")
+     * @Serializer\Groups({"special_hours"})
      */
     protected $repeatDate;
 
     /**
      * @ORM\Column(type="boolean", nullable=true)
+     * @Serializer\Groups({"special_hours"})
      */
     protected $available = true;
 

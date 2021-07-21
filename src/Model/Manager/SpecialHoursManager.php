@@ -70,11 +70,13 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
     public function updateList(array $list): array
     {
         $result = [];
+        $this->entityManager->beginTransaction();
         try {
             /** @var SpecialHoursDTO $specialHoursDTO */
             foreach ($list as $specialHoursDTO) {
                 if ($specialHoursDTO->getId() && $specialHoursDTO->getDeleted()) {
                     $entity = $this->find($specialHoursDTO->getId());
+                    $this->denyAccessUnlessGranted(SpecialHoursVoter::DELETE, $entity);
                     $this->entityManager->remove($entity);
                 } elseif ($specialHoursDTO->getId()) {
                     $entity = $this->find($specialHoursDTO->getId());

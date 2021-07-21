@@ -12,8 +12,7 @@ class AuthControllerTest extends AbstractBaseController
      */
     public function failureLogin(array $data)
     {
-        $client = $this->sendPostRequest('/api/login_check', [], $data);
-        $response = $client->getResponse();
+        $response = $this->sendPostRequest('/api/login_check', [], $data);
         $content = $response->getContent();
         $content = json_decode($content, true);
         $this->assertEquals(401, $response->getStatusCode());
@@ -27,8 +26,7 @@ class AuthControllerTest extends AbstractBaseController
      */
     public function successLogin(array $data)
     {
-        $client = $this->sendPostRequest('/api/login_check', [], $data);
-        $response = $client->getResponse();
+        $response = $this->sendPostRequest('/api/login_check', [], $data);
         $content = $response->getContent();
         $content = json_decode($content, true);
         $this->assertSuccessResponse($response);
@@ -42,8 +40,7 @@ class AuthControllerTest extends AbstractBaseController
      */
     public function failureRegistration(array $data)
     {
-        $client = $this->sendPostRequest('/api/registration', [], $data);
-        $response = $client->getResponse();
+        $response = $this->sendPostRequest('/api/registration', [], $data);
         $content = $response->getContent();
         $content = json_decode($content, true);
         $this->assertEquals(401, $response->getStatusCode());
@@ -57,8 +54,7 @@ class AuthControllerTest extends AbstractBaseController
      */
     public function successRegistration(array $data, string $role)
     {
-        $client = $this->sendPostRequest('/api/registration', [], $data);
-        $response = $client->getResponse();
+        $response = $this->sendPostRequest('/api/registration', [], $data);
         $content = $response->getContent();
         $content = json_decode($content, true);
         $this->assertSuccessResponse($response);

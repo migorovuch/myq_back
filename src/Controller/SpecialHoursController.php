@@ -29,7 +29,7 @@ class SpecialHoursController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Get("/search/app", name="search")
+     * @Rest\Get("/search", name="search")
      * @ParamConverter("specialHoursFindDTO", converter="query_converter", options={"paramName"="filter", "validationGroups"="Default"})
      * @param SpecialHoursFindDTO $specialHoursFindDTO
      * @return Response
@@ -37,7 +37,9 @@ class SpecialHoursController extends AbstractBaseController
     public function search(SpecialHoursFindDTO $specialHoursFindDTO): Response
     {
         return $this->response(
-            $this->specialHoursManager->findByDTO($specialHoursFindDTO)
+            $this->specialHoursManager->findByDTO($specialHoursFindDTO),
+            Response::HTTP_OK,
+            ['special_hours']
         );
     }
 
@@ -50,7 +52,9 @@ class SpecialHoursController extends AbstractBaseController
     public function updateList(array $list): Response
     {
         return $this->response(
-            $this->specialHoursManager->updateList($list)
+            $this->specialHoursManager->updateList($list),
+            Response::HTTP_OK,
+            ['special_hours', 'special_hours_schedule', 'schedule_id']
         );
     }
 
@@ -63,7 +67,9 @@ class SpecialHoursController extends AbstractBaseController
     public function update(string $id, SpecialHoursDTO $specialHoursDTO): Response
     {
         return $this->response(
-            $this->specialHoursManager->update($id, $specialHoursDTO)
+            $this->specialHoursManager->update($id, $specialHoursDTO),
+            Response::HTTP_OK,
+            ['special_hours']
         );
     }
 

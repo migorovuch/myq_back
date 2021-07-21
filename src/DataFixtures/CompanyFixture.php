@@ -11,6 +11,7 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
 {
 
     const COMPANY_1 = 'company_1';
+    const COMPANY_2 = 'company_2';
 
     public function load(ObjectManager $manager)
     {
@@ -25,9 +26,23 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setStatus(Company::STATUS_ON);
 
         $manager->persist($company1);
+
+        $user1 = $this->getReference(UserFixtures::USER_USER_REFERENCE);
+        $company2 = new Company();
+        $company2->setUser($user1)
+            ->setAddress('test address2')
+            ->setDescription('test description2')
+            ->setEmail('company2@gmail.com')
+            ->setName('Company 2')
+            ->setPhone('9823094823094')
+            ->setStatus(Company::STATUS_ON);
+
+        $manager->persist($company2);
+
         $manager->flush();
 
         $this->addReference(self::COMPANY_1, $company1);
+        $this->addReference(self::COMPANY_2, $company2);
     }
 
     /**
