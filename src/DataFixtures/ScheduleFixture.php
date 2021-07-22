@@ -31,7 +31,8 @@ class ScheduleFixture extends Fixture implements DependentFixtureInterface
             ->setCompany($company1)
             ->setBookingDuration(0)
             ->setMinBookingTime(20)
-            ->setMaxBookingTime(40);
+            ->setMaxBookingTime(40)
+            ->setBookingCondition(Schedule::BOOKING_CONDITION_AUTHORIZED_USERS);
         $manager->persist($schedule2);
 
         $manager->flush();

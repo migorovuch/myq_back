@@ -25,6 +25,7 @@ class Schedule implements EntityInterface
 
     const BOOKING_CONDITION_ALL_USERS = 0;
     const BOOKING_CONDITION_AUTHORIZED_USERS = 1;
+    // No point to do FOR_APPROVED_CLIENTS condition because approved clients are created on booking creation
 
     const DEFAULT_BOOKING_DURATION = 30;
     const DEFAULT_ACCEPT_BOOKING_TIME = 60;

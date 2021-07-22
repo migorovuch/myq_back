@@ -7,6 +7,7 @@ use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Exception\AccessDeniedException;
+use App\Exception\UnauthorizedBookingException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
@@ -124,6 +125,12 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         $entity = new $entityName();
         /** @var Booking $entity */
         $entity = $this->prepareEntity($entity, $data);
+        if (
+            $entity->getSchedule()->getBookingCondition() === Schedule::BOOKING_CONDITION_AUTHORIZED_USERS &&
+            !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)
+        ) {
+            throw new UnauthorizedBookingException();
+        }
         switch ($entity->getSchedule()->getAcceptBookingCondition()) {
             case Schedule::ACCEPT_BOOKING_DO_NOTHING:
                 $status = Booking::STATUS_NEW;

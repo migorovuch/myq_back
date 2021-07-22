@@ -63,7 +63,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
                 'errors' => $responseErrors,
             ];
         } elseif ($exception instanceof ApiExceptionInterface) {
-            $code = $code ? $code : Response::HTTP_BAD_REQUEST;
+            $code = $code ?: Response::HTTP_BAD_REQUEST;
             $response = [
                 'title' => $exception->getMessage(),
             ];
@@ -78,7 +78,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
                 'title' => 'Resource not found',
             ];
         } else {
-            $code = $code ? $code : Response::HTTP_INTERNAL_SERVER_ERROR;
+            $code = $code ?: Response::HTTP_INTERNAL_SERVER_ERROR;
             $response = [
                 'title' => $this->appDebug ? $exception->getMessage() : 'Ooops something went wrong!',
             ];
