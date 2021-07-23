@@ -116,7 +116,7 @@ class CompanyController extends AbstractBaseController
         return $this->response(
             $this->companyManager->findPublicByDTO($companyFindDTO),
             Response::HTTP_OK,
-            ['company']
+            ['company', 'company_user', 'user_id']
         );
     }
 }

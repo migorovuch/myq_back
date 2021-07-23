@@ -46,6 +46,11 @@ services:
         tags:
             - { name: jms_serializer.event_subscriber }
 
+    acme_api.event.authentication_success_listener:
+        class: App\EventListener\AuthenticationSuccessListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
+
     App\EventSubscriber\ApiExceptionSubscriber:
         class: App\EventSubscriber\ApiExceptionSubscriber
         tags:
