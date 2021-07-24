@@ -12,19 +12,19 @@ class SpecialHoursDTO implements DTOInterface
 {
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $id = null;
 
     /**
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("array<App\Model\DTO\SpecialHours\RangeDTO>")
      */
     protected ?array $ranges = null;

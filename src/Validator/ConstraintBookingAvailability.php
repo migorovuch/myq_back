@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraint;
  */
 class ConstraintBookingAvailability extends Constraint
 {
-    protected string $message = 'These dates are not allowed for booking';
+    public string $message = 'These dates are not allowed for booking';
 
     /**
      * @return string

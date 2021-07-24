@@ -1,9 +1,12 @@
-<h1>Hi!</h1>
-
-<p>
-    Confirm your account {{ confirmationLink }}
-</p>
-
-<p>
-    Cheers!
-</p>
+<div style="text-align: center;">
+    <div style="font-family: sans-serif;display: inline-block;max-width: 300px;">
+        <h3 style="color: #218838;">
+            {{ "Hi, %name%!"|trans({'%name%': userName}) }}
+        </h3>
+        <p>{{ "Confirm your email address to help us ensure your account is always protected."|trans }}</p>
+        <p>{{ "Cheers!"|trans }}</p>
+        <a href="{{ confirmationLink }}" style="width: 100%;display: inline-block;background-color: #218838;color: white;text-decoration: none;padding: 10px 0;text-transform: uppercase;">
+            {{ "Confirm your account"|trans }}
+        </a>
+    </div>
+</div>

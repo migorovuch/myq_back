@@ -13,25 +13,25 @@ class SpecialHoursFindDTO extends AbstractFindDTO
 {
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $id = null;
 
     /**
-     * @Assert\Type("App\Entity\Schedule")
+     * @Assert\Type("App\Entity\Schedule", groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
 
     /**
-     * @Assert\Type("int")
+     * @Assert\Type("int", groups={"Default"})
      * @Serializer\Type("int")
      */
     protected ?int $repeatCondition = null;
 
     /**
-     * @Assert\Type("int")
+     * @Assert\Type("int", groups={"Default"})
      * @Serializer\Type("int")
      */
     protected ?int $repeatDay = null;
@@ -55,7 +55,7 @@ class SpecialHoursFindDTO extends AbstractFindDTO
     protected ?DateTimeInterface $filterTo = null;
 
     /**
-     * @Assert\Type("boolean")
+     * @Assert\Type("boolean", groups={"Default"})
      * @Serializer\Type("boolean")
      */
     protected ?bool $available = null;

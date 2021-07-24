@@ -20,8 +20,8 @@ class UserFindDTO extends AbstractFindDTO
     /**
      * @var string
      *
-     * @Assert\Email()
-     * @Assert\Type("string")
+     * @Assert\Email(groups={"Default"}, message="Invalid email format")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $email;
@@ -29,7 +29,7 @@ class UserFindDTO extends AbstractFindDTO
     /**
      * @var string
      *
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $nickname;
@@ -37,7 +37,7 @@ class UserFindDTO extends AbstractFindDTO
     /**
      * @var array
      *
-     * @Assert\Choice(multiple=true, callback={"App\Model\Model\AbstractUser", "getRolesList"})
+     * @Assert\Choice(multiple=true, callback={"App\Model\Model\AbstractUser", "getRolesList"}, message="Wrong roles selected", groups={"Default"})
      * @Serializer\Type("array")
      */
     protected $roles;
@@ -52,6 +52,7 @@ class UserFindDTO extends AbstractFindDTO
      * @var DateTime
      *
      * @Assert\Type(
+     *     groups={"Default"},
      *     type="DateTime",
      *     message="The value {{ value }} is not a valid."
      * )
@@ -63,6 +64,7 @@ class UserFindDTO extends AbstractFindDTO
      * @var DateTime
      *
      * @Assert\Type(
+     *     groups={"Default"},
      *     type="DateTime",
      *     message="The value {{ value }} is not a valid."
      * )

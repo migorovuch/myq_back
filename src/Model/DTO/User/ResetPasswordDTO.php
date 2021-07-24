@@ -14,8 +14,8 @@ class ResetPasswordDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\Email()
-     * @Assert\Type("string")
+     * @Assert\Email(groups={"Default"}, message="Invalid email format")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $email;

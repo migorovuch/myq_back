@@ -9,13 +9,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 class RangeDTO implements DTOInterface
 {
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     private ?string $from;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     private ?string $to;

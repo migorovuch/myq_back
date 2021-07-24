@@ -12,31 +12,31 @@ class CompanyFindDTO extends AbstractFindDTO
 {
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $id = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $name = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $email = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $phone = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $address = null;
@@ -48,7 +48,7 @@ class CompanyFindDTO extends AbstractFindDTO
     protected ?int $status = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\User>")
      */
     protected ?User $user = null;

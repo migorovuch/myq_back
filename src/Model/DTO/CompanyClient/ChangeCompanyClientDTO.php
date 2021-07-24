@@ -19,7 +19,7 @@ class ChangeCompanyClientDTO implements DTOInterface
     protected ?int $status = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $pseudonym = null;

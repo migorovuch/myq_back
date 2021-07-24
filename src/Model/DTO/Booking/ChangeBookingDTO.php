@@ -35,7 +35,7 @@ class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
@@ -53,7 +53,7 @@ class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
     protected ?DateTime $end = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $title = null;

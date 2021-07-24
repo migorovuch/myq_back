@@ -12,8 +12,8 @@ class ApproveEmailDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $token = null;
@@ -21,8 +21,8 @@ class ApproveEmailDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $id = null;

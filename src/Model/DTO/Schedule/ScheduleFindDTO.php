@@ -12,25 +12,25 @@ class ScheduleFindDTO extends AbstractFindDTO
 {
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $id = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\Company>")
      */
     protected ?Company $company = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $name = null;
 
     /**
-     * @Assert\Type("boolean")
+     * @Assert\Type("boolean", groups={"Default"})
      * @Serializer\Type("boolean")
      */
     protected ?string $enabled = null;

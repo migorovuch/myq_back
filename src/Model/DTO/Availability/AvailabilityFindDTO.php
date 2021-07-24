@@ -15,7 +15,7 @@ class AvailabilityFindDTO extends AbstractFindDTO
 
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
@@ -28,14 +28,14 @@ class AvailabilityFindDTO extends AbstractFindDTO
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("DateTime<'U'>")
      */
     protected ?DateTimeInterface $filterFrom = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("DateTime<'U'>")
      */
     protected ?DateTimeInterface $filterTo = null;

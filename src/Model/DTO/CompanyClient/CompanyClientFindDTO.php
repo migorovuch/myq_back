@@ -38,7 +38,7 @@ class CompanyClientFindDTO extends AbstractFindDTO
 
     /**
      * @Assert\Type("App\Entity\Company", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Company>")
      */
     protected ?Company $company = null;
@@ -50,7 +50,7 @@ class CompanyClientFindDTO extends AbstractFindDTO
     protected ?int $status = null;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $pseudonym = null;

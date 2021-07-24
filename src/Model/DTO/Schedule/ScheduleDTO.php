@@ -10,8 +10,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ScheduleDTO implements DTOInterface
 {
     /**
-     * @Assert\NotBlank
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $name = null;
@@ -36,20 +36,20 @@ class ScheduleDTO implements DTOInterface
 
     /**
      * @Assert\Type("integer")
-     * @Assert\LessThan("minBookingTime")
+     * @Assert\LessThan("maxBookingTime", groups={"Default"}, message="This value should be lower than Max. booking time")
      * @Serializer\Type("integer")
      */
     protected ?int $minBookingTime = 0;
 
     /**
-     * @Assert\Type("integer")
-     * @Assert\GreaterThanOrEqual(propertyPath="minBookingTime")
+     * @Assert\Type("integer", groups={"Default"})
+     * @Assert\GreaterThanOrEqual(propertyPath="minBookingTime", groups={"Default"}, message="This value should greater or equal than Min. booking time")
      * @Serializer\Type("integer")
      */
     protected ?int $maxBookingTime = 0;
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected ?string $description = null;

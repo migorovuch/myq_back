@@ -16,7 +16,7 @@ class BookingFindDTO extends AbstractFindDTO
 {
 
     /**
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      * @var string|null
      */
@@ -32,14 +32,14 @@ class BookingFindDTO extends AbstractFindDTO
 
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
-     * @Assert\NotBlank(groups={"booking_schedule"})
+     * @Assert\NotBlank(groups={"booking_schedule"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
 
     /**
      * @Assert\Type("App\Entity\Company", groups={"Default"})
-     * @Assert\NotBlank(groups={"booking_company"})
+     * @Assert\NotBlank(groups={"booking_company"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Company>")
      */
     protected ?Company $company = null;
@@ -76,7 +76,7 @@ class BookingFindDTO extends AbstractFindDTO
 
     /**
      * @Assert\Type("App\Entity\User", groups={"Default"})
-     * @Assert\NotBlank(groups={"booking_user"})
+     * @Assert\NotBlank(groups={"booking_user"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\User>")
      */
     protected ?User $user = null;

@@ -14,12 +14,13 @@ class ChangePasswordDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Length(
      *     min="6",
+     *     groups={"Default"},
      *     minMessage="Your password must be at least {{ limit }} characters long"
      * )
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $password;
@@ -27,8 +28,8 @@ class ChangePasswordDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $token;

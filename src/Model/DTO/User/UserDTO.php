@@ -11,16 +11,16 @@ class UserDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $nickname;
     /**
      * @var string
      *
-     * @Assert\NotBlank
-     * @Assert\Type("string")
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $fullName;
@@ -28,8 +28,8 @@ class UserDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\Email()
-     * @Assert\Type("string")
+     * @Assert\Email(groups={"Default"}, message="Invalid email format")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $email;
@@ -38,7 +38,7 @@ class UserDTO implements DTOInterface
      * @var string
      *
      * @Assert\NotBlank(groups={"googleAuthentication"})
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
     protected $googleTockenId;
@@ -48,16 +48,19 @@ class UserDTO implements DTOInterface
      *
      * @Assert\Length(
      *     min="6",
+     *     groups={"Default"},
      *     allowEmptyString=true,
      *     minMessage="Your password must be at least {{ limit }} characters long"
      * )
-     * @Assert\Type("string")
+     * @Assert\Type("string", groups={"Default"})
      * @Assert\NotEqualTo(
+     *     groups={"Default"},
      *     propertyPath = "email",
      *     message = "Your password should not be the same as your email."
      * )
      * @Assert\NotEqualTo(
-     *     value = "Your application name",
+     *     groups={"Default"},
+     *     value = "myqpassword",
      *     message = "Don't use the name of this application as your password."
      * )
      * @Serializer\Type("string")
@@ -67,8 +70,8 @@ class UserDTO implements DTOInterface
     /**
      * @var array
      *
-     * @Assert\NotNull()
-     * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getPublicRolesList"})
+     * @Assert\NotNull(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getPublicRolesList"}, message="Wrong roles selected", groups={"Default"})
      * @Serializer\Type("array")
      */
     protected $roles;

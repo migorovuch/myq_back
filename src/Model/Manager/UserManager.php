@@ -19,6 +19,7 @@ use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class UserManager.
@@ -52,10 +53,16 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      * @var string
      */
     protected string $appUrl;
+
     /**
      * @var string
      */
     protected string $signingKey;
+
+    /**
+     * @var TranslatorInterface
+     */
+    protected TranslatorInterface $translator;
 
     /**
      * UserManager constructor.
@@ -78,6 +85,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         UserPasswordEncoderInterface $userPasswordEncoder,
         ResetPasswordHelperInterface $resetPasswordHelper,
         MailerInterface $mailer,
+        TranslatorInterface $translator,
         string $appName,
         string $appEmail,
         string $appUrl,
@@ -86,6 +94,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         parent::__construct($entityManager, $userRepository, $security, $userDtoExporter);
         $this->userPasswordEncoder = $userPasswordEncoder;
         $this->resetPasswordHelper = $resetPasswordHelper;
+        $this->translator = $translator;
         $this->mailer = $mailer;
         $this->appName = $appName;
         $this->appEmail = $appEmail;
@@ -124,16 +133,19 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      */
     public function registration(DTOInterface $data): EntityInterface
     {
+        /** @var User $user */
         $user = parent::create($data);
-        $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . $this->createToken($user);
+        $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . urlencode($this->createToken($user));
         $email = (new TemplatedEmail())
             ->from(new Address($this->appEmail, $this->appName))
             ->to($user->getEmail())
-            ->subject('Confirm your account on MyQ')
+            ->subject($this->translator->trans('Confirm your account on %appName%',['%appName%' => $this->appName]))
             ->htmlTemplate('user/registration_email.html.twig')
             ->context(
                 [
                     'confirmationLink' => $confirmationLink,
+                    'userName' => $user->getFullName(),
+                    'appName' => $this->appName
                 ]
             );
         $this->mailer->send($email);
@@ -150,7 +162,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $user = $this->entityRepository->findOneBy(['id' => $approveEmailDTO->getId(), 'status' => User::STATUS_OFF]);
         if ($user) {
             $checkToken = $this->createToken($user);
-            if (hash_equals($checkToken, $approveEmailDTO->getToken())) {
+            if (hash_equals($checkToken, urldecode($approveEmailDTO->getToken()))) {
                 $user->setStatus(User::STATUS_ON);
                 $this->save($user);
             }
@@ -164,6 +176,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      */
     public function processSendingPasswordResetEmail(string $emailFormData)
     {
+        /** @var User $user */
         $user = $this->findOneBy(
             [
                 'email' => $emailFormData,
@@ -174,21 +187,27 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         if ($user) {
             try {
                 $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-                $resetLink = $this->appUrl . '#/reset-password/' . $resetToken->getToken();
+                $resetLink = $this->appUrl . '#/reset-password/' . urlencode($resetToken->getToken());
                 $email = (new TemplatedEmail())
                     ->from(new Address($this->appEmail, $this->appName))
                     ->to($user->getEmail())
-                    ->subject('Your password reset request')
+                    ->subject($this->translator->trans('Your password reset request'))
                     ->htmlTemplate('reset_password/email.html.twig')
                     ->context(
                         [
                             'resetLink' => $resetLink,
                             'tokenLifetime' => $this->resetPasswordHelper->getTokenLifetime(),
+                            'userName' => $user->getFullName()
                         ]
                     );
                 $this->mailer->send($email);
             } catch (ResetPasswordExceptionInterface $e) {
-                throw new ApiException(sprintf('There was a problem handling your password reset request - %s', $e->getReason()));
+                throw new ApiException(
+                    $this->translator->trans(
+                        'There was a problem handling your password reset request - %reason%',
+                        ['%reason%' => $e->getReason()]
+                    )
+                );
             } catch (\Throwable $exception) {
                 if ($resetToken) {
                     $this->resetPasswordHelper->removeResetRequest($resetToken->getToken());
@@ -208,7 +227,12 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($changePasswordDTO->getToken());
         } catch (ResetPasswordExceptionInterface $e) {
-            throw new ApiException(sprintf('There was a problem validating your reset request - %s', $e->getReason()));
+            throw new ApiException(
+                $this->translator->trans(
+                    'There was a problem validating your reset request - %reason%',
+                    ['%reason%' => $e->getReason()]
+                )
+            );
         }
 
         // A password reset token should be used only once, remove it.
