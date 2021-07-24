@@ -141,6 +141,9 @@
             "config/packages/prod/jms_serializer.yaml"
         ]
     },
+    "jms/translation-bundle": {
+        "version": "1.6.0"
+    },
     "laminas/laminas-code": {
         "version": "4.3.0"
     },
@@ -365,6 +368,9 @@
     "symfony/event-dispatcher-contracts": {
         "version": "v2.4.0"
     },
+    "symfony/expression-language": {
+        "version": "v5.2.10"
+    },
     "symfony/filesystem": {
         "version": "v5.2.7"
     },
@@ -554,6 +560,19 @@
     },
     "symfony/test-pack": {
         "version": "v1.0.8"
+    },
+    "symfony/translation": {
+        "version": "3.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "2ad9d2545bce8ca1a863e50e92141f0b9d87ffcd"
+        },
+        "files": [
+            "config/packages/translation.yaml",
+            "translations/.gitignore"
+        ]
     },
     "symfony/translation-contracts": {
         "version": "v2.4.0"

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
+  <file date="2021-07-24T11:45:13Z" source-language="en" target-language="en" datatype="plaintext" original="not.available">
+    <header>
+      <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
+      <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
+    </header>
+    <body>
+      <trans-unit id="9bf0c6168b65c8cef91b67d0ed9ea094e5c7894b" resname="Confirm your account on %appName%">
+        <source>Confirm your account on %appName%</source>
+        <target state="new">Confirm your account on %appName%</target>
+        <jms:reference-file line="142">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="5545ef55055b77e537d44eb9963a257b1545c8d2" resname="There was a problem handling your password reset request - %reason%">
+        <source>There was a problem handling your password reset request - %reason%</source>
+        <target state="new">There was a problem handling your password reset request - %reason%</target>
+        <jms:reference-file line="206">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="49b14e17d7a37d4d16f99bb6fb9ef5fe01d1979b" resname="There was a problem validating your reset request - %reason%">
+        <source>There was a problem validating your reset request - %reason%</source>
+        <target state="new">There was a problem validating your reset request - %reason%</target>
+        <jms:reference-file line="231">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="7340fe8fc9198ae8e543e14b694fa5b6a0c352cf" resname="Your password reset request">
+        <source>Your password reset request</source>
+        <target state="new">Your password reset request</target>
+        <jms:reference-file line="194">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>
