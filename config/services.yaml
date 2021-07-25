@@ -58,6 +58,13 @@ services:
         arguments:
             $appDebug: '%env(int:APP_DEBUG)%'
 
+    App\EventSubscriber\RequestLocaleSubscriber:
+        class: App\EventSubscriber\RequestLocaleSubscriber
+        tags:
+            - { name: kernel.event_subscriber }
+        arguments:
+            $frontAppLocales: '%env(string:VUE_APP_I18N_SUPPORTED_LOCALE)%'
+
     App\Util\Request\QueryParamConverter:
         class: App\Util\Request\QueryParamConverter
         autowire: true

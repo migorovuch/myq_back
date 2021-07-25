@@ -43,7 +43,7 @@ class ScheduleDTO implements DTOInterface
 
     /**
      * @Assert\Type("integer", groups={"Default"})
-     * @Assert\GreaterThanOrEqual(propertyPath="minBookingTime", groups={"Default"}, message="This value should greater or equal than Min. booking time")
+     * @Assert\GreaterThanOrEqual(propertyPath="minBookingTime", groups={"Default"}, message="This value should be greater or equal than Min. booking time")
      * @Serializer\Type("integer")
      */
     protected ?int $maxBookingTime = 0;
