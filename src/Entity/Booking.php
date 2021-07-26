@@ -74,19 +74,7 @@ class Booking implements EntityInterface
      * @ORM\JoinColumn(nullable=false)
      * @Serializer\Groups({"booking_client"})
      */
-    protected $client;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Serializer\Groups({"booking"})
-     */
-    protected $userName;
-
-    /**
-     * @ORM\Column(type="string", length=255)
-     * @Serializer\Groups({"booking"})
-     */
-    protected $userPhone;
+    protected CompanyClient $client;
 
     /**
      * @ORM\Column(type="datetime")
@@ -161,30 +149,6 @@ class Booking implements EntityInterface
     public function setCustomerComment(?string $customerComment): self
     {
         $this->customerComment = $customerComment;
-
-        return $this;
-    }
-
-    public function getUserName(): ?string
-    {
-        return $this->userName;
-    }
-
-    public function setUserName(?string $userName): self
-    {
-        $this->userName = $userName;
-
-        return $this;
-    }
-
-    public function getUserPhone(): ?string
-    {
-        return $this->userPhone;
-    }
-
-    public function setUserPhone(?string $userPhone): self
-    {
-        $this->userPhone = $userPhone;
 
         return $this;
     }

@@ -43,6 +43,7 @@ class BookingController extends AbstractBaseController
             'schedule_company',
             'company_id',
             'company_name',
+            'company_client_pseudonym'
         ];
     }
 
@@ -138,7 +139,22 @@ class BookingController extends AbstractBaseController
                 'total' => $total
             ],
             Response::HTTP_OK,
-            $this->serializeGroups
+            [
+                'booking',
+                'booking_schedule',
+                'schedule_id',
+                'schedule_name',
+                'schedule_description',
+                'schedule_booking_duration',
+                'schedule_min_booking_time',
+                'schedule_max_booking_time',
+                'booking_client',
+                'booking_title',
+                'company_client',
+                'schedule_company',
+                'company_id',
+                'company_name',
+            ]
         );
     }
 
