@@ -14,21 +14,25 @@ use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Component\Validator\Exception\UnexpectedValueException;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConstraintBookingAvailabilityValidator extends ConstraintValidator
 {
     protected SpecialHoursManagerInterface $specialHoursManager;
     protected BookingRepository $bookingRepository;
+    protected TranslatorInterface $translator;
 
     /**
      * ConstraintBookingAvailabilityValidator constructor.
      */
     public function __construct(
         SpecialHoursManagerInterface $specialHoursManager,
-        BookingRepository $bookingRepository
+        BookingRepository $bookingRepository,
+        TranslatorInterface $translator
     ) {
         $this->specialHoursManager = $specialHoursManager;
         $this->bookingRepository = $bookingRepository;
+        $this->translator = $translator;
     }
 
     /**
@@ -90,7 +94,7 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
 
         if (!$result) {
             // TODO: show message corresponding to mistake (invalid date/time/duration)
-            $this->context->buildViolation($constraint->getMessage())
+            $this->context->buildViolation($this->translator->trans('These dates are not allowed for booking'))
                 ->atPath('start')
 //                ->setParameter('{{ string }}', $value)
                 ->addViolation();

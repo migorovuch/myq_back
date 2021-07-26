@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\CompanyClient;
+use App\Entity\User;
 use App\Model\DTO\AbstractFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -41,5 +42,26 @@ class CompanyClientRepository extends EntityRepository
         }
 
         return $clients;
+    }
+
+    /**
+     * @param User $user
+     * @return int|mixed|string
+     */
+    public function changeClientDetails(User $user)
+    {
+        $query = $this->createQueryBuilder('')
+            ->update(CompanyClient::class, 'cc')
+
+            ->set('cc.name', ':fullName')
+            ->setParameter('fullName', $user->getFullName())
+            ->set('cc.phone', ':phone')
+            ->setParameter('phone', $user->getPhone())
+
+            ->where('cc.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery();
+
+        return $query->execute();
     }
 }

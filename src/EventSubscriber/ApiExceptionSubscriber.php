@@ -13,6 +13,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Throwable;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 /**
  * Class ApiExceptionSubscriber.
@@ -22,19 +23,22 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
     /**
      * @var LoggerInterface
      */
-    protected $logger;
-    private int $appDebug;
+    protected LoggerInterface $logger;
+    protected TranslatorInterface $translator;
+    protected int $appDebug;
 
     /**
      * ApiExceptionSubscriber constructor.
      *
      * @param LoggerInterface $logger
+     * @param TranslatorInterface $translator
      * @param int $appDebug
      */
-    public function __construct(LoggerInterface $logger, int $appDebug)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, int $appDebug)
     {
         $this->logger = $logger;
         $this->appDebug = $appDebug;
+        $this->translator = $translator;
     }
 
     /**

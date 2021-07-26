@@ -3,6 +3,7 @@
 namespace App\Model\Manager;
 
 use App\Entity\CompanyClient;
+use App\Entity\User;
 use App\Exception\AccessDeniedException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
@@ -92,5 +93,13 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
         }
 
         return null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function changeClientDetails(User $user)
+    {
+        return $this->entityRepository->changeClientDetails($user);
     }
 }

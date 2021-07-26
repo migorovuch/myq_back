@@ -3,6 +3,7 @@
 namespace App\Model\Manager;
 
 use App\Entity\CompanyClient;
+use App\Entity\User;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -15,4 +16,9 @@ interface CompanyClientManagerInterface extends CRUDManagerInterface
      * @return CompanyClient|null
      */
     public function checkExistingClientForBooking(CompanyClient $existingClient, ?UserInterface $currentUser): ?CompanyClient;
+
+    /**
+     * @param User $user
+     */
+    public function changeClientDetails(User $user);
 }

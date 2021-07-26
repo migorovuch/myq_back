@@ -6,6 +6,7 @@ use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
+use App\Model\DTO\User\ChangeUserDTO;
 use App\Model\DTO\User\UserDTO;
 use App\Model\Model\EntityInterface;
 
@@ -53,4 +54,10 @@ interface UserManagerInterface extends CRUDManagerInterface
      * @return User|null
      */
     public function approveEmail(ApproveEmailDTO $approveEmailDTO): ?User;
+
+    /**
+     * @param ChangeUserDTO $data
+     * @return EntityInterface
+     */
+    public function changeAccount(ChangeUserDTO $data): EntityInterface;
 }

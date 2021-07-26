@@ -3,10 +3,12 @@
 namespace App\Model\Manager;
 
 use App\Entity\User;
+use App\Exception\AccessDeniedException;
 use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
+use App\Model\DTO\User\ChangeUserDTO;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
@@ -63,19 +65,24 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      * @var TranslatorInterface
      */
     protected TranslatorInterface $translator;
+    private CompanyClientManagerInterface $companyClientManager;
 
     /**
      * UserManager constructor.
      *
-     * @param EntityManagerInterface       $entityManager
-     * @param UserRepository               $userRepository
-     * @param Security                     $security
-     * @param DTOExporterInterface         $userDtoExporter
+     * @param EntityManagerInterface $entityManager
+     * @param UserRepository $userRepository
+     * @param Security $security
+     * @param DTOExporterInterface $userDtoExporter
      * @param UserPasswordEncoderInterface $userPasswordEncoder
      * @param ResetPasswordHelperInterface $resetPasswordHelper
-     * @param MailerInterface              $mailer
-     * @param string                       $appName
-     * @param string                       $appEmail
+     * @param MailerInterface $mailer
+     * @param TranslatorInterface $translator
+     * @param CompanyClientManagerInterface $companyClientManager
+     * @param string $appName
+     * @param string $appEmail
+     * @param string $appUrl
+     * @param string $signingKey
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -86,6 +93,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         ResetPasswordHelperInterface $resetPasswordHelper,
         MailerInterface $mailer,
         TranslatorInterface $translator,
+        CompanyClientManagerInterface $companyClientManager,
         string $appName,
         string $appEmail,
         string $appUrl,
@@ -100,6 +108,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->appEmail = $appEmail;
         $this->appUrl = $appUrl;
         $this->signingKey = $signingKey;
+        $this->companyClientManager = $companyClientManager;
     }
 
     /**
@@ -246,6 +255,27 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
 
         $user->setPassword($encodedPassword);
         $this->save($user);
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function changeAccount(ChangeUserDTO $data): EntityInterface
+    {
+        /** @var User $user */
+        $user = $this->find($this->security->getUser()->getId());
+        if ($data->getPassword() && $data->getNewPassword()) {
+            $password = $this->userPasswordEncoder->encodePassword($user, $data->getNewPassword());
+            $user->setPassword($password);
+        }
+        $user
+            ->setPhone($data->getPhone())
+            ->setFullName($data->getFullName())
+            ->setNickname($data->getNickname());
+        $this->save($user);
+        $this->companyClientManager->changeClientDetails($user);
+
+        return $user;
     }
 
     /**
