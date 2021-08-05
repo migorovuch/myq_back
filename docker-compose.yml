@@ -5,11 +5,8 @@ services:
     command: ["--default-authentication-plugin=mysql_native_password"]
     ports:
       - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
-      MYSQL_USER: ${MYSQL_USER}
-      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    env_file:
+      - ./.env.local
     networks:
       - default_network
   php:
@@ -22,6 +19,8 @@ services:
     environment:
       PHP_IDE_CONFIG: "serverName=q.localhost"
       XDEBUG_CONFIG: "mode=debug start_with_request=yes client_host=host.docker.internal"
+    env_file:
+      - ./.env.local
   nginx:
     build: docker/nginx
     ports:
