@@ -11,14 +11,14 @@ class RequestLocaleSubscriber implements EventSubscriberInterface
     /**
      * @var string
      */
-    protected array $frontAppLocales;
+    protected array $appLocales;
 
     /**
      * RequestLocaleSubscriber constructor.
      */
-    public function __construct(string $frontAppLocales)
+    public function __construct(string $appLocales)
     {
-        $this->frontAppLocales = explode(',', $frontAppLocales);
+        $this->appLocales = explode(',', $appLocales);
     }
 
     /**
@@ -34,7 +34,7 @@ class RequestLocaleSubscriber implements EventSubscriberInterface
 
         // Symfony expects underscore instead of dash in locale
         $locale = str_replace('-', '_', $acceptLanguage);
-        if (in_array($locale, $this->frontAppLocales)) {
+        if (in_array($locale, $this->appLocales)) {
             $request->setLocale($locale);
         }
     }
