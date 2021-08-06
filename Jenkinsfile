@@ -78,12 +78,5 @@ pipeline {
         sh 'docker exec myq_php bin/console doctrine:migrations:migrate'
       }
     }
-
-    stage('Build front') {
-      steps {
-        sh 'docker exec myq_app npm install'
-        sh 'docker exec myq_app npm run webpack:build -o /var/www/project/myq_back/public/front'
-      }
-    }
   }
 }
