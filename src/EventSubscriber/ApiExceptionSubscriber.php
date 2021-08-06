@@ -25,19 +25,19 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
      */
     protected LoggerInterface $logger;
     protected TranslatorInterface $translator;
-    protected int $appDebug;
+    protected string $appEnv;
 
     /**
      * ApiExceptionSubscriber constructor.
      *
      * @param LoggerInterface $logger
      * @param TranslatorInterface $translator
-     * @param int $appDebug
+     * @param string $appEnv
      */
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, int $appDebug)
+    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, string $appEnv)
     {
         $this->logger = $logger;
-        $this->appDebug = $appDebug;
+        $this->appEnv = $appEnv;
         $this->translator = $translator;
     }
 
@@ -84,7 +84,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         } else {
             $code = $code ?: Response::HTTP_INTERNAL_SERVER_ERROR;
             $response = [
-                'title' => $this->appDebug ? $exception->getMessage() : 'Ooops something went wrong!',
+                'title' => $this->appEnv === 'dev' ? $exception->getMessage() : 'Ooops something went wrong!',
             ];
         }
         $event->setResponse(

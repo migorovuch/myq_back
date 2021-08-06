@@ -74,7 +74,7 @@ class Booking implements EntityInterface
      * @ORM\JoinColumn(nullable=false)
      * @Serializer\Groups({"booking_client"})
      */
-    protected CompanyClient $client;
+    protected ?CompanyClient $client;
 
     /**
      * @ORM\Column(type="datetime")

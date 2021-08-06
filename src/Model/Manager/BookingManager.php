@@ -199,8 +199,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         }
         $entity
             ->setStatus($status)
-            ->setClient($companyClient)
-            ->setTitle($entity->getUserName());
+            ->setClient($companyClient);
         $this->denyAccessUnlessGranted(BookingVoter::CREATE, $entity);
         $this->save($entity);
 

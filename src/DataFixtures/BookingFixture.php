@@ -64,8 +64,6 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
                 ->setEnd($endDate)
                 ->setStatus(Booking::STATUS_ACCEPTED)
                 ->setClient($client)
-                ->setUserName($client->getName())
-                ->setUserPhone($client->getPhone())
                 ->setTitle($client->getName());
             $manager->persist($booking);
         }
