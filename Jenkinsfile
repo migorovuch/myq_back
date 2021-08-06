@@ -5,9 +5,6 @@ pipeline {
 
     stage('Build TEST environment') {
       steps {
-        withCredentials([file(credentialsId: 'myq_test', variable: 'SECRETS')]) {
-            writeFile file: './.env.test', text: readFile(SECRETS)
-        }
         sh 'docker build -t myq_php_test --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
         sh 'docker build -t myq_nginx_test --no-cache -f ./docker/nginx/prod/Dockerfile ./'
         sh 'docker build -t myq_mysql_test --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
@@ -16,10 +13,13 @@ pipeline {
 
     stage('Run TEST environment') {
       steps {
+        withCredentials([file(credentialsId: 'myq_test', variable: 'SECRETS')]) {
+            writeFile file: './.env.test', text: readFile(SECRETS)
+        }
         sh 'docker network create myq_network_test'
+        sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env myq_mysql_test'
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env myq_php_test php-fpm'
         sh 'docker run --rm -t -d --network=myq_network_test -p 80:80 --name myq_nginx_test --env-file .env myq_nginx_test'
-        sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env myq_mysql_test'
       }
     }
 
@@ -55,9 +55,6 @@ pipeline {
 
     stage('Build environment') {
       steps {
-        withCredentials([file(credentialsId: 'myq', variable: 'SECRETS')]) {
-            writeFile file: './.env', text: readFile(SECRETS)
-        }
         sh 'docker build -t myq_php --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
         sh 'docker build -t myq_nginx --no-cache -f ./docker/nginx/prod/Dockerfile ./'
         sh 'docker build -t myq_mysql --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
@@ -66,6 +63,9 @@ pipeline {
 
     stage('Run environment') {
       steps {
+        withCredentials([file(credentialsId: 'myq', variable: 'SECRETS')]) {
+            writeFile file: './.env', text: readFile(SECRETS)
+        }
         sh 'docker network create myq_network'
         sh 'docker run --rm -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
         sh 'docker run --rm -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
