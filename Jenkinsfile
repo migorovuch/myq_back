@@ -1,8 +1,5 @@
 pipeline {
-  agent {
-    label 'MYQ'
-//     dockerfile true
-  }
+  agent any
 
   stages {
 
