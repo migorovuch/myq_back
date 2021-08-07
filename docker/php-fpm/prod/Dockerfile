@@ -18,5 +18,7 @@ WORKDIR /var/www/project/
 RUN chown -R www-data:www-data var
 #RUN   echo -en "\nnameserver 8.8.8.8    # Primary DNS server\nnameserver 8.8.4.4    # Secondary DNS server" >> /etc/resolve.conf
 
+#remove proxy settings
+RUN unset http_proxy
 #install dependencies
-#RUN composer install --ignore-platform-reqs
+RUN composer install

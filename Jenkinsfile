@@ -22,7 +22,6 @@ pipeline {
         sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env.test myq_mysql_test'
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php_test php-fpm'
         sh 'docker run --rm -t -d --network=myq_network_test -p 80:80 --name myq_nginx_test --env-file .env.test myq_nginx_test'
-        sh 'docker exec myq_php_test composer install'
       }
     }
 
