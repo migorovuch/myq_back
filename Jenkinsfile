@@ -16,8 +16,8 @@ pipeline {
         withCredentials([file(credentialsId: 'myq_test', variable: 'SECRETS')]) {
             writeFile file: './.env.test', text: readFile(SECRETS)
         }
-//         sh "export $(grep -v '^#' .env | xargs)"
         sh 'docker stop myq_mysql_test || true && docker stop myq_php_test || true &&  docker stop myq_nginx_test || true && docker network rm myq_network_test || true'
+        sh 'docker rm myq_mysql_test || true && docker rm myq_php_test || true &&  docker rm myq_nginx_test || true && docker network rm myq_network_test || true'
         sh 'docker network create myq_network_test'
         sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env.test myq_mysql_test'
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php_test php-fpm'
