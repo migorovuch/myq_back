@@ -4,7 +4,9 @@ FROM php:8-fpm AS php
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 RUN apt-get update \
-    && apt-get install -y libbz2-dev libpq-dev libzip-dev libxml2-dev zip unzip librabbitmq-dev git vim
+    && apt-get install -y libbz2-dev libpq-dev libzip-dev libxml2-dev zip unzip librabbitmq-dev git vim \
+    iputils-ping
+
 RUN docker-php-ext-install \
     pdo_mysql mysqli opcache bcmath sockets zip bz2
 
@@ -18,6 +20,6 @@ WORKDIR /var/www/project/
 RUN chown -R www-data:www-data var
 
 #install dependencies
-RUN composer install
+RUN composer install --no-scripts
 
 RUN php bin/console lexik:jwt:generate-keypair
