@@ -69,6 +69,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     protected TranslatorInterface $translator;
     private CompanyClientManagerInterface $companyClientManager;
     private LoggerInterface $logger;
+    private string $appEnv;
 
     /**
      * UserManager constructor.
@@ -86,6 +87,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      * @param string $appName
      * @param string $appEmail
      * @param string $appUrl
+     * @param string $appEnv
      * @param string $signingKey
      */
     public function __construct(
@@ -102,6 +104,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         string $appName,
         string $appEmail,
         string $appUrl,
+        string $appEnv,
         string $signingKey
     ) {
         parent::__construct($entityManager, $userRepository, $security, $userDtoExporter);
@@ -116,6 +119,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->signingKey = $signingKey;
         $this->companyClientManager = $companyClientManager;
         $this->logger = $logger;
+        $this->appEnv = $appEnv;
     }
 
     /**
@@ -151,6 +155,10 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     {
         /** @var User $user */
         $user = parent::create($data);
+        if ($this->appEnv === 'test') {
+            $user->setStatus(User::STATUS_ON);
+            $this->save($user);
+        }
         $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . urlencode($this->createToken($user));
         try {
             $email = (new TemplatedEmail())
