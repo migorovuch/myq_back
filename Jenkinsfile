@@ -3,11 +3,11 @@ pipeline {
 
   stages {
 
-    stage('Build TEST environment') {
+    stage('Build environment') {
       steps {
-        sh 'docker build -t myq_php_test --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
-        sh 'docker build -t myq_nginx_test --no-cache -f ./docker/nginx/prod/Dockerfile ./'
-        sh 'docker build -t myq_mysql_test --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
+        sh 'docker build -t myq_php --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
+        sh 'docker build -t myq_nginx --no-cache -f ./docker/nginx/prod/Dockerfile ./'
+        sh 'docker build -t myq_mysql --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
       }
     }
 
@@ -19,9 +19,9 @@ pipeline {
         sh 'docker stop myq_mysql_test || true && docker stop myq_php_test || true &&  docker stop myq_nginx_test || true && docker network rm myq_network_test || true'
         sh 'docker rm myq_mysql_test || true && docker rm myq_php_test || true &&  docker rm myq_nginx_test || true && docker network rm myq_network_test || true'
         sh 'docker network create myq_network_test'
-        sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env.test myq_mysql_test'
-        sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php_test php-fpm'
-        sh 'docker run --rm -t -d --network=myq_network_test -p 80:80 --name myq_nginx_test --env-file .env.test myq_nginx_test'
+        sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env.test myq_mysql'
+        sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php php-fpm'
+        sh 'docker run --rm -t -d --network=myq_network_test -p 80:80 --name myq_nginx_test --env-file .env.test myq_nginx'
       }
     }
 
@@ -52,15 +52,6 @@ pipeline {
         sh 'docker stop myq_php_test'
         sh 'docker stop myq_nginx_test'
         sh 'docker network rm myq_network_test'
-      }
-    }
-
-    stage('Build environment') {
-      steps {
-        sh 'docker stop myq_mysql || true && docker stop myq_php || true &&  docker stop myq_nginx || true && docker network rm myq_network || true'
-        sh 'docker build -t myq_php --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
-        sh 'docker build -t myq_nginx --no-cache -f ./docker/nginx/prod/Dockerfile ./'
-        sh 'docker build -t myq_mysql --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
       }
     }
 
