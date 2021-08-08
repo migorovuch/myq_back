@@ -18,8 +18,3 @@ COPY ./. /var/www/project/
 WORKDIR /var/www/project/
 
 RUN chown -R www-data:www-data var
-
-#install dependencies
-RUN composer install --no-scripts
-
-#RUN php bin/console lexik:jwt:generate-keypair

@@ -105,7 +105,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->translator = $translator;
         $this->mailer = $mailer;
         $this->appName = $appName;
-        $this->appEmail = trim($appEmail);
+//        TODO: use correct email
+        $this->appEmail = str_replace("'", "", trim($appEmail));
         $this->appUrl = $appUrl;
         $this->signingKey = $signingKey;
         $this->companyClientManager = $companyClientManager;
