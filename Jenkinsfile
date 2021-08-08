@@ -25,7 +25,7 @@ pipeline {
       }
     }
 
-    stage('Install dependencies') {
+    stage('Install TEST dependencies') {
         steps {
             sh 'docker exec myq_php composer install'
             sh 'docker exec myq_php bin/console lexik:jwt:generate-keypair || true'
