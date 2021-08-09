@@ -155,10 +155,6 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     {
         /** @var User $user */
         $user = parent::create($data);
-        if ($this->appEnv === 'test') {
-            $user->setStatus(User::STATUS_ON);
-            $this->save($user);
-        }
         $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . urlencode($this->createToken($user));
         try {
             $email = (new TemplatedEmail())
