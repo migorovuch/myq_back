@@ -117,7 +117,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         foreach ($specialHours as $item) {
             if (
                 $item->getRepeatCondition() === SpecialHours::REPEAT_EVERY_DAY ||
-                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_WEAK && ($start->format('w') - 1) == $item->getRepeatDay()) ||
+                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_WEAK && $start->format('w') == $item->getRepeatDay()) ||
                 ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_MONTH && $start->format('d') == $item->getRepeatDate()->format('d')) ||
                 ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_YEAR && $start->format('md') == $item->getRepeatDate()->format('md'))
             ) {

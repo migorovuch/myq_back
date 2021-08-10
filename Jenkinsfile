@@ -19,6 +19,7 @@ pipeline {
         sh 'docker stop myq_mysql || true && docker stop myq_php || true &&  docker stop myq_nginx || true && docker network rm myq_network || true'
         sh 'docker network create myq_network'
         sh 'docker run --rm -t -d --network=myq_network -p 3307:3306 --name myq_mysql --env-file .env.test myq_mysql'
+//         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
         sh 'docker run --rm -t -d --network=myq_network --name myq_php --env-file .env.test myq_php php-fpm'
         sh 'docker run --rm -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env.test myq_nginx'
@@ -32,14 +33,9 @@ pipeline {
         }
     }
 
-    stage('Run TEST migrations') {
+    stage('Prepare TEST DB migrations&fixtures') {
       steps {
         sh 'docker exec myq_php bin/console doctrine:migrations:migrate'
-      }
-    }
-
-    stage('Load TEST fixtures') {
-      steps {
         sh 'docker exec myq_php bin/console doctrine:fixtures:load -n'
       }
     }
@@ -47,11 +43,24 @@ pipeline {
     stage('Run PHP Unit tests') {
       steps {
         sh 'docker exec myq_php bin/phpunit --log-junit var/testResults/phpunit.xml --coverage-clover var/testResults/clover.xml'
-        sh 'docker cp myq_app:/var/www/project/var/testResults/phpunit.xml ./testResults.xml'
-        sh 'docker cp myq_app:/var/www/project/var/testResults/clover.xml ./clover.xml'
+        sh 'docker cp myq_php:/var/www/project/var/testResults/phpunit.xml ./testResults.xml'
+//         sh 'docker cp myq_php:/var/www/project/var/testResults/clover.xml ./clover.xml'
         junit '**/testResults.xml'
       }
     }
+
+//     stage('Code coverage') {
+//       steps {
+//         step([
+//           $class: 'CloverPublisher',
+//           cloverReportDir: '.',
+//           cloverReportFileName: 'clover.xml',
+//           healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
+//           unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
+//           failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
+//         ])
+//       }
+//     }
 
     stage('Stop TEST environment') {
       steps {

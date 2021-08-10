@@ -66,6 +66,9 @@ class BookingControllerTest extends AbstractBaseController
         $this->assertArrayHasKey('id', $bookingContent['client'], 'Client wasn\'t created properly');
     }
 
+    /**
+     * Schedule should not be available for unauthorized users
+     */
     public function testCreateBookingUnauthorizedFail()
     {
         $companies = $this->findCompanyByEmail('company1@gmail.com');
@@ -75,8 +78,9 @@ class BookingControllerTest extends AbstractBaseController
 
         $now = new DateTime();
         $daysCount = 5;
-        if (((int)$now->format('N')) + $daysCount > 5) {
-            $daysCount += 2;
+        $bookingDay = ((int)$now->format('N')) + $daysCount;
+        if ($bookingDay !== 1 && $bookingDay !== 7) {
+            $daysCount += (7 - $bookingDay);
         }
         $start = (new DateTime())->modify($daysCount.' day')->setTime(11, 0, 0);
         $end = (new DateTime())->modify($daysCount.' day')->setTime(11, 30, 0);
@@ -115,8 +119,9 @@ class BookingControllerTest extends AbstractBaseController
 
         $now = new DateTime();
         $daysCount = 5;
-        if (((int)$now->format('N')) + $daysCount > 5) {
-            $daysCount += 2;
+        $bookingDay = ((int)$now->format('N')) + $daysCount;
+        if ($bookingDay !== 1 && $bookingDay !== 7) {
+            $daysCount += (7 - $bookingDay);
         }
         $start = (new DateTime())->modify($daysCount.' day')->setTime(11, 0, 0);
         $end = (new DateTime())->modify($daysCount.' day')->setTime(11, 30, 0);

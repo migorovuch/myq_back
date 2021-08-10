@@ -8,12 +8,23 @@
          bootstrap="tests/bootstrap.php"
          convertDeprecationsToExceptions="false"
 >
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">src</directory>
+        </include>
+        <exclude>
+            <directory suffix=".php">src/Exceptions</directory>
+            <directory suffix=".php">src/Controller</directory>
+            <file>src/Kernel.php</file>
+        </exclude>
+    </coverage>
     <php>
         <ini name="error_reporting" value="-1" />
         <server name="APP_ENV" value="test" force="true" />
         <server name="SHELL_VERBOSITY" value="-1" />
         <server name="SYMFONY_PHPUNIT_REMOVE" value="" />
-        <server name="SYMFONY_PHPUNIT_VERSION" value="9.5" />
+        <server name="SYMFONY_PHPUNIT_VERSION" value="10" />
+        <server name="SYMFONY_DEPRECATIONS_HELPER" value="disabled" />
     </php>
 
     <testsuites>
@@ -21,12 +32,6 @@
             <directory>tests</directory>
         </testsuite>
     </testsuites>
-
-    <coverage processUncoveredFiles="true">
-        <include>
-            <directory suffix=".php">src</directory>
-        </include>
-    </coverage>
 
     <listeners>
         <listener class="Symfony\Bridge\PhpUnit\SymfonyTestsListener" />
