@@ -18,7 +18,7 @@ pipeline {
         }
         sh 'docker stop myq_mysql_test || true && docker stop myq_php_test || true &&  docker stop myq_nginx_test || true && docker network rm myq_network_test || true'
         sh 'docker network create myq_network_test'
-        sh 'docker run --rm -t -d --network=myq_network -p 3307:3306 --name myq_mysql_test --env-file .env.test myq_mysql'
+        sh 'docker run --rm -t -d --network=myq_network_test -p 3307:3306 --name myq_mysql_test --env-file .env.test myq_mysql'
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php php-fpm'
@@ -86,21 +86,6 @@ pipeline {
         sh 'docker run --rm -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
         sh 'docker run --rm -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
       }
-    }
-
-    stage('Install dependencies') {
-        steps {
-            sh 'docker exec myq_php composer install'
-            sh 'docker exec myq_php bin/console lexik:jwt:generate-keypair || true'
-        }
-    }
-
-    stage('Copy FRONT to Nginx container') {
-        steps {
-            withCredentials([string(credentialsId: 'volumes_path', variable: 'VOLUMES_PATH')]) {
-                sh "docker cp $VOLUMES_PATHfront/. myq_nginx:/var/www/project/public/front/"
-            }
-        }
     }
 
     stage('Run migrations') {
