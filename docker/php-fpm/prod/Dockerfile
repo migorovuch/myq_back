@@ -13,8 +13,8 @@ RUN docker-php-ext-install \
 COPY ./docker/php-fpm/symfony.ini /usr/local/etc/php/conf.d
 COPY ./docker/php-fpm/symfony.ini /usr/local/etc/php/cli/conf.d
 COPY ./docker/php-fpm/symfony.pool.conf /usr/local/etc/php/php-fpm.d/
-COPY ./. /var/www/project/
+COPY ./. /var/www/html/
 
-WORKDIR /var/www/project/
+RUN chown -R www-data:www-data /var/www/html/var
 
-RUN chown -R www-data:www-data var
+WORKDIR /var/www/html/

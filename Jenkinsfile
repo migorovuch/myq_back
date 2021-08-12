@@ -22,6 +22,7 @@ pipeline {
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php php-fpm'
+        sh 'docker exec myq_php_test chown -R www-data:www-data /var/www/html/var'
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_nginx_test --env-file .env.test myq_nginx bash'
         sh 'docker exec myq_nginx_test bash -c \'echo "upstream php-upstream { server myq_php_test:9000; }" > /etc/nginx/conf.d/upstream.conf\''
         sh 'docker exec myq_nginx_test nginx'
@@ -45,8 +46,8 @@ pipeline {
     stage('Run PHP Unit tests') {
       steps {
         sh 'docker exec myq_php_test bin/phpunit --log-junit var/testResults/phpunit.xml --coverage-clover var/testResults/clover.xml'
-        sh 'docker cp myq_php_test:/var/www/project/var/testResults/phpunit.xml ./testResults.xml'
-//         sh 'docker cp myq_php:/var/www/project/var/testResults/clover.xml ./clover.xml'
+        sh 'docker cp myq_php_test:/var/www/html/var/testResults/phpunit.xml ./testResults.xml'
+//         sh 'docker cp myq_php:/var/www/html/var/testResults/clover.xml ./clover.xml'
         junit '**/testResults.xml'
       }
     }
@@ -80,11 +81,17 @@ pipeline {
         }
         sh 'docker stop myq_mysql || true && docker stop myq_php || true &&  docker stop myq_nginx || true && docker network rm myq_network || true'
         sh 'docker network create myq_network'
-        sh 'docker run --rm -t -d --network=myq_network --health-cmd="mysqladmin ping --silent" --health-interval=2s -p 3307:3306 --name myq_mysql --env-file .env myq_mysql'
+        withCredentials([string(credentialsId: 'volumes_path', variable: 'VOLUMES_PATH')]) {
+            sh '''
+                set +x
+                docker run --rm -t -d --network=myq_network -v $VOLUMES_PATH/mysql:/var/lib/mysql -p 3307:3306 --name myq_mysql --env-file .env myq_mysql
+            '''
+        }
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
         sh 'docker run --rm -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
         sh 'docker run --rm -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
+        sh 'docker exec myq_php chown -R www-data:www-data /var/www/html/var'
       }
     }
 
@@ -98,6 +105,13 @@ pipeline {
     stage('Run migrations') {
       steps {
         sh 'docker exec myq_php bin/console doctrine:migrations:migrate'
+      }
+    }
+
+    stage('Copy FRONT') {
+      steps {
+        sh 'docker cp myq_node:/app/dist/. ./app/dist/'
+        sh 'docker cp ./app/dist/. myq_nginx:/var/www/html/public/front/'
       }
     }
   }
