@@ -4,12 +4,14 @@ namespace App\Model\DTO\User;
 
 use App\Model\DTO\DTOInterface;
 use App\Validator\ConstraintAccount;
+use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class ChangeUserDTO
  * @ConstraintAccount
+ * @ConstraintAccountUniqueEmail
  */
 class ChangeUserDTO implements DTOInterface
 {
@@ -72,20 +74,31 @@ class ChangeUserDTO implements DTOInterface
     protected string $newPassword;
 
     /**
+     * @var string
+     *
+     * @Assert\Email(groups={"Default"}, message="Invalid email format")
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected $email;
+
+    /**
      * UpdateDTO constructor.
      * @param string $nickname
      * @param string $fullName
      * @param string $phone
      * @param string $password
      * @param string $newPassword
+     * @param string $email
      */
-    public function __construct(string $nickname, string $fullName, string $phone, string $password, string $newPassword)
+    public function __construct(string $nickname, string $fullName, string $phone, string $password, string $newPassword, string $email)
     {
         $this->nickname = $nickname;
         $this->fullName = $fullName;
         $this->phone = $phone;
         $this->password = $password;
         $this->newPassword = $newPassword;
+        $this->email = $email;
     }
 
     /**
@@ -126,5 +139,13 @@ class ChangeUserDTO implements DTOInterface
     public function getNewPassword(): string
     {
         return $this->newPassword;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail(): string
+    {
+        return $this->email;
     }
 }

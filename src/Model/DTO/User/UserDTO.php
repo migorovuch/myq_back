@@ -3,9 +3,14 @@
 namespace App\Model\DTO\User;
 
 use App\Model\DTO\DTOInterface;
+use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * Class UserDTO
+ * @ConstraintAccountUniqueEmail
+ */
 class UserDTO implements DTOInterface
 {
     /**

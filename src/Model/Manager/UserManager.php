@@ -3,7 +3,6 @@
 namespace App\Model\Manager;
 
 use App\Entity\User;
-use App\Exception\AccessDeniedException;
 use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
