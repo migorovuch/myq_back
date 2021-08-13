@@ -110,8 +110,8 @@ pipeline {
 
     stage('Copy FRONT') {
       steps {
-        sh 'docker cp myq_node:/app/dist/. ./app/dist/'
-        sh 'docker cp ./app/dist/. myq_nginx:/var/www/html/public/front/'
+        sh 'docker cp myq_node:/app/dist/. ./public/front/'
+        sh 'docker cp ./public/front/. myq_nginx:/var/www/html/public/front/'
       }
     }
   }
