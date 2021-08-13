@@ -30,7 +30,7 @@ class SpecialHours implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Schedule::class, inversedBy="specialHours")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Serializer\Groups({"special_hours_schedule"})
      */
     protected $schedule;

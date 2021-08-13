@@ -52,6 +52,7 @@ class CompanyClient implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Serializer\Groups({"company_client_company"})
      */
     protected ?Company $company = null;

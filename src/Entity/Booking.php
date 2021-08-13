@@ -41,6 +41,7 @@ class Booking implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Schedule::class, inversedBy="bookings")
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Serializer\Groups({"booking_schedule"})
      */
     protected $schedule;
@@ -71,7 +72,7 @@ class Booking implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=CompanyClient::class, inversedBy="bookings")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Serializer\Groups({"booking_client"})
      */
     protected ?CompanyClient $client;

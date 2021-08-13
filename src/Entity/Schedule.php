@@ -41,7 +41,7 @@ class Schedule implements EntityInterface
 
     /**
      * @ORM\ManyToOne(targetEntity=Company::class, inversedBy="schedules")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=false, onDelete="CASCADE")
      * @Serializer\Groups({"schedule_company"})
      */
     private $company;
