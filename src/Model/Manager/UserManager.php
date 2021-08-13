@@ -13,6 +13,7 @@ use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
@@ -22,6 +23,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * Class UserManager.
@@ -66,6 +68,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      */
     protected TranslatorInterface $translator;
     private CompanyClientManagerInterface $companyClientManager;
+    private LoggerInterface $logger;
+    private string $appEnv;
 
     /**
      * UserManager constructor.
@@ -79,9 +83,11 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      * @param MailerInterface $mailer
      * @param TranslatorInterface $translator
      * @param CompanyClientManagerInterface $companyClientManager
+     * @param LoggerInterface $logger
      * @param string $appName
      * @param string $appEmail
      * @param string $appUrl
+     * @param string $appEnv
      * @param string $signingKey
      */
     public function __construct(
@@ -94,9 +100,11 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         MailerInterface $mailer,
         TranslatorInterface $translator,
         CompanyClientManagerInterface $companyClientManager,
+        LoggerInterface $logger,
         string $appName,
         string $appEmail,
         string $appUrl,
+        string $appEnv,
         string $signingKey
     ) {
         parent::__construct($entityManager, $userRepository, $security, $userDtoExporter);
@@ -105,10 +113,13 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->translator = $translator;
         $this->mailer = $mailer;
         $this->appName = $appName;
-        $this->appEmail = $appEmail;
+//        TODO: use correct email
+        $this->appEmail = str_replace("'", "", trim($appEmail));
         $this->appUrl = $appUrl;
         $this->signingKey = $signingKey;
         $this->companyClientManager = $companyClientManager;
+        $this->logger = $logger;
+        $this->appEnv = $appEnv;
     }
 
     /**
@@ -145,19 +156,24 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         /** @var User $user */
         $user = parent::create($data);
         $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . urlencode($this->createToken($user));
-        $email = (new TemplatedEmail())
-            ->from(new Address($this->appEmail, $this->appName))
-            ->to($user->getEmail())
-            ->subject($this->translator->trans('Confirm your account on %appName%',['%appName%' => $this->appName]))
-            ->htmlTemplate('user/registration_email.html.twig')
-            ->context(
-                [
-                    'confirmationLink' => $confirmationLink,
-                    'userName' => $user->getFullName(),
-                    'appName' => $this->appName
-                ]
-            );
-        $this->mailer->send($email);
+        try {
+            $email = (new TemplatedEmail())
+                ->from(new Address($this->appEmail, $this->appName))
+                ->to($user->getEmail())
+                ->subject($this->translator->trans('Confirm your account on %appName%',
+                    ['%appName%' => $this->appName]))
+                ->htmlTemplate('user/registration_email.html.twig')
+                ->context(
+                    [
+                        'confirmationLink' => $confirmationLink,
+                        'userName' => $user->getFullName(),
+                        'appName' => $this->appName
+                    ]
+                );
+            $this->mailer->send($email);
+        } catch (Throwable $exception) {
+            $this->logger->error('Send registration email exception: '.$exception->getMessage());
+        }
 
         return $user;
     }

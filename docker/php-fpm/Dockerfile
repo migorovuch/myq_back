@@ -30,4 +30,4 @@ RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v2.phar -o php-cs-fixer
 RUN chmod a+x php-cs-fixer
 RUN mv php-cs-fixer /usr/local/bin/php-cs-fixer
 
-WORKDIR /var/www/project
+WORKDIR /var/www/html

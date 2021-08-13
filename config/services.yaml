@@ -56,14 +56,14 @@ services:
         tags:
             - { name: kernel.event_subscriber, event: kernel.exception }
         arguments:
-            $appDebug: '%env(int:APP_DEBUG)%'
+            $appEnv: '%env(string:APP_ENV)%'
 
     App\EventSubscriber\RequestLocaleSubscriber:
         class: App\EventSubscriber\RequestLocaleSubscriber
         tags:
             - { name: kernel.event_subscriber }
         arguments:
-            $frontAppLocales: '%env(string:VUE_APP_I18N_SUPPORTED_LOCALE)%'
+            $appLocales: '%env(string:SUPPORTED_LOCALE)%'
 
     App\Util\Request\QueryParamConverter:
         class: App\Util\Request\QueryParamConverter
@@ -77,6 +77,7 @@ services:
             $appName: '%env(string:APP_NAME)%'
             $appEmail: '%env(string:APP_EMAIL)%'
             $appUrl: '%env(string:VUE_APP_APP_URL)%'
+            $appEnv: '%env(string:APP_ENV)%'
             $signingKey: '%env(string:SIGNING_KEY)%'
 
     gedmo.listener.timestampable:
