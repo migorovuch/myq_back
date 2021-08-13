@@ -50,7 +50,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
     {
         $exception = $event->getThrowable();
         $code = $exception->getCode();
-        $response = [];
+        $response = $exceptionContext = [];
 //        $actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
         if ($exception instanceof ValidationFailedException) {
             $code = Response::HTTP_UNPROCESSABLE_ENTITY;
@@ -62,6 +62,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
                     'title' => $error->getMessage(),
                 ];
             }
+            $exceptionContext = $responseErrors;
             $response = [
                 'title' => $exception->getMessage(),
                 'errors' => $responseErrors,
@@ -90,19 +91,21 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         $event->setResponse(
             new JsonResponse($response, $code)
         );
-        $this->log($exception);
+        $this->log($exception, $exceptionContext);
 
         return $event;
     }
 
     /**
      * @param Throwable $exception
+     * @param array $exceptionContext
      */
-    private function log(Throwable $exception)
+    private function log(Throwable $exception, array $exceptionContext = [])
     {
         $log = [
             'code' => $exception->getCode(),
             'message' => $exception->getMessage(),
+            'exceptionContext' => $exceptionContext,
             'occurred' => [
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
