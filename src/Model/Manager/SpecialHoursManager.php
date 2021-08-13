@@ -94,6 +94,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
                 }
             }
             $this->entityManager->flush();
+            $this->entityManager->commit();
         } catch (AccessDeniedException $exception) {
             $this->entityManager->rollback();
             throw $exception;
