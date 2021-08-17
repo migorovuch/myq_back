@@ -22,7 +22,6 @@ pipeline {
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_php_test --env-file .env.test myq_php php-fpm'
-        sh 'docker exec myq_php_test chown -R www-data:www-data /var/www/html/var'
         sh 'docker run --rm -t -d --network=myq_network_test --name myq_nginx_test --env-file .env.test myq_nginx bash'
         sh 'docker exec myq_nginx_test bash -c \'echo "upstream php-upstream { server myq_php_test:9000; }" > /etc/nginx/conf.d/upstream.conf\''
         sh 'docker exec myq_nginx_test nginx'
@@ -80,18 +79,18 @@ pipeline {
             writeFile file: './.env', text: readFile(SECRETS)
         }
         sh 'docker stop myq_mysql || true && docker stop myq_php || true &&  docker stop myq_nginx || true && docker network rm myq_network || true'
+        sh 'docker rm myq_mysql || true && docker rm myq_php || true &&  docker rm myq_nginx || true'
         sh 'docker network create myq_network'
         withCredentials([string(credentialsId: 'volumes_path', variable: 'VOLUMES_PATH')]) {
             sh '''
                 set +x
-                docker run --rm -t -d --network=myq_network -v $VOLUMES_PATH/mysql:/var/lib/mysql -p 3307:3306 --name myq_mysql --env-file .env myq_mysql
+                docker run -t -d --network=myq_network -v $VOLUMES_PATH/mysql:/var/lib/mysql -p 3307:3306 --name myq_mysql --env-file .env myq_mysql
             '''
         }
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
-        sh 'docker run --rm -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
-        sh 'docker run --rm -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
-        sh 'docker exec myq_php chown -R www-data:www-data /var/www/html/var'
+        sh 'docker run -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
+        sh 'docker run -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
       }
     }
 
