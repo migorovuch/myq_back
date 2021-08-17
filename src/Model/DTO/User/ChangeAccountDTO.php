@@ -3,16 +3,27 @@
 namespace App\Model\DTO\User;
 
 use App\Model\DTO\DTOInterface;
+use App\Validator\ConstraintAccount;
 use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class UserDTO
+ * Class ChangeAccountDTO
+ * @ConstraintAccount
  * @ConstraintAccountUniqueEmail
  */
-class UserDTO implements DTOInterface
+class ChangeAccountDTO implements DTOInterface
 {
+
+    /**
+     * @var string
+     *
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected string $id;
+
     /**
      * @var string
      *
@@ -20,7 +31,7 @@ class UserDTO implements DTOInterface
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected $nickname;
+    protected string $nickname;
     /**
      * @var string
      *
@@ -28,25 +39,28 @@ class UserDTO implements DTOInterface
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected $fullName;
+    protected string $fullName;
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected string $phone;
 
     /**
      * @var string
      *
-     * @Assert\Email(groups={"Default"}, message="Invalid email format")
      * @Assert\Type("string", groups={"Default"})
+     * @Assert\NotEqualTo(
+     *     groups={"Default"},
+     *     value = "myqpassword",
+     *     message = "Don't use the name of this application as your password."
+     * )
      * @Serializer\Type("string")
      */
-    protected $email;
-
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(groups={"googleAuthentication"})
-     * @Assert\Type("string", groups={"Default"})
-     * @Serializer\Type("string")
-     */
-    protected $googleTockenId;
+    protected string $password;
 
     /**
      * @var string
@@ -60,45 +74,49 @@ class UserDTO implements DTOInterface
      * @Assert\Type("string", groups={"Default"})
      * @Assert\NotEqualTo(
      *     groups={"Default"},
-     *     propertyPath = "email",
-     *     message = "Your password should not be the same as your email."
-     * )
-     * @Assert\NotEqualTo(
-     *     groups={"Default"},
      *     value = "myqpassword",
      *     message = "Don't use the name of this application as your password."
      * )
      * @Serializer\Type("string")
      */
-    protected $password;
+    protected string $newPassword;
 
     /**
-     * @var array
+     * @var string
      *
-     * @Assert\NotNull(groups={"Default"}, message="This value should not be blank")
-     * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getPublicRolesList"}, message="Wrong roles selected", groups={"Default"})
-     * @Serializer\Type("array")
+     * @Assert\Email(groups={"Default"}, message="Invalid email format")
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
      */
-    protected $roles;
+    protected $email;
 
     /**
-     * RegistrationDTO constructor.
-     *
+     * ChangeAccountDTO constructor.
+     * @param string $id
      * @param string $nickname
      * @param string $fullName
-     * @param string $email
+     * @param string $phone
      * @param string $password
-     * @param array $roles
-     * @param string $googleTockenId
+     * @param string $newPassword
+     * @param string $email
      */
-    public function __construct(string $nickname, string $fullName, string $email, string $password, array $roles, string $googleTockenId)
+    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $password, string $newPassword, string $email)
     {
         $this->nickname = $nickname;
-        $this->email = $email;
-        $this->password = $password;
-        $this->roles = $roles;
-        $this->googleTockenId = $googleTockenId;
         $this->fullName = $fullName;
+        $this->phone = $phone;
+        $this->password = $password;
+        $this->newPassword = $newPassword;
+        $this->email = $email;
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -120,9 +138,9 @@ class UserDTO implements DTOInterface
     /**
      * @return string
      */
-    public function getEmail(): string
+    public function getPhone(): string
     {
-        return $this->email;
+        return $this->phone;
     }
 
     /**
@@ -134,18 +152,18 @@ class UserDTO implements DTOInterface
     }
 
     /**
-     * @return array
+     * @return string
      */
-    public function getRoles(): array
+    public function getNewPassword(): string
     {
-        return $this->roles;
+        return $this->newPassword;
     }
 
     /**
-     * @return string|null
+     * @return string
      */
-    public function getGoogleTockenId(): ?string
+    public function getEmail(): string
     {
-        return $this->googleTockenId;
+        return $this->email;
     }
 }

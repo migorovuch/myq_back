@@ -6,8 +6,8 @@ use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
-use App\Model\DTO\User\ChangeUserDTO;
-use App\Model\DTO\User\UserDTO;
+use App\Model\DTO\User\ChangeAccountDTO;
+use App\Model\DTO\User\RegistrationDTO;
 use App\Model\Model\EntityInterface;
 
 /**
@@ -23,7 +23,7 @@ interface UserManagerInterface extends CRUDManagerInterface
     public function loadUserByUsername(string $username);
 
     /**
-     * @param UserDTO $data
+     * @param RegistrationDTO $data
      *
      * @return User|array
      */
@@ -56,8 +56,15 @@ interface UserManagerInterface extends CRUDManagerInterface
     public function approveEmail(ApproveEmailDTO $approveEmailDTO): ?User;
 
     /**
-     * @param ChangeUserDTO $data
+     * @param ChangeAccountDTO $data
      * @return EntityInterface
      */
-    public function changeAccount(ChangeUserDTO $data): EntityInterface;
+    public function changeAccount(ChangeAccountDTO $data): EntityInterface;
+
+    /**
+     * @param string $email
+     * @param string|null $exceptId
+     * @return bool
+     */
+    public function ifEmailExists(string $email, string $exceptId = null);
 }

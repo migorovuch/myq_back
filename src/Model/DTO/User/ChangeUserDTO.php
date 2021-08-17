@@ -1,20 +1,30 @@
 <?php
 
+
 namespace App\Model\DTO\User;
 
+use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use App\Validator\ConstraintAccount;
-use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+use App\Validator\ConstraintAccountUniqueEmail;
 
 /**
  * Class ChangeUserDTO
- * @ConstraintAccount
  * @ConstraintAccountUniqueEmail
+ * @ConstraintAccount
  */
 class ChangeUserDTO implements DTOInterface
 {
+
+    /**
+     * @var string
+     *
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected string $id;
 
     /**
      * @var string
@@ -57,25 +67,6 @@ class ChangeUserDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\Length(
-     *     min="6",
-     *     groups={"Default"},
-     *     allowEmptyString=true,
-     *     minMessage="Your password must be at least {{ limit }} characters long"
-     * )
-     * @Assert\Type("string", groups={"Default"})
-     * @Assert\NotEqualTo(
-     *     groups={"Default"},
-     *     value = "myqpassword",
-     *     message = "Don't use the name of this application as your password."
-     * )
-     * @Serializer\Type("string")
-     */
-    protected string $newPassword;
-
-    /**
-     * @var string
-     *
      * @Assert\Email(groups={"Default"}, message="Invalid email format")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -83,22 +74,41 @@ class ChangeUserDTO implements DTOInterface
     protected $email;
 
     /**
-     * UpdateDTO constructor.
+     * @Assert\Type("int", groups={"Default"})
+     * @Assert\Choice(choices=App\Entity\User::STATUS_LIST, message="Wrong status selected", groups={"Default"})
+     * @Serializer\Type("integer")
+     * @var int|null
+     */
+    protected ?int $status = User::STATUS_OFF;
+
+    /**
+     * ChangeUserDTO constructor.
+     * @param string $id
      * @param string $nickname
      * @param string $fullName
      * @param string $phone
      * @param string $password
-     * @param string $newPassword
      * @param string $email
+     * @param int $status
      */
-    public function __construct(string $nickname, string $fullName, string $phone, string $password, string $newPassword, string $email)
+    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $password, string $email, int $status)
     {
+
+        $this->status = $status;
         $this->nickname = $nickname;
         $this->fullName = $fullName;
         $this->phone = $phone;
         $this->password = $password;
-        $this->newPassword = $newPassword;
         $this->email = $email;
+        $this->id = $id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getId(): string
+    {
+        return $this->id;
     }
 
     /**
@@ -136,16 +146,16 @@ class ChangeUserDTO implements DTOInterface
     /**
      * @return string
      */
-    public function getNewPassword(): string
-    {
-        return $this->newPassword;
-    }
-
-    /**
-     * @return string
-     */
     public function getEmail(): string
     {
         return $this->email;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getStatus(): ?int
+    {
+        return $this->status;
     }
 }

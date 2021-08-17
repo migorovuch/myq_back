@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ResetPasswordDTO;
-use App\Model\DTO\User\UserDTO;
+use App\Model\DTO\User\RegistrationDTO;
 use App\Model\Manager\UserManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use FOS\RestBundle\View\View;
@@ -38,11 +38,11 @@ class AuthController extends AbstractBaseController
      * @Rest\Post("/registration", name="registration")
      * @ParamConverter("registrationDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
-     * @param UserDTO $registrationDTO
+     * @param RegistrationDTO $registrationDTO
      *
      * @return Response
      */
-    public function registration(UserDTO $registrationDTO)
+    public function registration(RegistrationDTO $registrationDTO)
     {
         $user = $this->userManager->registration($registrationDTO);
 

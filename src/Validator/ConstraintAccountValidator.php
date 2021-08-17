@@ -3,7 +3,7 @@
 
 namespace App\Validator;
 
-use App\Model\DTO\User\ChangeUserDTO;
+use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\Manager\UserManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
@@ -44,7 +44,7 @@ class ConstraintAccountValidator extends ConstraintValidator
     }
 
     /**
-     * @param ChangeUserDTO $value
+     * @param ChangeAccountDTO $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)

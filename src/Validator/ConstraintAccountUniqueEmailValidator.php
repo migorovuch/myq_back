@@ -2,8 +2,9 @@
 
 namespace App\Validator;
 
+use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\DTO\User\ChangeUserDTO;
-use App\Model\DTO\User\UserDTO;
+use App\Model\DTO\User\RegistrationDTO;
 use App\Model\Manager\UserManagerInterface;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
@@ -30,7 +31,7 @@ class ConstraintAccountUniqueEmailValidator extends ConstraintValidator
     }
 
     /**
-     * @param UserDTO|ChangeUserDTO $value
+     * @param RegistrationDTO|ChangeAccountDTO|ChangeUserDTO $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)
@@ -39,8 +40,12 @@ class ConstraintAccountUniqueEmailValidator extends ConstraintValidator
             throw new UnexpectedTypeException($constraint, ConstraintAccountUniqueEmail::class);
         }
         if ($value->getEmail()) {
-            $user = $this->userManager->findOneBy(['email' => $value->getEmail()]);
-            if ($user) {
+            $id = null;
+            if (($value instanceof ChangeAccountDTO || $value instanceof ChangeUserDTO) && $value->getId()) {
+                $id = $value->getId();
+            }
+
+            if ($this->userManager->ifEmailExists($value->getEmail(), $id)) {
                 $this->context->buildViolation($this->translator->trans('The client with this email already exists'))
                     ->atPath('email')
                     ->addViolation();

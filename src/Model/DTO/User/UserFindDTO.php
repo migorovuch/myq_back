@@ -11,9 +11,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 class UserFindDTO extends AbstractFindDTO
 {
     /**
-     * @var int
+     * @var string
      *
-     * @Serializer\Type("integer")
+     * @Serializer\Type("string")
      */
     protected $id;
 
@@ -75,19 +75,19 @@ class UserFindDTO extends AbstractFindDTO
     /**
      * UserFindDTO constructor.
      *
-     * @param int      $id
-     * @param string   $email
-     * @param string   $nickname
-     * @param array    $roles
-     * @param int      $status
-     * @param DateTime $dateCreate
-     * @param DateTime $dateUpdate
-     * @param string   $sort
-     * @param PageDTO  $pageDTO
-     * @param string   $condition
+     * @param string|null $id
+     * @param string|null $email
+     * @param string|null $nickname
+     * @param array|null $roles
+     * @param int|null $status
+     * @param DateTime|null $dateCreate
+     * @param DateTime|null $dateUpdate
+     * @param array|null $sort
+     * @param PageDTO|null $pageDTO
+     * @param string $condition
      */
     public function __construct(
-        ?int $id,
+        ?string $id,
         ?string $email,
         ?string $nickname,
         ?array $roles,
@@ -109,9 +109,9 @@ class UserFindDTO extends AbstractFindDTO
     }
 
     /**
-     * @return int|null
+     * @return string|null
      */
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

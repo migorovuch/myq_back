@@ -7,7 +7,7 @@ use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
-use App\Model\DTO\User\ChangeUserDTO;
+use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
@@ -275,7 +275,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     /**
      * @inheritDoc
      */
-    public function changeAccount(ChangeUserDTO $data): EntityInterface
+    public function changeAccount(ChangeAccountDTO $data): EntityInterface
     {
         /** @var User $user */
         $user = $this->find($this->security->getUser()->getId());
@@ -291,6 +291,16 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->companyClientManager->changeClientDetails($user);
 
         return $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function ifEmailExists(string $email, string $exceptId = null)
+    {
+        $user = $this->entityRepository->findByEmail($email, $exceptId);
+
+        return $user !== null;
     }
 
     /**
