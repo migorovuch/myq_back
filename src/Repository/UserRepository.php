@@ -65,4 +65,22 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
     }
+
+    /**
+     * @param string $nickname
+     * @param string|null $exceptId
+     * @return User|null
+     * @throws NonUniqueResultException
+     */
+    public function findByNickname(string $nickname, string $exceptId = null)
+    {
+        $queryBuilder = $this->createQueryBuilder('u')
+            ->where('u.nickname = :nickname')
+            ->setParameter('nickname', $nickname);
+        if ($exceptId) {
+            $queryBuilder->andWhere('u.id != :id')->setParameter(':id', $exceptId);
+        }
+
+        return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
 }

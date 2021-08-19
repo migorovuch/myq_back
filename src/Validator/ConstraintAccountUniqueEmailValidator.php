@@ -39,15 +39,21 @@ class ConstraintAccountUniqueEmailValidator extends ConstraintValidator
         if (!$constraint instanceof ConstraintAccountUniqueEmail) {
             throw new UnexpectedTypeException($constraint, ConstraintAccountUniqueEmail::class);
         }
+        $id = null;
+        if ($value instanceof ChangeAccountDTO || $value instanceof ChangeUserDTO) {
+            $id = $value->getId();
+        }
         if ($value->getEmail()) {
-            $id = null;
-            if (($value instanceof ChangeAccountDTO || $value instanceof ChangeUserDTO) && $value->getId()) {
-                $id = $value->getId();
-            }
-
             if ($this->userManager->ifEmailExists($value->getEmail(), $id)) {
-                $this->context->buildViolation($this->translator->trans('The client with this email already exists'))
+                $this->context->buildViolation($this->translator->trans('The user with this email already exists'))
                     ->atPath('email')
+                    ->addViolation();
+            }
+        }
+        if ($value->getNickname()) {
+            if ($this->userManager->ifNicknameExists($value->getNickname(), $id)) {
+                $this->context->buildViolation($this->translator->trans('The user with this nickname already exists'))
+                    ->atPath('nickname')
                     ->addViolation();
             }
         }

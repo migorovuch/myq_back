@@ -16,7 +16,7 @@ class RegistrationDTO implements DTOInterface
     /**
      * @var string
      *
-     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\NotBlank(groups={"nickname"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */

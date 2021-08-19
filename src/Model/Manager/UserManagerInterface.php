@@ -15,6 +15,8 @@ use App\Model\Model\EntityInterface;
  */
 interface UserManagerInterface extends CRUDManagerInterface
 {
+    const EMPTY_NICKNAME = '-';
+
     /**
      * @param string $username
      *
@@ -67,4 +69,11 @@ interface UserManagerInterface extends CRUDManagerInterface
      * @return bool
      */
     public function ifEmailExists(string $email, string $exceptId = null);
+
+    /**
+     * @param string $nickname
+     * @param string|null $exceptId
+     * @return mixed
+     */
+    public function ifNicknameExists(string $nickname, string $exceptId = null);
 }

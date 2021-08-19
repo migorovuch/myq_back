@@ -23,6 +23,7 @@ class AuthenticationSuccessListener
             'id' => $user->getId(),
             'fullName' => $user->getFullName(),
             'phone' => $user->getPhone(),
+            'email' => $user->getEmail(),
             'nickname' => $user->getNickname(),
         ];
 

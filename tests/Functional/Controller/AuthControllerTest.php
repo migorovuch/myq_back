@@ -31,6 +31,12 @@ class AuthControllerTest extends AbstractBaseController
         $content = json_decode($content, true);
         $this->assertSuccessResponse($response);
         $this->assertArrayHasKey('token', $content);
+        $this->assertArrayHasKey('data', $content);
+        $this->assertArrayHasKey('id', $content['data']);
+        $this->assertArrayHasKey('fullName', $content['data']);
+        $this->assertArrayHasKey('phone', $content['data']);
+        $this->assertArrayHasKey('email', $content['data']);
+        $this->assertArrayHasKey('nickname', $content['data']);
 
         return $content['token'];
     }
@@ -60,6 +66,9 @@ class AuthControllerTest extends AbstractBaseController
         $this->assertSuccessResponse($response);
         $this->assertArrayHasKey('id', $content);
         $this->assertContains($role, $content['roles']);
+        $nickname = explode('@', $data['email']);
+        $nickname = $nickname[0];
+        $this->assertEquals($nickname, $content['nickname']);
     }
 
     public function testFailureAdminLogin()
@@ -88,12 +97,21 @@ class AuthControllerTest extends AbstractBaseController
     {
         $data = [
             'full_name' => 'Test User 123',
-            'nickname' => 'testuser123',
+            'nickname' => '-',
             'email' => 'testuser123@site.com',
             'password' => '12345678',
             'roles' => ["ROLE_USER"]
         ];
 
         $this->successRegistration($data, 'ROLE_USER');
+    }
+
+    public function testFailureUnapprovedLogin()
+    {
+        $data = [
+            'username' => 'testuser123@site.com',
+            'password' => '12345678',
+        ];
+        $this->failureLogin($data);
     }
 }

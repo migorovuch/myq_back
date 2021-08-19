@@ -27,7 +27,7 @@ class AccountController extends AbstractBaseController
 
 
     /**
-     * @Rest\Patch("/", name="change_my")
+     * @Rest\Put("/", name="change_my")
      * @ParamConverter("changeUserDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      * @param ChangeAccountDTO $changeUserDTO
      * @return Response

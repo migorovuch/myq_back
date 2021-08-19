@@ -19,6 +19,7 @@ class ChangeAccountDTO implements DTOInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
@@ -33,24 +34,24 @@ class ChangeAccountDTO implements DTOInterface
      */
     protected string $nickname;
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected string $fullName;
+    protected ?string $fullName = null;
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected string $phone;
+    protected ?string $phone = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\Type("string", groups={"Default"})
      * @Assert\NotEqualTo(
@@ -60,7 +61,7 @@ class ChangeAccountDTO implements DTOInterface
      * )
      * @Serializer\Type("string")
      */
-    protected string $password;
+    protected ?string $password = null;
 
     /**
      * @var string
@@ -79,11 +80,12 @@ class ChangeAccountDTO implements DTOInterface
      * )
      * @Serializer\Type("string")
      */
-    protected string $newPassword;
+    protected ?string $newPassword = null;
 
     /**
      * @var string
      *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Email(groups={"Default"}, message="Invalid email format")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -152,9 +154,9 @@ class ChangeAccountDTO implements DTOInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNewPassword(): string
+    public function getNewPassword(): ?string
     {
         return $this->newPassword;
     }
