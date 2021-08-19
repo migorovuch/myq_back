@@ -102,7 +102,32 @@ class CompanyController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Get("/search/app", name="search")
+     * @Rest\Get("/search/app", name="search_public")
+     * @ParamConverter(
+     *     "companyFindDTO",
+     *     converter="query_converter",
+     *     options={"paramName"="filter"}
+     * )
+     * @param CompanyFindDTO $companyFindDTO
+     * @return Response
+     */
+    public function searchPublic(CompanyFindDTO $companyFindDTO): Response
+    {
+        $data = $this->companyManager->findPublicByDTO($companyFindDTO);
+        $total = $this->companyManager->countByDTO($companyFindDTO);
+
+        return $this->response(
+            [
+                'data' => $data,
+                'total' => $total,
+            ],
+            Response::HTTP_OK,
+            ['company', 'company_user', 'user_id']
+        );
+    }
+
+    /**
+     * @Rest\Get("/search/all", name="search")
      * @ParamConverter(
      *     "companyFindDTO",
      *     converter="query_converter",
@@ -113,10 +138,16 @@ class CompanyController extends AbstractBaseController
      */
     public function search(CompanyFindDTO $companyFindDTO): Response
     {
+        $data = $this->companyManager->findByDTO($companyFindDTO);
+        $total = $this->companyManager->countByDTO($companyFindDTO);
+
         return $this->response(
-            $this->companyManager->findPublicByDTO($companyFindDTO),
+            [
+                'data' => $data,
+                'total' => $total,
+            ],
             Response::HTTP_OK,
-            ['company', 'company_user', 'user_id']
+            ['company', 'company_created', 'company_updated', 'company_user', 'user_id']
         );
     }
 }

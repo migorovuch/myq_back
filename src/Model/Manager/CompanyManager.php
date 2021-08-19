@@ -7,6 +7,7 @@ use App\Model\DTO\Company\CompanyFindDTO;
 use App\Model\DTO\DTOInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\CompanyRepository;
+use App\Security\AbstractVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
@@ -59,13 +60,19 @@ class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterf
         return $this->findByDTO($data);
     }
 
-    protected function prepareEntity(
-        EntityInterface $entity,
-        DTOInterface $dto,
-        bool $setNullProperty = true
-    ): EntityInterface {
-        $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
+    /**
+     * @param DTOInterface $data
+     *
+     * @return EntityInterface
+     */
+    public function create(DTOInterface $data)
+    {
+        $entityName = $this->entityRepository->getClassName();
+        $entity = new $entityName();
+        $entity = $this->prepareEntity($entity, $data)->setUser($this->security->getUser());
+        $this->denyAccessUnlessGranted(AbstractVoter::CREATE, $entity);
+        $this->save($entity);
 
-        return $entity->setUser($this->security->getUser());
+        return $entity;
     }
 }

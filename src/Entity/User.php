@@ -148,11 +148,11 @@ class User implements UserInterface, EntityInterface
     }
 
     /**
-     * @param string $nickname
+     * @param string|null $nickname
      *
      * @return User
      */
-    public function setNickname(string $nickname): self
+    public function setNickname(?string $nickname): self
     {
         $this->nickname = $nickname;
 
