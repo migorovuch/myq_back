@@ -55,6 +55,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             (
                 $this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY) &&
                 (
+                    ($data->getCompany() && $data->getCompany()->getUser()->getId() === $currentUser->getId()) ||
                     ($data->getSchedule() && $data->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId()) ||
                     ($data->getUser() && $data->getUser()->getId() === $currentUser->getId()) ||
                     $this->security->isGranted(User::ROLE_ADMIN)
@@ -98,7 +99,9 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         return new BookingFindDTO(
             $data->getId(),
             $data->getStatus(),
+            $data->getScheduleName(),
             $data->getSchedule(),
+            $data->getCompanyName(),
             $data->getCompany(),
             $data->getFilterFrom(),
             $data->getFilterTo(),

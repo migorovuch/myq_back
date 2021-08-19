@@ -97,7 +97,7 @@ class BookingController extends AbstractBaseController
      * @ParamConverter(
      *     "bookingFindDTO",
      *     converter="query_converter",
-     *     options={"paramName"="filter", "validationGroups"="Default,booking_company"}
+     *     options={"paramName"="filter", "validationGroups"="Default", "validationGroupsRole"={"ROLE_USER"="booking_company"}}
      * )
      * @param BookingFindDTO $bookingFindDTO
      * @return Response
