@@ -51,6 +51,7 @@ class RegistrationDTO implements DTOInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Length(
      *     min="6",
      *     groups={"Default"},

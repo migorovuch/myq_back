@@ -13,9 +13,8 @@ use App\Validator\ConstraintAccountUniqueEmail;
 /**
  * Class ChangeUserDTO
  * @ConstraintAccountUniqueEmail
- * @ConstraintAccount
  */
-class ChangeUserDTO implements DTOInterface
+class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
 {
 
     /**
@@ -55,6 +54,12 @@ class ChangeUserDTO implements DTOInterface
     /**
      * @var string
      *
+     * @Assert\Length(
+     *     min="6",
+     *     groups={"Default"},
+     *     allowEmptyString=true,
+     *     minMessage="Your password must be at least {{ limit }} characters long"
+     * )
      * @Assert\Type("string", groups={"Default"})
      * @Assert\NotEqualTo(
      *     groups={"Default"},
@@ -63,7 +68,7 @@ class ChangeUserDTO implements DTOInterface
      * )
      * @Serializer\Type("string")
      */
-    protected string $password;
+    protected ?string $newPassword = null;
 
     /**
      * @var string
@@ -83,25 +88,36 @@ class ChangeUserDTO implements DTOInterface
     protected ?int $status = User::STATUS_OFF;
 
     /**
+     * @var array
+     *
+     * @Assert\NotNull(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getRolesList"}, message="Wrong roles selected", groups={"Default"})
+     * @Serializer\Type("array")
+     */
+    protected array $roles;
+
+    /**
      * ChangeUserDTO constructor.
      * @param string $id
      * @param string $nickname
      * @param string $fullName
      * @param string $phone
-     * @param string $password
+     * @param string $newPassword
      * @param string $email
      * @param int $status
+     * @param array $roles
      */
-    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $password, string $email, int $status)
+    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $newPassword, string $email, int $status, array $roles)
     {
 
         $this->status = $status;
         $this->nickname = $nickname;
         $this->fullName = $fullName;
         $this->phone = $phone;
-        $this->password = $password;
+        $this->newPassword = $newPassword;
         $this->email = $email;
         $this->id = $id;
+        $this->roles = $roles;
     }
 
     /**
@@ -137,11 +153,11 @@ class ChangeUserDTO implements DTOInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPassword(): string
+    public function getNewPassword(): ?string
     {
-        return $this->password;
+        return $this->newPassword;
     }
 
     /**
@@ -158,5 +174,13 @@ class ChangeUserDTO implements DTOInterface
     public function getStatus(): ?int
     {
         return $this->status;
+    }
+
+    /**
+     * @return array
+     */
+    public function getRoles(): array
+    {
+        return $this->roles;
     }
 }

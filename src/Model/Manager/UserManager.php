@@ -8,6 +8,7 @@ use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\DTO\User\ChangeAccountDTO;
+use App\Model\DTO\User\NewPasswordAwareInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
 use App\Security\AbstractVoter;
@@ -360,8 +361,11 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         bool $setNullProperty = true
     ): EntityInterface {
         $oldStatus = $entity->getStatus();
+        /** @var User $entity */
         $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
-        $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $entity->getPassword()));
+        if ($dto instanceof NewPasswordAwareInterface && !empty($dto->getNewPassword())) {
+            $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $dto->getNewPassword()));
+        }
         if (!$this->security->isGranted(User::ROLE_ADMIN)) {
             $entity->setStatus($oldStatus);
         }

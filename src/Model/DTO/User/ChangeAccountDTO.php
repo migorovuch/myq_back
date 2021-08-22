@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ConstraintAccount
  * @ConstraintAccountUniqueEmail
  */
-class ChangeAccountDTO implements DTOInterface
+class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
 {
 
     /**
@@ -75,8 +75,8 @@ class ChangeAccountDTO implements DTOInterface
      * @Assert\Type("string", groups={"Default"})
      * @Assert\NotEqualTo(
      *     groups={"Default"},
-     *     value = "myqpassword",
-     *     message = "Don't use the name of this application as your password."
+     *     propertyPath = "password",
+     *     message = "Enter new password."
      * )
      * @Serializer\Type("string")
      */
@@ -146,9 +146,9 @@ class ChangeAccountDTO implements DTOInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPassword(): string
+    public function getPassword(): ?string
     {
         return $this->password;
     }

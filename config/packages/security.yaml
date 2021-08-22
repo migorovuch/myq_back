@@ -65,5 +65,6 @@ security:
         - { path: ^/api/reset-password/reset, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/bookings/, roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY], methods: [POST] }
         - { path: ^/api/bookings/my, roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY], methods: [GET] }
+        - { path: ^/api/users, roles: [ROLE_ADMIN], methods: [GET, POST] }
         - { path: ^/api.*/app, roles: [IS_AUTHENTICATED_FULLY, IS_AUTHENTICATED_ANONYMOUSLY], methods: [GET] }
         - { path: ^/api/, roles: [IS_AUTHENTICATED_FULLY] }

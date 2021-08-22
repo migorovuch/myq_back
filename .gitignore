@@ -18,7 +18,8 @@
 /config/jwt/*.pem
 ###< lexik/jwt-authentication-bundle ###
 
-/public/media/
+/public/media/company/*
+!/public/media/company/.gitkeep
 
 ###> symfony/phpunit-bridge ###
 .phpunit.result.cache

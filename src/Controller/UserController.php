@@ -60,7 +60,7 @@ class UserController extends AbstractBaseController
      */
     public function update(string $id, ChangeUserDTO $changeUserDTO): Response
     {
-        $data = $this->userManager->update($id, $changeUserDTO);
+        $data = $this->userManager->change($id, $changeUserDTO);
 
         return $this->response(
             $data,
