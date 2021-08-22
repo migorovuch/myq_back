@@ -78,6 +78,7 @@ class ScheduleControllerTest extends AbstractBaseController
             'name' => "Test Schedule 1 UPDATE",
             'accept_booking_time' => 5,
             'time_between_bookings' => 1,
+            'company' => $schedule['company']['id']
         ];
         $response = $this->sendPutRequest('/api/schedule/'.$schedule['id'], [], $data + ['token' => $token]);
         $this->assertSuccessResponse($response);
@@ -85,7 +86,10 @@ class ScheduleControllerTest extends AbstractBaseController
         $content = json_decode($content, true);
         foreach ($data as $dataKey => $dataValue) {
             $this->assertArrayHasKey($dataKey, $content);
-            $this->assertEquals($content[$dataKey], $dataValue);
+            if ($dataKey !== 'company') {
+                $this->assertEquals($content[$dataKey], $dataValue);
+            }
         }
+        $this->assertEquals($data['company'], $content['company']['id']);
     }
 }
