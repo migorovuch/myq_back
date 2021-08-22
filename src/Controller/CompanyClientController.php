@@ -54,7 +54,7 @@ class CompanyClientController extends AbstractBaseController
      * @ParamConverter(
      *     "companyClientFindDTO",
      *     converter="query_converter",
-     *     options={"paramName"="filter", "validationGroups"="Default"}
+     *     options={"paramName"="filter", "validationGroups"="Default", "validationGroupsRole"={"ROLE_USER"="client_company_notblank"}}
      * )
      * @param CompanyClientFindDTO $companyClientFindDTO
      * @return Response
@@ -73,7 +73,7 @@ class CompanyClientController extends AbstractBaseController
                 'total' => $total,
             ],
             Response::HTTP_OK,
-            ['company_client', 'company_client_number_of_bookings', 'company_client_status', 'company_client_pseudonym']
+            ['company_client', 'company_client_number_of_bookings', 'company_client_status', 'company_client_pseudonym', 'company_client_company', 'company_id', 'company_name']
         );
     }
 

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\CompanyClient;
 use App\Entity\User;
 use App\Model\DTO\AbstractFindDTO;
+use App\Model\DTO\CompanyClient\CompanyClientFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -25,6 +26,10 @@ class CompanyClientRepository extends EntityRepository
         parent::__construct($registry, CompanyClient::class, $propertyInfoExtractorFactory);
     }
 
+    /**
+     * @param CompanyClientFindDTO $data
+     * @return array
+     */
     public function findByDTO(AbstractFindDTO $data)
     {
         $qb = $this->createQueryBuilder('t');
@@ -32,6 +37,22 @@ class CompanyClientRepository extends EntityRepository
             ->leftJoin('t.bookings', 'b')
             ->addSelect('COUNT(b.id) as numberOfBookings')
             ->groupBy('t.id');
+        if ($data->getCompanyName()) {
+            $qb
+                ->innerJoin('t.company', 'c')
+                ->andWhere('c.name LIKE :companyName')
+                ->setParameter('companyName', $data->getCompanyName());
+        }
+        if ($data->getStatus() !== null) {
+            $qb
+                ->andWhere('t.status = :status')
+                ->setParameter('status', $data->getStatus());
+        }
+        if ($data->getName()) {
+            $qb
+                ->orWhere('t.pseudonym LIKE :pseudonym')
+                ->setParameter('pseudonym', $data->getName());
+        }
         $qb = $this->paginationQueryByDTO($qb, $data);
         $query = $qb->getQuery();
 

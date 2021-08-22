@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\CompanyClient;
+use App\Entity\User;
 use App\Exception\ApiException;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -50,7 +51,11 @@ class CompanyClientVoter extends AbstractVoter
      */
     protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return $currentUser !== 'anon.' && $subject->getCompany()->getUser()->getId() === $currentUser->getId();
+        return $currentUser->isRole(User::ROLE_ADMIN) ||
+            (
+                $currentUser !== 'anon.' &&
+                $subject->getCompany()->getUser()->getId() === $currentUser->getId()
+            );
     }
 
     /**
@@ -60,7 +65,8 @@ class CompanyClientVoter extends AbstractVoter
      */
     protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return ($currentUser === 'anon.' && !$subject->getUser()) ||
+        return $currentUser->isRole(User::ROLE_ADMIN) ||
+            ($currentUser === 'anon.' && !$subject->getUser()) ||
             (
                 $currentUser !== 'anon.' &&
                 (

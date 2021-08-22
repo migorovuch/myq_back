@@ -38,10 +38,16 @@ class CompanyClientFindDTO extends AbstractFindDTO
 
     /**
      * @Assert\Type("App\Entity\Company", groups={"Default"})
-     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\NotBlank(groups={"client_company_notblank"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Company>")
      */
     protected ?Company $company = null;
+
+    /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected ?string $companyName = null;
 
     /**
      * @Assert\Type("int", groups={"Default"})
@@ -78,6 +84,7 @@ class CompanyClientFindDTO extends AbstractFindDTO
         ?string $phone = null,
         ?User $user = null,
         ?Company $company = null,
+        ?string $companyName = null,
         ?int $status = null,
         ?string $pseudonym = null,
         ?int $numberOfBookings = null,
@@ -94,6 +101,7 @@ class CompanyClientFindDTO extends AbstractFindDTO
         $this->status = $status;
         $this->pseudonym = $pseudonym;
         $this->numberOfBookings = $numberOfBookings;
+        $this->companyName = $companyName;
     }
 
     /**
@@ -134,6 +142,14 @@ class CompanyClientFindDTO extends AbstractFindDTO
     public function getCompany(): ?Company
     {
         return $this->company;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCompanyName(): ?string
+    {
+        return $this->companyName;
     }
 
     /**
