@@ -2,6 +2,7 @@
 
 namespace App\Model\DTO\Schedule;
 
+use App\Entity\Company;
 use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
 use JMS\Serializer\Annotation as Serializer;
@@ -9,6 +10,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ScheduleDTO implements DTOInterface
 {
+    /**
+     * @Assert\Type("App\Entity\Company", groups={"Default"})
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Serializer\Type("Relation<App\Entity\Company>")
+     */
+    protected ?Company $company = null;
+
     /**
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
@@ -82,6 +90,7 @@ class ScheduleDTO implements DTOInterface
 
     /**
      * ScheduleDTO constructor.
+     * @param Company|null $company
      * @param string|null $name
      * @param bool|null $enabled
      * @param bool|null $available
@@ -92,8 +101,10 @@ class ScheduleDTO implements DTOInterface
      * @param int|null $bookingCondition
      * @param int|null $acceptBookingCondition
      * @param int|null $acceptBookingTime
+     * @param int|null $timeBetweenBookings
      */
     public function __construct(
+        ?Company $company = null,
         ?string $name = null,
         ?bool $enabled = null,
         ?bool $available = null,
@@ -106,6 +117,7 @@ class ScheduleDTO implements DTOInterface
         ?int $acceptBookingTime = null,
         ?int $timeBetweenBookings = null
     ) {
+        $this->company = $company;
         $this->name = $name;
         $this->enabled = $enabled;
         $this->available = $available;
@@ -117,6 +129,14 @@ class ScheduleDTO implements DTOInterface
         $this->acceptBookingCondition = $acceptBookingCondition;
         $this->acceptBookingTime = $acceptBookingTime;
         $this->timeBetweenBookings = $timeBetweenBookings;
+    }
+
+    /**
+     * @return Company|null
+     */
+    public function getCompany(): ?Company
+    {
+        return $this->company;
     }
 
     /**

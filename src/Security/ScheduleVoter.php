@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\Schedule;
+use App\Entity\User;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -26,7 +27,7 @@ class ScheduleVoter extends AbstractVoter
      */
     protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return $subject->getCompany()->getUser()->getId() === $currentUser->getId();
+        return $subject->getCompany()->getUser()->getId() === $currentUser->getId() || $currentUser->isRole(User::ROLE_ADMIN);
     }
 
     /**

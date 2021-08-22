@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\Company;
+use App\Entity\User;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -16,7 +17,7 @@ class CompanyVoter extends AbstractVoter
 
     protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return $subject->getUser()->getId() === $currentUser->getId();
+        return $subject->getUser()->getId() === $currentUser->getId() || $currentUser->isRole(User::ROLE_ADMIN);
     }
 
     protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool

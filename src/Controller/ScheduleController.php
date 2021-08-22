@@ -41,7 +41,7 @@ class ScheduleController extends AbstractBaseController
     {
         $schedule = $this->scheduleManager->create($scheduleDTO);
 
-        return $this->response($schedule, Response::HTTP_OK, ['schedule']);
+        return $this->response($schedule, Response::HTTP_OK, ['schedule', 'schedule_company', 'company_id']);
     }
 
     /**
@@ -55,7 +55,7 @@ class ScheduleController extends AbstractBaseController
     {
         $schedule = $this->scheduleManager->update($id, $scheduleDTO);
 
-        return $this->response($schedule, Response::HTTP_OK, ['schedule']);
+        return $this->response($schedule, Response::HTTP_OK, ['schedule', 'schedule_company', 'company_id']);
     }
 
     /**
@@ -70,7 +70,7 @@ class ScheduleController extends AbstractBaseController
             throw new NotFoundHttpException();
         }
 
-        return $this->response($schedule, Response::HTTP_OK, ['schedule']);
+        return $this->response($schedule, Response::HTTP_OK, ['schedule', 'schedule_company', 'company_id']);
     }
 
     /**
@@ -97,7 +97,7 @@ class ScheduleController extends AbstractBaseController
         return $this->response(
             $this->scheduleManager->findByDTO($scheduleFindDTO),
             Response::HTTP_OK,
-            ['schedule']
+            ['schedule', 'schedule_company', 'company_id']
         );
     }
 
@@ -116,7 +116,7 @@ class ScheduleController extends AbstractBaseController
         return $this->response(
             $this->scheduleManager->findPublicByDTO($scheduleFindDTO),
             Response::HTTP_OK,
-            ['schedule']
+            ['schedule', 'schedule_company', 'company_id']
         );
     }
 }
