@@ -3,6 +3,7 @@
 namespace App\Security;
 
 use App\Entity\SpecialHours;
+use App\Entity\User;
 use App\Model\Model\EntityInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -28,7 +29,7 @@ class SpecialHoursVoter extends AbstractVoter
      */
     protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
     {
-        return $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId();
+        return $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() || $currentUser->isRole(User::ROLE_ADMIN);
     }
 
     /**

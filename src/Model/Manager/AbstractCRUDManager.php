@@ -174,8 +174,8 @@ abstract class AbstractCRUDManager
     public function update(string $id, DTOInterface $data)
     {
         $entity = $this->find($id);
-        $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $entity = $this->prepareEntity($entity, $data);
+        $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $this->save($entity);
 
         return $entity;
@@ -190,8 +190,8 @@ abstract class AbstractCRUDManager
     public function change(string $id, DTOInterface $data): EntityInterface
     {
         $entity = $this->find($id);
-        $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $entity = $this->prepareEntity($entity, $data, false);
+        $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $this->save($entity);
 
         return $entity;

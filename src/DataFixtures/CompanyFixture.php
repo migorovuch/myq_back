@@ -15,9 +15,9 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
 
     public function load(ObjectManager $manager)
     {
-        $admin = $this->getReference(UserFixtures::ADMIN_USER_REFERENCE);
+        $companyUser1 = $this->getReference(UserFixtures::COMPANY_USER_REFERENCE);
         $company1 = new Company();
-        $company1->setUser($admin)
+        $company1->setUser($companyUser1)
             ->setAddress('test address1')
             ->setDescription('test description')
             ->setEmail('company1@gmail.com')
@@ -27,9 +27,9 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
 
         $manager->persist($company1);
 
-        $user1 = $this->getReference(UserFixtures::USER_USER_REFERENCE);
+        $companyUser2 = $this->getReference(UserFixtures::COMPANY_USER_REFERENCE2);
         $company2 = new Company();
-        $company2->setUser($user1)
+        $company2->setUser($companyUser2)
             ->setAddress('test address2')
             ->setDescription('test description2')
             ->setEmail('company2@gmail.com')

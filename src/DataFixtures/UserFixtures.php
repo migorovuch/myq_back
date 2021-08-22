@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserFixtures extends Fixture
 {
+    const COMPANY_USER_REFERENCE = 'company-user';
+    const COMPANY_USER_REFERENCE2 = 'company-user2';
     const ADMIN_USER_REFERENCE = 'admin-user';
     const USER_USER_REFERENCE = 'user';
 
@@ -46,6 +48,26 @@ class UserFixtures extends Fixture
             ->setFullName('admin 1')
             ->setPhone('123212131');
         $manager->persist($admin);
+        // create company user
+        $companyUser = new User();
+        $companyUser->setEmail('company1@site.com')
+            ->setRoles([User::ROLE_USER])
+            ->setPassword($this->userPasswordEncoder->encodePassword($companyUser, $defaultPassword))
+            ->setNickname('company1')
+            ->setFullName('company 1')
+            ->setStatus(User::STATUS_ON)
+            ->setPhone('22333112344');
+        $manager->persist($companyUser);
+        // create company user 2
+        $companyUser2 = new User();
+        $companyUser2->setEmail('company2@site.com')
+            ->setRoles([User::ROLE_USER])
+            ->setPassword($this->userPasswordEncoder->encodePassword($companyUser2, $defaultPassword))
+            ->setNickname('company2')
+            ->setFullName('company 2')
+            ->setStatus(User::STATUS_ON)
+            ->setPhone('22333112344');
+        $manager->persist($companyUser2);
         // create regular user
         $user = new User();
         $user->setEmail('user1@site.com')
@@ -56,10 +78,22 @@ class UserFixtures extends Fixture
             ->setStatus(User::STATUS_ON)
             ->setPhone('22333112344');
         $manager->persist($user);
+        // create test regular user
+        $user = new User();
+        $user->setEmail('test_user1@site.com')
+            ->setRoles([User::ROLE_USER])
+            ->setPassword($this->userPasswordEncoder->encodePassword($user, $defaultPassword))
+            ->setNickname('test_user1')
+            ->setFullName('Test user 1')
+            ->setStatus(User::STATUS_ON)
+            ->setPhone('22333112344');
+        $manager->persist($user);
 
         $manager->flush();
 
         $this->addReference(self::ADMIN_USER_REFERENCE, $admin);
         $this->addReference(self::USER_USER_REFERENCE, $user);
+        $this->addReference(self::COMPANY_USER_REFERENCE, $companyUser);
+        $this->addReference(self::COMPANY_USER_REFERENCE2, $companyUser2);
     }
 }

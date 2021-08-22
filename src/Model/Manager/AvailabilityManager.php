@@ -27,7 +27,9 @@ class AvailabilityManager implements AvailabilityManagerInterface
         $bookings = $this->bookingRepository->findByDTO(new BookingFindDTO(
             null,
             null,
+            null,
             $data->getSchedule(),
+            null,
             $data->getCompany(),
             $data->getFilterFrom(),
             $data->getFilterTo()

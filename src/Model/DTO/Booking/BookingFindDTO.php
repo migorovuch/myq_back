@@ -31,11 +31,23 @@ class BookingFindDTO extends AbstractFindDTO
     protected ?int $status = null;
 
     /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected ?string $scheduleName = null;
+
+    /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
      * @Assert\NotBlank(groups={"booking_schedule"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
      */
     protected ?Schedule $schedule = null;
+
+    /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
+    protected ?string $companyName = null;
 
     /**
      * @Assert\Type("App\Entity\Company", groups={"Default"})
@@ -97,13 +109,16 @@ class BookingFindDTO extends AbstractFindDTO
      * BookingDTO constructor.
      * @param string|null $id
      * @param int|null $status
+     * @param string|null $scheduleName
      * @param Schedule|null $schedule
+     * @param string|null $companyName
      * @param Company|null $company
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
      * @param string|null $title
      * @param string|null $customerComment
      * @param CompanyClient|null $client
+     * @param User|null $user
      * @param string|null $userName
      * @param string|null $userPhone
      * @param array|null $sort
@@ -113,7 +128,9 @@ class BookingFindDTO extends AbstractFindDTO
     public function __construct(
         ?string $id = null,
         ?int $status = null,
+        ?string $scheduleName = null,
         ?Schedule $schedule = null,
+        ?string $companyName = null,
         ?Company $company = null,
         ?DateTime $filterFrom = null,
         ?DateTime $filterTo = null,
@@ -140,6 +157,8 @@ class BookingFindDTO extends AbstractFindDTO
         $this->userPhone = $userPhone;
         $this->company = $company;
         $this->client = $client;
+        $this->scheduleName = $scheduleName;
+        $this->companyName = $companyName;
     }
 
     /**
@@ -164,6 +183,22 @@ class BookingFindDTO extends AbstractFindDTO
     public function getCompany(): ?Company
     {
         return $this->company;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getScheduleName(): ?string
+    {
+        return $this->scheduleName;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getCompanyName(): ?string
+    {
+        return $this->companyName;
     }
 
     /**

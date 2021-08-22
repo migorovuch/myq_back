@@ -8,15 +8,15 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class UserDTO
+ * Class RegistrationDTO
  * @ConstraintAccountUniqueEmail
  */
-class UserDTO implements DTOInterface
+class RegistrationDTO implements DTOInterface
 {
     /**
      * @var string
      *
-     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\NotBlank(groups={"nickname"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
@@ -51,6 +51,7 @@ class UserDTO implements DTOInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Length(
      *     min="6",
      *     groups={"Default"},

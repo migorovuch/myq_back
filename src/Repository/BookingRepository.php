@@ -50,29 +50,39 @@ class BookingRepository extends EntityRepository
      */
     protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
     {
+        $queryBuilder = parent::buildQueryByDTO($queryBuilder, $data);
+        $queryBuilder
+            ->innerJoin('t.schedule', 's')
+            ->innerJoin('s.company', 'c');
         if ($data->getUserName() || $data->getUserPhone() || $data->getUser()) {
             $queryBuilder
-                ->leftJoin('t.client', 'c');
+                ->leftJoin('t.client', 'cl');
             if ($data->getUser()) {
                 $queryBuilder
-                    ->andWhere($queryBuilder->expr()->eq('c.user', ':user'))
+                    ->andWhere($queryBuilder->expr()->eq('cl.user', ':user'))
                     ->setParameter('user', $data->getUser());
             }
             if ($data->getUserName()) {
                 $queryBuilder
-                    ->andWhere('(t.userName LIKE :userName OR c.name LIKE :userName)')
+                    ->andWhere('cl.name LIKE :userName')
                     ->setParameter('userName', $data->getUserName());
-                $data->setUserName(null);
             }
             if ($data->getUserPhone()) {
                 $queryBuilder
-                    ->andWhere('(t.userPhone LIKE :userPhone OR c.phone LIKE :userPhone)')
+                    ->andWhere('cl.phone LIKE :userPhone')
                     ->setParameter('userPhone', $data->getUserPhone());
-                $data->setUserPhone(null);
             }
         }
-
-        $queryBuilder = parent::buildQueryByDTO($queryBuilder, $data);
+        if ($data->getCompanyName()) {
+            $queryBuilder
+                ->andWhere('c.name LIKE :companyName')
+                ->setParameter('companyName', $data->getCompanyName());
+        }
+        if ($data->getScheduleName()) {
+            $queryBuilder
+                ->andWhere('s.name LIKE :scheduleName')
+                ->setParameter('scheduleName', $data->getScheduleName());
+        }
         if ($data->getFilterFrom()) {
             $queryBuilder
                 ->andWhere($queryBuilder->expr()->gt('t.end', ':filterFrom'))
@@ -85,8 +95,6 @@ class BookingRepository extends EntityRepository
         }
         if ($data->getCompany()) {
             $queryBuilder
-                ->innerJoin('t.schedule', 's')
-                ->innerJoin('s.company', 'c')
                 ->andWhere('c.id = :companyid')
                 ->setParameter('companyid', $data->getCompany()->getId());
         }

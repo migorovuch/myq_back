@@ -72,11 +72,16 @@ class QueryParamConverter implements ParamConverterInterface
             }
             if (!empty($option['validationGroupsRole'])) {
                 $validationGroupsRole = $option['validationGroupsRole'];
-                foreach ($validationGroupsRole as $role => $groups) {
-                    if ($this->security->isGranted($role)) {
-                        $validationGroups = array_merge($validationGroups, explode(',', $groups));
+                $validationGroupsRoleIntersect = explode(',', $validationGroupsRole[array_key_first($validationGroupsRole)]);
+                foreach ($this->security->getUser()->getRoles() as $role) {
+                    if (empty($validationGroupsRole[$role])) {
+                        $validationGroupsRoleIntersect = [];
+                        break;
+                    } else {
+                        $validationGroupsRoleIntersect = array_intersect($validationGroupsRoleIntersect, explode(',', $validationGroupsRole[$role]));
                     }
                 }
+                $validationGroups = array_merge($validationGroups, $validationGroupsRoleIntersect);
             }
             $validationErrors = null;
             if (!empty($validationGroups)) {

@@ -143,6 +143,9 @@ class AbstractBaseController extends WebTestCase
         $listContent = json_decode($response->getContent(), true);
         $this->assertIsArray($listContent);
         $this->assertNotEmpty($listContent);
+        if (isset($listContent['data'], $listContent['total'])) {
+            $listContent = $listContent['data'];
+        }
         $firstKey = array_key_first($listContent);
         $this->assertArrayHasKey('id', $listContent[$firstKey]);
 

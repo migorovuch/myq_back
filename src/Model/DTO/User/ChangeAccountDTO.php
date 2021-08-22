@@ -1,20 +1,19 @@
 <?php
 
-
 namespace App\Model\DTO\User;
 
-use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use App\Validator\ConstraintAccount;
+use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\ConstraintAccountUniqueEmail;
 
 /**
- * Class ChangeUserDTO
+ * Class ChangeAccountDTO
+ * @ConstraintAccount
  * @ConstraintAccountUniqueEmail
  */
-class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
+class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
 {
 
     /**
@@ -35,21 +34,34 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
      */
     protected string $nickname;
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected string $fullName;
+    protected ?string $fullName = null;
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected string $phone;
+    protected ?string $phone = null;
+
+    /**
+     * @var string|null
+     *
+     * @Assert\Type("string", groups={"Default"})
+     * @Assert\NotEqualTo(
+     *     groups={"Default"},
+     *     value = "myqpassword",
+     *     message = "Don't use the name of this application as your password."
+     * )
+     * @Serializer\Type("string")
+     */
+    protected ?string $password = null;
 
     /**
      * @var string
@@ -63,8 +75,8 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
      * @Assert\Type("string", groups={"Default"})
      * @Assert\NotEqualTo(
      *     groups={"Default"},
-     *     value = "myqpassword",
-     *     message = "Don't use the name of this application as your password."
+     *     propertyPath = "password",
+     *     message = "Enter new password."
      * )
      * @Serializer\Type("string")
      */
@@ -73,6 +85,7 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Email(groups={"Default"}, message="Invalid email format")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -80,44 +93,24 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
     protected $email;
 
     /**
-     * @Assert\Type("int", groups={"Default"})
-     * @Assert\Choice(choices=App\Entity\User::STATUS_LIST, message="Wrong status selected", groups={"Default"})
-     * @Serializer\Type("integer")
-     * @var int|null
-     */
-    protected ?int $status = User::STATUS_OFF;
-
-    /**
-     * @var array
-     *
-     * @Assert\NotNull(groups={"Default"}, message="This value should not be blank")
-     * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getRolesList"}, message="Wrong roles selected", groups={"Default"})
-     * @Serializer\Type("array")
-     */
-    protected array $roles;
-
-    /**
-     * ChangeUserDTO constructor.
+     * ChangeAccountDTO constructor.
      * @param string $id
      * @param string $nickname
      * @param string $fullName
      * @param string $phone
+     * @param string $password
      * @param string $newPassword
      * @param string $email
-     * @param int $status
-     * @param array $roles
      */
-    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $newPassword, string $email, int $status, array $roles)
+    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $password, string $newPassword, string $email)
     {
-
-        $this->status = $status;
         $this->nickname = $nickname;
         $this->fullName = $fullName;
         $this->phone = $phone;
+        $this->password = $password;
         $this->newPassword = $newPassword;
         $this->email = $email;
         $this->id = $id;
-        $this->roles = $roles;
     }
 
     /**
@@ -155,6 +148,14 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
     /**
      * @return string|null
      */
+    public function getPassword(): ?string
+    {
+        return $this->password;
+    }
+
+    /**
+     * @return string|null
+     */
     public function getNewPassword(): ?string
     {
         return $this->newPassword;
@@ -166,21 +167,5 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
     public function getEmail(): string
     {
         return $this->email;
-    }
-
-    /**
-     * @return int|null
-     */
-    public function getStatus(): ?int
-    {
-        return $this->status;
-    }
-
-    /**
-     * @return array
-     */
-    public function getRoles(): array
-    {
-        return $this->roles;
     }
 }

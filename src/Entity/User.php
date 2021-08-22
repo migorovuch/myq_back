@@ -22,6 +22,12 @@ class User implements UserInterface, EntityInterface
     const STATUS_OFF = 0;
     const STATUS_ON = 1;
     const STATUS_DEACTIVATED = 2;
+
+    const STATUS_LIST = [
+        self::STATUS_OFF => self::STATUS_OFF,
+        self::STATUS_ON => self::STATUS_ON,
+        self::STATUS_DEACTIVATED => self::STATUS_DEACTIVATED,
+    ];
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -142,11 +148,11 @@ class User implements UserInterface, EntityInterface
     }
 
     /**
-     * @param string $nickname
+     * @param string|null $nickname
      *
      * @return User
      */
-    public function setNickname(string $nickname): self
+    public function setNickname(?string $nickname): self
     {
         $this->nickname = $nickname;
 

@@ -3,7 +3,7 @@
 
 namespace App\Validator;
 
-use App\Model\DTO\User\ChangeUserDTO;
+use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\Manager\UserManagerInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
@@ -44,7 +44,7 @@ class ConstraintAccountValidator extends ConstraintValidator
     }
 
     /**
-     * @param ChangeUserDTO $value
+     * @param ChangeAccountDTO $value
      * @param Constraint $constraint
      */
     public function validate($value, Constraint $constraint)
@@ -52,7 +52,7 @@ class ConstraintAccountValidator extends ConstraintValidator
         if (!$constraint instanceof ConstraintAccount) {
             throw new UnexpectedTypeException($constraint, ConstraintAccount::class);
         }
-        if ($value->getPassword() && $value->getNewPassword()) {
+        if ($value->getNewPassword()) {
             $user = $this->userManager->find($this->security->getUser()->getId());
             if (
                 !$this->encoderFactory->getEncoder($user)->isPasswordValid(

@@ -40,7 +40,11 @@ class BookingControllerTest extends AbstractBaseController
 
         $now = new DateTime();
         $daysCount = 5;
-        if (((int)$now->format('N')) + $daysCount > 5) {
+        $bookingDay = ((int)$now->format('N')) + $daysCount;
+        if ($bookingDay > 7) {
+            $bookingDay -= 7;
+        }
+        if ($bookingDay > 5) {
             $daysCount += 2;
         }
         $start = (new DateTime())->modify($daysCount.' day')->setTime(11, 0, 0);
@@ -79,6 +83,9 @@ class BookingControllerTest extends AbstractBaseController
         $now = new DateTime();
         $daysCount = 5;
         $bookingDay = ((int)$now->format('N')) + $daysCount;
+        if ($bookingDay > 7) {
+            $bookingDay -= 7;
+        }
         if ($bookingDay !== 1 && $bookingDay !== 7) {
             $daysCount += (7 - $bookingDay);
         }
@@ -120,6 +127,9 @@ class BookingControllerTest extends AbstractBaseController
         $now = new DateTime();
         $daysCount = 5;
         $bookingDay = ((int)$now->format('N')) + $daysCount;
+        if ($bookingDay > 7) {
+            $bookingDay -= 7;
+        }
         if ($bookingDay !== 1 && $bookingDay !== 7) {
             $daysCount += (7 - $bookingDay);
         }

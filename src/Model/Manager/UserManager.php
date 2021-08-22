@@ -7,15 +7,18 @@ use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
-use App\Model\DTO\User\ChangeUserDTO;
+use App\Model\DTO\User\ChangeAccountDTO;
+use App\Model\DTO\User\NewPasswordAwareInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
+use App\Security\AbstractVoter;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
+use Symfony\Component\Mime\Message;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -152,8 +155,30 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      */
     public function registration(DTOInterface $data): EntityInterface
     {
+        $entityName = $this->entityRepository->getClassName();
+        $user = new $entityName();
         /** @var User $user */
-        $user = parent::create($data);
+        $user = $this->prepareEntity($user, $data);
+        $this->denyAccessUnlessGranted(AbstractVoter::CREATE, $user);
+        if (!$user->getNickname() || $user->getNickname() === self::EMPTY_NICKNAME) {
+            $nickname = explode('@',$user->getEmail());
+            $nickname = reset($nickname);
+            if ($this->ifNicknameExists($nickname)) {
+                $nickname .= time();
+            }
+            $user->setNickname($nickname);
+        }
+        $this->save($user);
+        $this->sendConfirmAccountEmail($user);
+
+        return $user;
+    }
+
+    /**
+     * @param UserInterface $user
+     */
+    protected function sendConfirmAccountEmail(UserInterface $user)
+    {
         $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . urlencode($this->createToken($user));
         try {
             $email = (new TemplatedEmail())
@@ -173,8 +198,6 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         } catch (Throwable $exception) {
             $this->logger->error('Send registration email exception: '.$exception->getMessage());
         }
-
-        return $user;
     }
 
     /**
@@ -275,11 +298,11 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     /**
      * @inheritDoc
      */
-    public function changeAccount(ChangeUserDTO $data): EntityInterface
+    public function changeAccount(ChangeAccountDTO $data): EntityInterface
     {
         /** @var User $user */
         $user = $this->find($this->security->getUser()->getId());
-        if ($data->getPassword() && $data->getNewPassword()) {
+        if ($data->getNewPassword() && $data->getPassword()) {
             $password = $this->userPasswordEncoder->encodePassword($user, $data->getNewPassword());
             $user->setPassword($password);
         }
@@ -287,10 +310,32 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
             ->setPhone($data->getPhone())
             ->setFullName($data->getFullName())
             ->setNickname($data->getNickname());
+        if ($user->getEmail() !== $data->getEmail()) {
+            $user
+                ->setEmail($data->getEmail())
+                ->setStatus(User::STATUS_OFF);
+            $this->sendConfirmAccountEmail($user);
+        }
         $this->save($user);
         $this->companyClientManager->changeClientDetails($user);
 
         return $user;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function ifEmailExists(string $email, string $exceptId = null)
+    {
+        return $this->entityRepository->findByEmail($email, $exceptId) !== null;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function ifNicknameExists(string $nickname, string $exceptId = null)
+    {
+        return $this->entityRepository->findByNickname($nickname, $exceptId) !== null;
     }
 
     /**
@@ -316,8 +361,11 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         bool $setNullProperty = true
     ): EntityInterface {
         $oldStatus = $entity->getStatus();
+        /** @var User $entity */
         $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
-        $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $entity->getPassword()));
+        if ($dto instanceof NewPasswordAwareInterface && !empty($dto->getNewPassword())) {
+            $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $dto->getNewPassword()));
+        }
         if (!$this->security->isGranted(User::ROLE_ADMIN)) {
             $entity->setStatus($oldStatus);
         }
