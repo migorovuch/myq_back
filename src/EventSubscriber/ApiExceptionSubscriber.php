@@ -85,7 +85,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         } else {
             $code = $code ?: Response::HTTP_INTERNAL_SERVER_ERROR;
             $response = [
-                'title' => $this->appEnv === 'dev' ? $exception->getMessage() : $this->translator->trans('Ooops something went wrong!'),
+                'title' => $this->appEnv !== 'prod' ? $exception->getMessage() : $this->translator->trans('Ooops something went wrong!'),
             ];
         }
         $event->setResponse(
