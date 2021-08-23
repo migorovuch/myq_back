@@ -20,11 +20,11 @@
       </trans-unit>
       <trans-unit id="c390b677da5f3af8ce4ad8a42339273ff8663d65" resname="This value should be greater or equal than Min. booking time">
         <source>This value should be greater or equal than Min. booking time</source>
-        <target>This value should be greater or equal than Min. booking time</target>
+        <target>Це значення повинно бути більши або рівне Мін. тривалість бронювання</target>
       </trans-unit>
       <trans-unit id="db33c2c47799ae5600dd1e408c30fd27080554b2" resname="This value should be lower than Max. booking time">
         <source>This value should be lower than Max. booking time</source>
-        <target>Це значення не повинно бути нижче ніж Макс. тривалість бронювання</target>
+        <target>Це значення не повинно бути менше ніж Макс. тривалість бронювання</target>
       </trans-unit>
       <trans-unit id="ce8b98ed582a1dd5a6abdd65d927c67dd8811249" resname="This value should not be blank">
         <source>This value should not be blank</source>
