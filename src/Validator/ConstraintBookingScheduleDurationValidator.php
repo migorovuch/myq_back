@@ -37,12 +37,14 @@ class ConstraintBookingScheduleDurationValidator extends ConstraintValidator
         $schedule = $value->getSchedule();
         $bookingDatesDifferent = abs($value->getStart()->getTimestamp() - $value->getEnd()->getTimestamp()) / 60;
         if (
-            ($schedule->getBookingDuration() && $schedule->getBookingDuration() !== $bookingDatesDifferent) ||
             !(
-                $schedule->getMinBookingTime() &&
-                $schedule->getMinBookingTime() <= $bookingDatesDifferent &&
-                $schedule->getMaxBookingTime() &&
-                $schedule->getMaxBookingTime() >= $bookingDatesDifferent
+                ($schedule->getBookingDuration() && $schedule->getBookingDuration() === $bookingDatesDifferent) ||
+                (
+                    $schedule->getMinBookingTime() &&
+                    $schedule->getMinBookingTime() <= $bookingDatesDifferent &&
+                    $schedule->getMaxBookingTime() &&
+                    $schedule->getMaxBookingTime() >= $bookingDatesDifferent
+                )
             )
         ) {
             $message = $this->translator->trans('Incorrect booking duration');
