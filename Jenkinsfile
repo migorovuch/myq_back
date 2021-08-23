@@ -91,6 +91,7 @@ pipeline {
         sleep 30
         sh 'docker run -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
         sh 'docker run -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
+        sh 'docker exec myq_php chown -R www-data:www-data /var/www/html/var'
       }
     }
 

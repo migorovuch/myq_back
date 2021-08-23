@@ -6,6 +6,8 @@ use App\Entity\Booking;
 use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
+use App\Validator\ConstraintBookingScheduleAcceptTime;
+use App\Validator\ConstraintBookingScheduleDuration;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -14,6 +16,8 @@ use App\Validator\ConstraintBookingAvailability;
 /**
  * Class BookingDTO
  * @ConstraintBookingAvailability
+ * @ConstraintBookingScheduleDuration
+ * @ConstraintBookingScheduleAcceptTime
  */
 class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 {

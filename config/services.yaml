@@ -51,6 +51,11 @@ services:
         tags:
             - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_success, method: onAuthenticationSuccessResponse }
 
+    acme_api.event.authentication_failure_listener:
+        class: App\EventListener\AuthenticationFailureListener
+        tags:
+            - { name: kernel.event_listener, event: lexik_jwt_authentication.on_authentication_failure, method: onAuthenticationFailureResponse }
+
     App\EventSubscriber\ApiExceptionSubscriber:
         class: App\EventSubscriber\ApiExceptionSubscriber
         tags:

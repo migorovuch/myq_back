@@ -20,10 +20,12 @@ use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Security;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
 {
     protected CompanyClientManagerInterface $companyClientManager;
+    private TranslatorInterface $translator;
 
     /**
      * BookingManager constructor.
@@ -32,16 +34,19 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
      * @param Security $security
      * @param DTOExporterInterface $bookingDtoExporter
      * @param CompanyClientManagerInterface $companyClientManager
+     * @param TranslatorInterface $translator
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         BookingRepository $bookingRepository,
         Security $security,
         DTOExporterInterface $bookingDtoExporter,
-        CompanyClientManagerInterface $companyClientManager
+        CompanyClientManagerInterface $companyClientManager,
+        TranslatorInterface $translator
     ) {
         parent::__construct($entityManager, $bookingRepository, $security, $bookingDtoExporter);
         $this->companyClientManager = $companyClientManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -132,7 +137,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             $entity->getSchedule()->getBookingCondition() === Schedule::BOOKING_CONDITION_AUTHORIZED_USERS &&
             !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)
         ) {
-            throw new UnauthorizedBookingException();
+            throw new UnauthorizedBookingException($this->translator->trans('This booking is only available for authorized users. Please, sign in.'));
         }
         switch ($entity->getSchedule()->getAcceptBookingCondition()) {
             case Schedule::ACCEPT_BOOKING_DO_NOTHING:

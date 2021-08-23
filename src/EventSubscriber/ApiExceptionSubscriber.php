@@ -64,7 +64,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             }
             $exceptionContext = $responseErrors;
             $response = [
-                'title' => $exception->getMessage(),
+                'title' => $this->translator->trans('Validation failed with %count% error(s).', ['%count%' => count($responseErrors)]),
                 'errors' => $responseErrors,
             ];
         } elseif ($exception instanceof ApiExceptionInterface) {
@@ -75,17 +75,17 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         } elseif ($exception instanceof AuthenticationCredentialsNotFoundException) {
             $code = Response::HTTP_UNAUTHORIZED;
             $response = [
-                'title' => 'Authentication failed!',
+                'title' => $this->translator->trans('Authentication failed!'),
             ];
         } elseif ($exception instanceof NotFoundHttpException) {
             $code = Response::HTTP_NOT_FOUND;
             $response = [
-                'title' => 'Resource not found',
+                'title' => $this->translator->trans('Resource not found'),
             ];
         } else {
             $code = $code ?: Response::HTTP_INTERNAL_SERVER_ERROR;
             $response = [
-                'title' => $this->appEnv === 'dev' ? $exception->getMessage() : 'Ooops something went wrong!',
+                'title' => $this->appEnv !== 'prod' ? $exception->getMessage() : $this->translator->trans('Ooops something went wrong!'),
             ];
         }
         $event->setResponse(

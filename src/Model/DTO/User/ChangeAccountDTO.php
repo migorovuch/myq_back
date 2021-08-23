@@ -73,11 +73,6 @@ class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
      *     minMessage="Your password must be at least {{ limit }} characters long"
      * )
      * @Assert\Type("string", groups={"Default"})
-     * @Assert\NotEqualTo(
-     *     groups={"Default"},
-     *     propertyPath = "password",
-     *     message = "Enter new password."
-     * )
      * @Serializer\Type("string")
      */
     protected ?string $newPassword = null;

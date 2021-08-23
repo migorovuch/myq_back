@@ -11,7 +11,6 @@ use App\Model\Manager\SpecialHoursManagerInterface;
 use App\Repository\BookingRepository;
 use DateInterval;
 use DateTime;
-use Exception;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -55,51 +54,48 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
         }
 
         if (!$value instanceof BookingAvailabilityDTOInterface) {
-            throw new UnexpectedValueException($value, BookingDTO::class);
+            throw new UnexpectedValueException($value, BookingAvailabilityDTOInterface::class);
         }
 
-        $now = new DateTime();
-        $now->add(new DateInterval("PT" . $value->getSchedule()->getAcceptBookingTime() . 'M'));
-        $result = false;
         $schedule = $value->getSchedule();
-        $bookingDatesDifferent = abs($value->getStart()->getTimestamp() - $value->getEnd()->getTimestamp()) / 60;
+        $filterFrom = clone $value->getStart();
+        $filterTo = clone $value->getEnd();
+        $timeBetweenBookingsInterval = new DateInterval("PT" . $schedule->getTimeBetweenBookings() . 'M');
+        $filterFrom->sub($timeBetweenBookingsInterval);
+        $filterTo->add($timeBetweenBookingsInterval);
+        $selectedTimeBookings = $this->bookingRepository->findByDTO(
+            new BookingFindDTO(null, Booking::STATUS_ACCEPTED, null, $schedule, null, null, $filterFrom, $filterTo)
+        );
+
+        $message = $this->translator->trans('These dates are not allowed for booking');
         if (
-            (
-                $schedule->getBookingDuration() === $bookingDatesDifferent ||
-                (
-                    $schedule->getMinBookingTime() &&
-                    $schedule->getMinBookingTime() <= $bookingDatesDifferent &&
-                    $schedule->getMaxBookingTime() &&
-                    $schedule->getMaxBookingTime() >= $bookingDatesDifferent
-                )
-            ) &&
-            $schedule->getEnabled() &&
-            $value->getStart() >= $now &&
             !$schedule->getAvailable() &&
-            $this->specialHoursManager->checkScheduleAvailability(
+            !$this->specialHoursManager->checkScheduleAvailability(
                 $schedule,
                 $value->getStart(),
                 $value->getEnd()
             )
         ) {
-            $filterFrom = clone $value->getStart();
-            $filterTo = clone $value->getEnd();
-            $timeBetweenBookingsInterval = new DateInterval("PT" . $schedule->getTimeBetweenBookings() . 'M');
-            $filterFrom->sub($timeBetweenBookingsInterval);
-            $filterTo->add($timeBetweenBookingsInterval);
-            $selectedTimeBookings = $this->bookingRepository->findByDTO(
-                new BookingFindDTO(null, Booking::STATUS_ACCEPTED, null, $schedule, null, null, $filterFrom, $filterTo)
-            );
-            if (empty($selectedTimeBookings) || (!isset($selectedTimeBookings[1]) && $value->getId() && $value->getId() === reset($selectedTimeBookings)->getId())) {
-                $result = true;
-            }
-        }
-
-        if (!$result) {
             // TODO: show message corresponding to mistake (invalid date/time/duration)
-            $this->context->buildViolation($this->translator->trans('These dates are not allowed for booking'))
+            $this->context->buildViolation($message)
                 ->atPath('start')
-//                ->setParameter('{{ string }}', $value)
+                ->addViolation();
+        } elseif (
+            isset($selectedTimeBookings[1]) ||
+            (
+                !empty($selectedTimeBookings) &&
+                (
+                    !$value->getId() ||
+                    (
+                        $value->getId() &&
+                        $value->getId() !== reset($selectedTimeBookings)->getId()
+                    )
+                )
+            )
+        ) {
+            // TODO: show message corresponding to mistake (invalid date/time/duration)
+            $this->context->buildViolation($message)
+                ->atPath('start')
                 ->addViolation();
         }
     }
