@@ -42,7 +42,7 @@ class DTOExporter implements DTOExporterInterface
                     continue;
                 }
             }
-            if (method_exists($entity, $setterMethod) && $key != 'id') {
+            if (method_exists($entity, $setterMethod) && 'id' != $key) {
                 $value = $dto->$getterMethod();
                 if (null !== $value || $setNullProperty) {
                     $entity->$setterMethod($value);

@@ -6,8 +6,8 @@ use App\Entity\User;
 use App\Exception\ApiException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
-use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\DTO\User\ChangeAccountDTO;
+use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\DTO\User\NewPasswordAwareInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
@@ -18,13 +18,12 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Component\Mailer\MailerInterface;
 use Symfony\Component\Mime\Address;
-use Symfony\Component\Mime\Message;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use SymfonyCasts\Bundle\ResetPassword\Exception\ResetPasswordExceptionInterface;
 use SymfonyCasts\Bundle\ResetPassword\ResetPasswordHelperInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 use Throwable;
 
 /**
@@ -76,21 +75,21 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     /**
      * UserManager constructor.
      *
-     * @param EntityManagerInterface $entityManager
-     * @param UserRepository $userRepository
-     * @param Security $security
-     * @param DTOExporterInterface $userDtoExporter
-     * @param UserPasswordEncoderInterface $userPasswordEncoder
-     * @param ResetPasswordHelperInterface $resetPasswordHelper
-     * @param MailerInterface $mailer
-     * @param TranslatorInterface $translator
+     * @param EntityManagerInterface        $entityManager
+     * @param UserRepository                $userRepository
+     * @param Security                      $security
+     * @param DTOExporterInterface          $userDtoExporter
+     * @param UserPasswordEncoderInterface  $userPasswordEncoder
+     * @param ResetPasswordHelperInterface  $resetPasswordHelper
+     * @param MailerInterface               $mailer
+     * @param TranslatorInterface           $translator
      * @param CompanyClientManagerInterface $companyClientManager
-     * @param LoggerInterface $logger
-     * @param string $appName
-     * @param string $appEmail
-     * @param string $appUrl
-     * @param string $appEnv
-     * @param string $signingKey
+     * @param LoggerInterface               $logger
+     * @param string                        $appName
+     * @param string                        $appEmail
+     * @param string                        $appUrl
+     * @param string                        $appEnv
+     * @param string                        $signingKey
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -116,7 +115,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->mailer = $mailer;
         $this->appName = $appName;
 //        TODO: use correct email
-        $this->appEmail = str_replace("'", "", trim($appEmail));
+        $this->appEmail = str_replace("'", '', trim($appEmail));
         $this->appUrl = $appUrl;
         $this->signingKey = $signingKey;
         $this->companyClientManager = $companyClientManager;
@@ -125,7 +124,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function googleAuthentication(DTOInterface $data)
     {
@@ -143,7 +142,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function loadUserByUsername(string $username)
     {
@@ -151,7 +150,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function registration(DTOInterface $data): EntityInterface
     {
@@ -160,8 +159,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         /** @var User $user */
         $user = $this->prepareEntity($user, $data);
         $this->denyAccessUnlessGranted(AbstractVoter::CREATE, $user);
-        if (!$user->getNickname() || $user->getNickname() === self::EMPTY_NICKNAME) {
-            $nickname = explode('@',$user->getEmail());
+        if (!$user->getNickname() || self::EMPTY_NICKNAME === $user->getNickname()) {
+            $nickname = explode('@', $user->getEmail());
             $nickname = reset($nickname);
             if ($this->ifNicknameExists($nickname)) {
                 $nickname .= time();
@@ -179,7 +178,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      */
     protected function sendConfirmAccountEmail(UserInterface $user)
     {
-        $confirmationLink = $this->appUrl . '#/approve-email/' . $user->getId() . '/' . urlencode($this->createToken($user));
+        $confirmationLink = $this->appUrl.'#/approve-email/'.$user->getId().'/'.urlencode($this->createToken($user));
         try {
             $email = (new TemplatedEmail())
                 ->from(new Address($this->appEmail, $this->appName))
@@ -191,7 +190,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
                     [
                         'confirmationLink' => $confirmationLink,
                         'userName' => $user->getFullName(),
-                        'appName' => $this->appName
+                        'appName' => $this->appName,
                     ]
                 );
             $this->mailer->send($email);
@@ -201,7 +200,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function approveEmail(ApproveEmailDTO $approveEmailDTO): ?User
     {
@@ -219,7 +218,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function processSendingPasswordResetEmail(string $emailFormData)
     {
@@ -234,7 +233,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         if ($user) {
             try {
                 $resetToken = $this->resetPasswordHelper->generateResetToken($user);
-                $resetLink = $this->appUrl . '#/reset-password/' . urlencode($resetToken->getToken());
+                $resetLink = $this->appUrl.'#/reset-password/'.urlencode($resetToken->getToken());
                 $email = (new TemplatedEmail())
                     ->from(new Address($this->appEmail, $this->appName))
                     ->to($user->getEmail())
@@ -244,17 +243,12 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
                         [
                             'resetLink' => $resetLink,
                             'tokenLifetime' => $this->resetPasswordHelper->getTokenLifetime(),
-                            'userName' => $user->getFullName()
+                            'userName' => $user->getFullName(),
                         ]
                     );
                 $this->mailer->send($email);
             } catch (ResetPasswordExceptionInterface $e) {
-                throw new ApiException(
-                    $this->translator->trans(
-                        'There was a problem handling your password reset request - %reason%',
-                        ['%reason%' => $e->getReason()]
-                    )
-                );
+                throw new ApiException($this->translator->trans('There was a problem handling your password reset request - %reason%', ['%reason%' => $e->getReason()]));
             } catch (\Throwable $exception) {
                 if ($resetToken) {
                     $this->resetPasswordHelper->removeResetRequest($resetToken->getToken());
@@ -267,19 +261,14 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritdoc
+     * {@inheritdoc}
      */
     public function resetPassword(ChangePasswordDTO $changePasswordDTO)
     {
         try {
             $user = $this->resetPasswordHelper->validateTokenAndFetchUser($changePasswordDTO->getToken());
         } catch (ResetPasswordExceptionInterface $e) {
-            throw new ApiException(
-                $this->translator->trans(
-                    'There was a problem validating your reset request - %reason%',
-                    ['%reason%' => $e->getReason()]
-                )
-            );
+            throw new ApiException($this->translator->trans('There was a problem validating your reset request - %reason%', ['%reason%' => $e->getReason()]));
         }
 
         // A password reset token should be used only once, remove it.
@@ -296,7 +285,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function changeAccount(ChangeAccountDTO $data): EntityInterface
     {
@@ -323,23 +312,24 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function ifEmailExists(string $email, string $exceptId = null)
     {
-        return $this->entityRepository->findByEmail($email, $exceptId) !== null;
+        return null !== $this->entityRepository->findByEmail($email, $exceptId);
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function ifNicknameExists(string $nickname, string $exceptId = null)
     {
-        return $this->entityRepository->findByNickname($nickname, $exceptId) !== null;
+        return null !== $this->entityRepository->findByNickname($nickname, $exceptId);
     }
 
     /**
      * @param UserInterface $user
+     *
      * @return string
      */
     protected function createToken(UserInterface $user): string
@@ -350,9 +340,10 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     }
 
     /**
-     * @param User $entity
+     * @param User         $entity
      * @param DTOInterface $dto
-     * @param bool $setNullProperty
+     * @param bool         $setNullProperty
+     *
      * @return EntityInterface
      */
     protected function prepareEntity(

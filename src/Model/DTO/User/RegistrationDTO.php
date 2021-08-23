@@ -8,7 +8,8 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class RegistrationDTO
+ * Class RegistrationDTO.
+ *
  * @ConstraintAccountUniqueEmail
  */
 class RegistrationDTO implements DTOInterface
@@ -89,7 +90,7 @@ class RegistrationDTO implements DTOInterface
      * @param string $fullName
      * @param string $email
      * @param string $password
-     * @param array $roles
+     * @param array  $roles
      * @param string $googleTockenId
      */
     public function __construct(string $nickname, string $fullName, string $email, string $password, array $roles, string $googleTockenId)

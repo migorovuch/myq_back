@@ -5,8 +5,8 @@ namespace App\Entity;
 use App\Model\DTO\SpecialHours\RangeDTO;
 use App\Model\Model\EntityInterface;
 use App\Repository\SpecialHoursRepository;
-use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
+use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
 /**
@@ -14,7 +14,6 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class SpecialHours implements EntityInterface
 {
-
     const REPEAT_EVERY_DAY = 0;
     const REPEAT_ONCE_A_WEAK = 1;
     const REPEAT_ONCE_A_MONTH = 2;

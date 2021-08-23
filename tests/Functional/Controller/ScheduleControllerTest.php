@@ -4,7 +4,6 @@ namespace App\Tests\Functional\Controller;
 
 class ScheduleControllerTest extends AbstractBaseController
 {
-
     public function getMyCompany($token)
     {
         $response = $this->sendGetRequest('/api/companies/my', [], ['token' => $token]);
@@ -36,11 +35,11 @@ class ScheduleControllerTest extends AbstractBaseController
             'available' => false,
             'booking_condition' => 0,
             'booking_duration' => 30,
-            'description' => "",
+            'description' => '',
             'enabled' => true,
             'max_booking_time' => 0,
             'min_booking_time' => 0,
-            'name' => "Test Schedule 1",
+            'name' => 'Test Schedule 1',
             'accept_booking_time' => 0,
             'time_between_bookings' => 0,
         ];
@@ -65,20 +64,19 @@ class ScheduleControllerTest extends AbstractBaseController
         $schedules = $this->getMySchedules($token);
         $schedule = $schedules[array_key_first($schedules)];
 
-
         $data = [
             'accept_booking_condition' => 1,
             'available' => false,
             'booking_condition' => 0,
             'booking_duration' => 35,
-            'description' => "Test schedule description UPDATE",
+            'description' => 'Test schedule description UPDATE',
             'enabled' => false,
             'max_booking_time' => 0,
             'min_booking_time' => 0,
-            'name' => "Test Schedule 1 UPDATE",
+            'name' => 'Test Schedule 1 UPDATE',
             'accept_booking_time' => 5,
             'time_between_bookings' => 1,
-            'company' => $schedule['company']['id']
+            'company' => $schedule['company']['id'],
         ];
         $response = $this->sendPutRequest('/api/schedule/'.$schedule['id'], [], $data + ['token' => $token]);
         $this->assertSuccessResponse($response);
@@ -86,7 +84,7 @@ class ScheduleControllerTest extends AbstractBaseController
         $content = json_decode($content, true);
         foreach ($data as $dataKey => $dataValue) {
             $this->assertArrayHasKey($dataKey, $content);
-            if ($dataKey !== 'company') {
+            if ('company' !== $dataKey) {
                 $this->assertEquals($content[$dataKey], $dataValue);
             }
         }

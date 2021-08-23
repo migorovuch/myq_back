@@ -2,7 +2,6 @@
 
 namespace App\Exception;
 
-use RuntimeException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
 

@@ -7,9 +7,9 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Gedmo\Mapping\Annotation as Gedmo;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -130,6 +130,7 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @param mixed $fullName
+     *
      * @return self
      */
     public function setFullName($fullName): self
@@ -170,11 +171,12 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @param string $role
+     *
      * @return bool
      */
     public function hasRole(string $role): bool
     {
-        return in_array($role, $this->getRoles());
+        return \in_array($role, $this->getRoles());
     }
 
     public function setRoles(array $roles): self
@@ -275,7 +277,7 @@ class User implements UserInterface, EntityInterface
      */
     public function isRole(string $role)
     {
-        return in_array($role, $this->getRoles());
+        return \in_array($role, $this->getRoles());
     }
 
     /**
@@ -305,7 +307,7 @@ class User implements UserInterface, EntityInterface
             } else {
                 $companies = $companies->first();
             }
-        } elseif (is_array($companies) && !empty($companies)) {
+        } elseif (\is_array($companies) && !empty($companies)) {
             $companies = $companies[array_key_first($companies)];
         } elseif (!$companies) {
             $companies = null;
@@ -328,6 +330,7 @@ class User implements UserInterface, EntityInterface
 
     /**
      * @param string|null $phone
+     *
      * @return self
      */
     public function setPhone(?string $phone): self

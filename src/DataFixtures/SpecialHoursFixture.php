@@ -4,14 +4,13 @@ namespace App\DataFixtures;
 
 use App\Entity\SpecialHours;
 use App\Model\DTO\SpecialHours\RangeDTO;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use DateTime;
 
 class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 {
-
     public function load(ObjectManager $manager)
     {
         $defultRanges = [new RangeDTO('06:00', '15:00')];
@@ -21,8 +20,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours1 = new SpecialHours();
         $specialHours1
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule1)
             ->setRepeatDay(0);
@@ -30,8 +29,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours2 = new SpecialHours();
         $specialHours2
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule1)
             ->setRepeatDay(1);
@@ -39,8 +38,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours3 = new SpecialHours();
         $specialHours3
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule1)
             ->setRepeatDay(2);
@@ -48,8 +47,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours4 = new SpecialHours();
         $specialHours4
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule1)
             ->setRepeatDay(3);
@@ -57,8 +56,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours5 = new SpecialHours();
         $specialHours5
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule1)
             ->setRepeatDay(4);
@@ -66,8 +65,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours6 = new SpecialHours();
         $specialHours6
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule2)
             ->setRepeatDay(0);
@@ -75,8 +74,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours7 = new SpecialHours();
         $specialHours7
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setSchedule($schedule2)
             ->setRepeatDay(6);
@@ -84,8 +83,8 @@ class SpecialHoursFixture extends Fixture implements DependentFixtureInterface
 
         $specialHours8 = new SpecialHours();
         $specialHours8
-            ->setStartDate((new DateTime())->modify("-1 week"))
-            ->setEndDate((new DateTime())->modify("+1 year"))
+            ->setStartDate((new DateTime())->modify('-1 week'))
+            ->setEndDate((new DateTime())->modify('+1 year'))
             ->setRanges($defultRanges)
             ->setRepeatCondition(SpecialHours::REPEAT_ONCE_A_MONTH)
             ->setSchedule($schedule2)

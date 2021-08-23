@@ -29,12 +29,13 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
 
     /**
      * BookingManager constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param BookingRepository $bookingRepository
-     * @param Security $security
-     * @param DTOExporterInterface $bookingDtoExporter
+     *
+     * @param EntityManagerInterface        $entityManager
+     * @param BookingRepository             $bookingRepository
+     * @param Security                      $security
+     * @param DTOExporterInterface          $bookingDtoExporter
      * @param CompanyClientManagerInterface $companyClientManager
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface           $translator
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -51,6 +52,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
 
     /**
      * @param BookingFindDTO $data
+     *
      * @return array|mixed
      */
     public function findByDTO(AbstractFindDTO $data)
@@ -79,14 +81,14 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function buildMyBookingFindDTO(AbstractFindDTO $data): BookingFindDTO
     {
         /** @var User $currentUser */
         $currentUser = $this->security->getUser();
         $client = $data->getClient();
-        if(
+        if (
             !$currentUser &&
             (
                 ($client && $client->getUser()) ||
@@ -96,7 +98,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             throw new AccessDeniedException();
         }
         // update client-user relation
-        if($currentUser && ($client = $data->getClient()) && !$client->getUser()) {
+        if ($currentUser && ($client = $data->getClient()) && !$client->getUser()) {
             $client->setUser($currentUser);
             $this->save($client);
         }
@@ -134,7 +136,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         /** @var Booking $entity */
         $entity = $this->prepareEntity($entity, $data);
         if (
-            $entity->getSchedule()->getBookingCondition() === Schedule::BOOKING_CONDITION_AUTHORIZED_USERS &&
+            Schedule::BOOKING_CONDITION_AUTHORIZED_USERS === $entity->getSchedule()->getBookingCondition() &&
             !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)
         ) {
             throw new UnauthorizedBookingException($this->translator->trans('This booking is only available for authorized users. Please, sign in.'));
@@ -146,19 +148,19 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             case Schedule::ACCEPT_BOOKING_ACCEPT_ALL:
                 $status = Booking::STATUS_ACCEPTED;
                 break;
-            case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS;
+            case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS:
                 if (
                     $entity->getClient() &&
                     $entity->getSchedule()->getCompany()->getId() === $entity->getClient()->getCompany()->getId() &&
-                    $entity->getClient()->getStatus() === CompanyClient::STATUS_ON
+                    CompanyClient::STATUS_ON === $entity->getClient()->getStatus()
                 ) {
                     $status = Booking::STATUS_ACCEPTED;
                 } else {
                     $status = Booking::STATUS_NEW;
                 }
                 break;
-            case Schedule::ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE; // TODO
-            case Schedule::ACCEPT_BOOKING_DECLINE_ALL;
+            case Schedule::ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE: // TODO
+            case Schedule::ACCEPT_BOOKING_DECLINE_ALL:
                 $status = Booking::STATUS_DECLINED;
                 break;
             default:
@@ -199,7 +201,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
                 $data->getUserName(),
                 $data->getUserPhone(),
                 $data->getSchedule()->getCompany(),
-                $entity->getSchedule()->getAcceptBookingCondition() === Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS ?
+                Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS === $entity->getSchedule()->getAcceptBookingCondition() ?
                     CompanyClient::STATUS_OFF :
                     CompanyClient::STATUS_ON
             );

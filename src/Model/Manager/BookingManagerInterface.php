@@ -9,6 +9,7 @@ interface BookingManagerInterface extends CRUDManagerInterface
 {
     /**
      * @param BookingFindDTO $data
+     *
      * @return BookingFindDTO
      */
     public function buildMyBookingFindDTO(AbstractFindDTO $data): BookingFindDTO;

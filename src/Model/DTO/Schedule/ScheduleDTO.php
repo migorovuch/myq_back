@@ -82,7 +82,8 @@ class ScheduleDTO implements DTOInterface
     protected ?int $acceptBookingTime = Schedule::DEFAULT_ACCEPT_BOOKING_TIME;
 
     /**
-     * Time between bookings
+     * Time between bookings.
+     *
      * @Assert\Type("integer")
      * @Serializer\Type("integer")
      */
@@ -90,18 +91,19 @@ class ScheduleDTO implements DTOInterface
 
     /**
      * ScheduleDTO constructor.
+     *
      * @param Company|null $company
-     * @param string|null $name
-     * @param bool|null $enabled
-     * @param bool|null $available
-     * @param int|null $bookingDuration
-     * @param int|null $minBookingTime
-     * @param int|null $maxBookingTime
-     * @param string|null $description
-     * @param int|null $bookingCondition
-     * @param int|null $acceptBookingCondition
-     * @param int|null $acceptBookingTime
-     * @param int|null $timeBetweenBookings
+     * @param string|null  $name
+     * @param bool|null    $enabled
+     * @param bool|null    $available
+     * @param int|null     $bookingDuration
+     * @param int|null     $minBookingTime
+     * @param int|null     $maxBookingTime
+     * @param string|null  $description
+     * @param int|null     $bookingCondition
+     * @param int|null     $acceptBookingCondition
+     * @param int|null     $acceptBookingTime
+     * @param int|null     $timeBetweenBookings
      */
     public function __construct(
         ?Company $company = null,

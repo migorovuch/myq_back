@@ -14,7 +14,6 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class Booking implements EntityInterface
 {
-
     const STATUS_NEW = 0;
     const STATUS_ACCEPTED = 1;
     const STATUS_DECLINED = 2;
@@ -200,6 +199,7 @@ class Booking implements EntityInterface
 
     /**
      * @param DateTime $updatedAt
+     *
      * @return Booking
      */
     public function setUpdatedAt(DateTime $updatedAt): self
@@ -210,7 +210,7 @@ class Booking implements EntityInterface
     }
 
     /**
-     * @return null|CompanyClient
+     * @return CompanyClient|null
      */
     public function getClient()
     {
@@ -219,6 +219,7 @@ class Booking implements EntityInterface
 
     /**
      * @param CompanyClient|null $client
+     *
      * @return Booking
      */
     public function setClient(?CompanyClient $client): self
@@ -235,7 +236,7 @@ class Booking implements EntityInterface
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
     }

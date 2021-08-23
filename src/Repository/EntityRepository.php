@@ -2,7 +2,6 @@
 
 namespace App\Repository;
 
-use App\Model\DTO\DTOInterface;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\Model\EntityInterface;
 use App\Util\Factory\PropertyInfoExtractorFactory;
@@ -25,8 +24,8 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     /**
      * EntityRepository constructor.
      *
-     * @param ManagerRegistry $registry
-     * @param string $entityClass
+     * @param ManagerRegistry                   $registry
+     * @param string                            $entityClass
      * @param PropertyInfoExtractorFactory|null $propertyInfoExtractorFactory
      */
     public function __construct(
@@ -39,7 +38,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @param Criteria     $criteria
+     * @param Criteria        $criteria
      * @param AbstractFindDTO $data
      *
      * @return Criteria
@@ -82,8 +81,9 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder    $queryBuilder
      * @param AbstractFindDTO $data
+     *
      * @return QueryBuilder
      */
     protected function paginationQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
@@ -96,7 +96,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
         if (!empty($data->getSort())) {
             foreach ($data->getSort() as $key => $val) {
                 $key = lcfirst(implode('', array_map('ucfirst', explode('_', $key))));
-                $queryBuilder->addOrderBy('t.' . $key, $val);
+                $queryBuilder->addOrderBy('t.'.$key, $val);
             }
         }
 
@@ -104,7 +104,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder    $queryBuilder
      * @param AbstractFindDTO $data
      *
      * @return QueryBuilder
@@ -114,7 +114,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
         $propertyInfoExtractor = $this->propertyInfoExtractorFactory->buildPropertyInfoExtractor();
         $abstractClassMetadata = $propertyInfoExtractor->getProperties(AbstractFindDTO::class);
         $entityProperties = $propertyInfoExtractor->getProperties($this->getEntityName());
-        $dataProperties = $propertyInfoExtractor->getProperties(get_class($data));
+        $dataProperties = $propertyInfoExtractor->getProperties(\get_class($data));
         $findFields = array_diff($entityProperties, $abstractClassMetadata);
 
         $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
@@ -125,25 +125,25 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
         $orStatements = $queryBuilder->expr()->orX();
         foreach ($findFields as $key) {
             if (
-                in_array($key, $dataProperties) &&
-                in_array($key, $entityProperties) &&
+                \in_array($key, $dataProperties) &&
+                \in_array($key, $entityProperties) &&
                 ($value = $propertyAccessor->getValue($data, $key))
             ) {
-                $expression = $queryBuilder->expr()->like($entityAlias . '.' . $key, ':q' . $key);
+                $expression = $queryBuilder->expr()->like($entityAlias.'.'.$key, ':q'.$key);
                 if (\is_array($value)) {
-                    $expression = $queryBuilder->expr()->in($entityAlias . '.' . $key, ':q' . $key);
+                    $expression = $queryBuilder->expr()->in($entityAlias.'.'.$key, ':q'.$key);
                 } elseif ($value instanceof EntityInterface) {
-                    $expression = $queryBuilder->expr()->eq($entityAlias . '.' . $key, ':q' . $key);
+                    $expression = $queryBuilder->expr()->eq($entityAlias.'.'.$key, ':q'.$key);
                 }
-                if ($data->getCondition() === AbstractFindDTO::CONDITION_AND) {
+                if (AbstractFindDTO::CONDITION_AND === $data->getCondition()) {
                     $queryBuilder->andWhere($expression);
-                } elseif ($data->getCondition() === AbstractFindDTO::CONDITION_OR) {
+                } elseif (AbstractFindDTO::CONDITION_OR === $data->getCondition()) {
                     $orStatements->add($expression);
                 }
-                $queryBuilder->setParameter(':q' . $key, $value);
+                $queryBuilder->setParameter(':q'.$key, $value);
             }
         }
-        if($orStatements->count()) {
+        if ($orStatements->count()) {
             $queryBuilder->andWhere($orStatements);
         }
 
@@ -166,7 +166,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function countByDTO(AbstractFindDTO $data)
     {

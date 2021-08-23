@@ -27,14 +27,14 @@ class RequestLocaleSubscriber implements EventSubscriberInterface
     public function onKernelRequest(RequestEvent $event)
     {
         $request = $event->getRequest();
-        $acceptLanguage = $request->headers->get("accept-language");
+        $acceptLanguage = $request->headers->get('accept-language');
         if (empty($acceptLanguage)) {
             return;
         }
 
         // Symfony expects underscore instead of dash in locale
         $locale = str_replace('-', '_', $acceptLanguage);
-        if (in_array($locale, $this->appLocales)) {
+        if (\in_array($locale, $this->appLocales)) {
             $request->setLocale($locale);
         }
     }

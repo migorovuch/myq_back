@@ -12,8 +12,8 @@ use Symfony\Component\HttpKernel\Event\ExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
-use Throwable;
 use Symfony\Contracts\Translation\TranslatorInterface;
+use Throwable;
 
 /**
  * Class ApiExceptionSubscriber.
@@ -30,9 +30,9 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
     /**
      * ApiExceptionSubscriber constructor.
      *
-     * @param LoggerInterface $logger
+     * @param LoggerInterface     $logger
      * @param TranslatorInterface $translator
-     * @param string $appEnv
+     * @param string              $appEnv
      */
     public function __construct(LoggerInterface $logger, TranslatorInterface $translator, string $appEnv)
     {
@@ -64,7 +64,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             }
             $exceptionContext = $responseErrors;
             $response = [
-                'title' => $this->translator->trans('Validation failed with %count% error(s).', ['%count%' => count($responseErrors)]),
+                'title' => $this->translator->trans('Validation failed with %count% error(s).', ['%count%' => \count($responseErrors)]),
                 'errors' => $responseErrors,
             ];
         } elseif ($exception instanceof ApiExceptionInterface) {
@@ -85,7 +85,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
         } else {
             $code = $code ?: Response::HTTP_INTERNAL_SERVER_ERROR;
             $response = [
-                'title' => $this->appEnv !== 'prod' ? $exception->getMessage() : $this->translator->trans('Ooops something went wrong!'),
+                'title' => 'prod' !== $this->appEnv ? $exception->getMessage() : $this->translator->trans('Ooops something went wrong!'),
             ];
         }
         $event->setResponse(
@@ -98,7 +98,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
 
     /**
      * @param Throwable $exception
-     * @param array $exceptionContext
+     * @param array     $exceptionContext
      */
     private function log(Throwable $exception, array $exceptionContext = [])
     {
@@ -110,7 +110,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
             ],
-            'trace' => $exception->getTrace()
+            'trace' => $exception->getTrace(),
         ];
         if (isset($exception->getTrace()[0]['file'])) {
             $log['called']['file'] = $exception->getTrace()[0]['file'];
@@ -123,7 +123,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             $log += [
                 'previous' => [
                     'message' => $exception->getPrevious()->getMessage(),
-                    'exception' => get_class($exception->getPrevious()),
+                    'exception' => \get_class($exception->getPrevious()),
                     'file' => $exception->getPrevious()->getFile(),
                     'line' => $exception->getPrevious()->getLine(),
                 ],

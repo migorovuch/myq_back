@@ -16,7 +16,6 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class Schedule implements EntityInterface
 {
-
     const ACCEPT_BOOKING_DO_NOTHING = 0;
     const ACCEPT_BOOKING_ACCEPT_ALL = 1;
     const ACCEPT_BOOKING_DECLINE_ALL = 2;
@@ -107,14 +106,16 @@ class Schedule implements EntityInterface
     private $acceptBookingCondition = self::ACCEPT_BOOKING_DO_NOTHING;
 
     /**
-     * Time from now to booking
+     * Time from now to booking.
+     *
      * @ORM\Column(type="integer", nullable=true)
      * @Serializer\Groups({"schedule"})
      */
     private $acceptBookingTime = self::DEFAULT_ACCEPT_BOOKING_TIME;
 
     /**
-     * Time between bookings
+     * Time between bookings.
+     *
      * @ORM\Column(type="integer", nullable=true)
      * @Serializer\Groups({"schedule"})
      */
@@ -381,6 +382,7 @@ class Schedule implements EntityInterface
 
     /**
      * @param DateTime|null $createdAt
+     *
      * @return Schedule
      */
     public function setCreatedAt(?DateTime $createdAt): self
@@ -400,6 +402,7 @@ class Schedule implements EntityInterface
 
     /**
      * @param DateTime|null $updatedAt
+     *
      * @return Schedule
      */
     public function setUpdatedAt(?DateTime $updatedAt): self
@@ -416,7 +419,7 @@ class Schedule implements EntityInterface
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
     }

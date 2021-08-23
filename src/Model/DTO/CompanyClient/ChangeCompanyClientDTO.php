@@ -2,16 +2,13 @@
 
 namespace App\Model\DTO\CompanyClient;
 
-use App\Entity\Company;
 use App\Entity\CompanyClient;
-use App\Entity\User;
 use App\Model\DTO\DTOInterface;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 class ChangeCompanyClientDTO implements DTOInterface
 {
-
     /**
      * @Assert\Type("int", groups={"Default"})
      * @Serializer\Type("integer")
@@ -26,7 +23,8 @@ class ChangeCompanyClientDTO implements DTOInterface
 
     /**
      * CompanyClientDTO constructor.
-     * @param int $status
+     *
+     * @param int         $status
      * @param string|null $pseudonym
      */
     public function __construct(

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Validator;
 
 use App\Model\DTO\Booking\BookingAvailabilityDTOInterface;
@@ -12,12 +11,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConstraintBookingScheduleDurationValidator extends ConstraintValidator
 {
-
     /**
      * ConstraintBookingScheduleDurationValidator constructor.
      */
     public function __construct(protected TranslatorInterface $translator)
-    {}
+    {
+    }
 
     public function validate($value, Constraint $constraint)
     {

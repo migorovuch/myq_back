@@ -10,7 +10,6 @@ use App\Model\DTO\Booking\ChangeBookingDTO;
 use App\Model\Manager\SpecialHoursManagerInterface;
 use App\Repository\BookingRepository;
 use DateInterval;
-use DateTime;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
@@ -37,8 +36,9 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
     }
 
     /**
-     * @param BookingDTO|ChangeBookingDTO $value
+     * @param BookingDTO|ChangeBookingDTO   $value
      * @param ConstraintBookingAvailability $constraint
+     *
      * @throws UnexpectedValueException|UnexpectedTypeException
      */
     public function validate($value, Constraint $constraint)
@@ -60,7 +60,7 @@ class ConstraintBookingAvailabilityValidator extends ConstraintValidator
         $schedule = $value->getSchedule();
         $filterFrom = clone $value->getStart();
         $filterTo = clone $value->getEnd();
-        $timeBetweenBookingsInterval = new DateInterval("PT" . $schedule->getTimeBetweenBookings() . 'M');
+        $timeBetweenBookingsInterval = new DateInterval('PT'.$schedule->getTimeBetweenBookings().'M');
         $filterFrom->sub($timeBetweenBookingsInterval);
         $filterTo->add($timeBetweenBookingsInterval);
         $selectedTimeBookings = $this->bookingRepository->findByDTO(

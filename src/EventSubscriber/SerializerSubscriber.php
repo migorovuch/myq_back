@@ -73,7 +73,7 @@ class SerializerSubscriber implements EventSubscriberInterface
         }
         $validationErrors = null;
         if (!empty($validationGroups)) {
-            if (is_array($object)) {
+            if (\is_array($object)) {
                 foreach ($object as $objectItem) {
                     $validationErrors = $this->validator->validate($objectItem, null, $validationGroups);
                 }

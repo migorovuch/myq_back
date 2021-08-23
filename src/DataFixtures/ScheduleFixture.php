@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class ScheduleFixture extends Fixture implements DependentFixtureInterface
 {
-
     const SCHEDULE_1 = 'schedule_1';
     const SCHEDULE_2 = 'schedule_2';
 
@@ -47,7 +46,7 @@ class ScheduleFixture extends Fixture implements DependentFixtureInterface
     public function getDependencies()
     {
         return [
-            CompanyFixture::class
+            CompanyFixture::class,
         ];
     }
 }

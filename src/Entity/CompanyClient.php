@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class CompanyClient implements EntityInterface
 {
-
     const STATUS_OFF = 0;
     const STATUS_ON = 1;
     const STATUS_DEACTIVATED = 2;
@@ -208,6 +207,7 @@ class CompanyClient implements EntityInterface
 
     /**
      * @param Company|null $company
+     *
      * @return CompanyClient
      */
     public function setCompany(?Company $company): self
@@ -224,7 +224,7 @@ class CompanyClient implements EntityInterface
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
     }
@@ -239,6 +239,7 @@ class CompanyClient implements EntityInterface
 
     /**
      * @param int $numberOfBookings
+     *
      * @return CompanyClient
      */
     public function setNumberOfBookings(int $numberOfBookings): self

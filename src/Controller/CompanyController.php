@@ -6,10 +6,10 @@ use App\Model\DTO\Company\CompanyDTO;
 use App\Model\DTO\Company\CompanyFindDTO;
 use App\Model\Manager\CompanyManagerInterface;
 use App\Service\FileUploader;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -24,6 +24,7 @@ class CompanyController extends AbstractBaseController
 
     /**
      * CompanyController constructor.
+     *
      * @param CompanyManagerInterface $companyManager
      */
     public function __construct(CompanyManagerInterface $companyManager)
@@ -34,7 +35,9 @@ class CompanyController extends AbstractBaseController
     /**
      * @Rest\Post("/", name="create")
      * @ParamConverter("companyDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
      * @param CompanyDTO $companyDTO
+     *
      * @return Response
      */
     public function create(CompanyDTO $companyDTO): Response
@@ -47,8 +50,10 @@ class CompanyController extends AbstractBaseController
     /**
      * @Rest\Put("/{id}", name="update")
      * @ParamConverter("companyDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
-     * @param string $id
+     *
+     * @param string     $id
      * @param CompanyDTO $companyDTO
+     *
      * @return Response
      */
     public function update(string $id, CompanyDTO $companyDTO): Response
@@ -60,19 +65,22 @@ class CompanyController extends AbstractBaseController
 
     /**
      * @Rest\Get("/my", name="my_companies")
+     *
      * @return Response
      */
-    public function myCompanies() : Response
+    public function myCompanies(): Response
     {
         return $this->response($this->getUser()->getFirstCompany() ?? [], Response::HTTP_OK, ['company']);
     }
 
     /**
      * @Rest\Get ("/{id}", name="company")
+     *
      * @param string $id
+     *
      * @return Response
      */
-    public function company(string $id) : Response
+    public function company(string $id): Response
     {
         $company = $this->companyManager->find($id);
         if (!$company) {
@@ -84,8 +92,10 @@ class CompanyController extends AbstractBaseController
 
     /**
      * @Rest\Post("/logo/{id}", name="company_logo")
-     * @param string $id
+     *
+     * @param string  $id
      * @param Request $request
+     *
      * @return Response
      */
     public function uploadLogo(string $id, Request $request, FileUploader $fileUploader): Response
@@ -94,7 +104,7 @@ class CompanyController extends AbstractBaseController
         $fileName = $fileUploader->upload(
             $files,
             '/company',
-            'logo_' . $id
+            'logo_'.$id
         );
         $this->companyManager->change($id, new CompanyDTO(null, null, null, null, null, null, $fileName));
 
@@ -108,7 +118,9 @@ class CompanyController extends AbstractBaseController
      *     converter="query_converter",
      *     options={"paramName"="filter"}
      * )
+     *
      * @param CompanyFindDTO $companyFindDTO
+     *
      * @return Response
      */
     public function searchPublic(CompanyFindDTO $companyFindDTO): Response
@@ -133,7 +145,9 @@ class CompanyController extends AbstractBaseController
      *     converter="query_converter",
      *     options={"paramName"="filter"}
      * )
+     *
      * @param CompanyFindDTO $companyFindDTO
+     *
      * @return Response
      */
     public function search(CompanyFindDTO $companyFindDTO): Response

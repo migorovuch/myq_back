@@ -5,7 +5,6 @@ namespace App\Model\Manager;
 use App\Entity\CompanyClient;
 use App\Entity\User;
 use App\Exception\AccessDeniedException;
-use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Repository\CompanyClientRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
@@ -15,13 +14,13 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class CompanyClientManager extends AbstractCRUDManager implements CompanyClientManagerInterface
 {
-
     /**
      * CompanyManager constructor.
-     * @param EntityManagerInterface $entityManager
+     *
+     * @param EntityManagerInterface  $entityManager
      * @param CompanyClientRepository $comapnyClientRepository
-     * @param Security $security
-     * @param DTOExporterInterface $companyDtoExporter
+     * @param Security                $security
+     * @param DTOExporterInterface    $companyDtoExporter
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -33,7 +32,7 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function getByDTO(CompanyClientDTO $companyClientDTO, ?CompanyClient $existingClient): CompanyClient
     {
@@ -70,7 +69,7 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function checkExistingClientForBooking(CompanyClient $existingClient, ?UserInterface $currentUser): ?CompanyClient
     {
@@ -96,7 +95,7 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function changeClientDetails(User $user)
     {

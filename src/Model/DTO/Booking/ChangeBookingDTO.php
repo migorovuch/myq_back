@@ -3,24 +3,24 @@
 namespace App\Model\DTO\Booking;
 
 use App\Entity\Booking;
-use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
+use App\Validator\ConstraintBookingAvailability;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\ConstraintBookingAvailability;
 
 /**
- * Class ChangeBookingDTO
+ * Class ChangeBookingDTO.
+ *
  * @ConstraintBookingAvailability
  */
 class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     *
      * @var string|null
      */
     protected ?string $id = null;
@@ -29,6 +29,7 @@ class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      * @Assert\Type("int", groups={"Default"})
      * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})
      * @Serializer\Type("integer")
+     *
      * @var int|null
      */
     protected ?int $status = Booking::STATUS_NEW;
@@ -66,13 +67,14 @@ class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 
     /**
      * ChangeBookingDTO constructor.
-     * @param string|null $id
-     * @param int|null $status
+     *
+     * @param string|null   $id
+     * @param int|null      $status
      * @param Schedule|null $schedule
      * @param DateTime|null $filterFrom
      * @param DateTime|null $filterTo
-     * @param string|null $title
-     * @param bool|null $newClient
+     * @param string|null   $title
+     * @param bool|null     $newClient
      */
     public function __construct(
         ?string $id = null,

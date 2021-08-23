@@ -49,9 +49,11 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
     }
 
     /**
-     * @param string $email
+     * @param string      $email
      * @param string|null $exceptId
+     *
      * @return User|null
+     *
      * @throws NonUniqueResultException
      */
     public function findByEmail(string $email, string $exceptId = null)
@@ -67,9 +69,11 @@ class UserRepository extends EntityRepository implements UserLoaderInterface
     }
 
     /**
-     * @param string $nickname
+     * @param string      $nickname
      * @param string|null $exceptId
+     *
      * @return User|null
+     *
      * @throws NonUniqueResultException
      */
     public function findByNickname(string $nickname, string $exceptId = null)

@@ -2,7 +2,6 @@
 
 namespace App\Tests\Functional\Controller;
 
-use Symfony\Bundle\FrameworkBundle\Client;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,8 +36,9 @@ class AbstractBaseController extends WebTestCase
 
     /**
      * @param string $url
-     * @param array $parameters
-     * @param array $data
+     * @param array  $parameters
+     * @param array  $data
+     *
      * @return Response
      */
     protected function sendGetRequest(string $url, array $parameters = [], array $data = [])
@@ -50,8 +50,9 @@ class AbstractBaseController extends WebTestCase
 
     /**
      * @param string $url
-     * @param array $parameters
-     * @param array $data
+     * @param array  $parameters
+     * @param array  $data
+     *
      * @return Response
      */
     protected function sendPostRequest(string $url, array $parameters, array $data)
@@ -63,8 +64,9 @@ class AbstractBaseController extends WebTestCase
 
     /**
      * @param string $url
-     * @param array $parameters
-     * @param array $data
+     * @param array  $parameters
+     * @param array  $data
+     *
      * @return Response
      */
     protected function sendPutRequest(string $url, array $parameters, array $data)
@@ -76,8 +78,9 @@ class AbstractBaseController extends WebTestCase
 
     /**
      * @param string $url
-     * @param array $parameters
-     * @param array $data
+     * @param array  $parameters
+     * @param array  $data
+     *
      * @return Response
      */
     protected function sendPatchRequest(string $url, array $parameters, array $data)
@@ -89,8 +92,9 @@ class AbstractBaseController extends WebTestCase
 
     /**
      * @param string $url
-     * @param array $parameters
-     * @param array $data
+     * @param array  $parameters
+     * @param array  $data
+     *
      * @return Response
      */
     protected function sendDeleteRequest(string $url, array $parameters = [], array $data = [])
@@ -135,6 +139,7 @@ class AbstractBaseController extends WebTestCase
 
     /**
      * @param Response $response
+     *
      * @return array
      */
     protected function assertSuccessEntitiesArray(Response $response): array

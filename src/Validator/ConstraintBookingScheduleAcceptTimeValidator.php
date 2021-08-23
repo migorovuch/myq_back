@@ -1,8 +1,6 @@
 <?php
 
-
 namespace App\Validator;
-
 
 use App\Model\DTO\Booking\BookingAvailabilityDTOInterface;
 use DateInterval;
@@ -15,12 +13,12 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class ConstraintBookingScheduleAcceptTimeValidator extends ConstraintValidator
 {
-
     /**
      * ConstraintBookingScheduleAcceptTimeValidator constructor.
      */
     public function __construct(protected TranslatorInterface $translator)
-    {}
+    {
+    }
 
     public function validate($value, Constraint $constraint)
     {
@@ -40,7 +38,7 @@ class ConstraintBookingScheduleAcceptTimeValidator extends ConstraintValidator
 
         $schedule = $value->getSchedule();
         $acceptBookingTime = new DateTime();
-        $acceptBookingTime->add(new DateInterval("PT" . $schedule->getAcceptBookingTime() . 'M'));
+        $acceptBookingTime->add(new DateInterval('PT'.$schedule->getAcceptBookingTime().'M'));
         if (!$schedule->getEnabled()) {
             $message = $this->translator->trans('Schedule is not available for booking');
             $this->context->buildViolation($message)

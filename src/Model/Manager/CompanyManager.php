@@ -15,13 +15,13 @@ use Symfony\Component\Security\Core\Security;
 
 class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterface
 {
-
     /**
      * CompanyManager constructor.
+     *
      * @param EntityManagerInterface $entityManager
-     * @param CompanyRepository $comapnyRepository
-     * @param Security $security
-     * @param DTOExporterInterface $companyDtoExporter
+     * @param CompanyRepository      $comapnyRepository
+     * @param Security               $security
+     * @param DTOExporterInterface   $companyDtoExporter
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -34,6 +34,7 @@ class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterf
 
     /**
      * @param CompanyFindDTO $data
+     *
      * @return array
      */
     public function findPublicByDTO(CompanyFindDTO $data): array

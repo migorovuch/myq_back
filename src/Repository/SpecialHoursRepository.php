@@ -24,8 +24,9 @@ class SpecialHoursRepository extends EntityRepository
     }
 
     /**
-     * @param Criteria $criteria
+     * @param Criteria            $criteria
      * @param SpecialHoursFindDTO $data
+     *
      * @return Criteria
      */
     public function buildCriteriaByDTO(Criteria $criteria, AbstractFindDTO $data): Criteria
@@ -42,8 +43,9 @@ class SpecialHoursRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder        $queryBuilder
      * @param SpecialHoursFindDTO $data
+     *
      * @return QueryBuilder
      */
     protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder

@@ -4,13 +4,14 @@ namespace App\Controller;
 
 use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\Manager\UserManagerInterface;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class AccountController
+ * Class AccountController.
+ *
  * @Route("/account", name="api_account_")
  */
 class AccountController extends AbstractBaseController
@@ -25,11 +26,12 @@ class AccountController extends AbstractBaseController
         $this->userManager = $userManager;
     }
 
-
     /**
      * @Rest\Put("/", name="change_my")
      * @ParamConverter("changeUserDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
      * @param ChangeAccountDTO $changeUserDTO
+     *
      * @return Response
      */
     public function changeMy(ChangeAccountDTO $changeUserDTO): Response

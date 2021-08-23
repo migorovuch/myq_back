@@ -13,8 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class BookingVoter extends AbstractVoter
 {
     /**
-     * @param array $attributes
-     * @param Booking $subject
+     * @param array          $attributes
+     * @param Booking        $subject
      * @param TokenInterface $token
      *
      * @return bool
@@ -37,58 +37,63 @@ class BookingVoter extends AbstractVoter
 
     /**
      * @param UserInterface|string $currentUser
-     * @param Booking $subject
+     * @param Booking              $subject
+     *
      * @return bool
      */
-    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
-        return $currentUser !== 'anon.' ||
-            $subject->getSchedule()->getBookingCondition() === Schedule::BOOKING_CONDITION_ALL_USERS;
+        return 'anon.' !== $currentUser ||
+            Schedule::BOOKING_CONDITION_ALL_USERS === $subject->getSchedule()->getBookingCondition();
     }
 
     /**
      * @param User|string $currentUser
-     * @param Booking $subject
+     * @param Booking     $subject
+     *
      * @return bool
      */
-    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
-        return (
-                $currentUser !== 'anon.' && (
+        return
+                'anon.' !== $currentUser && (
                     $subject->getSchedule()->getCompany()->getUser()->getId() === $currentUser->getId() ||
 //                    $subject->getUser()->getId() === $currentUser->getId() ||
                     $currentUser->hasRole(User::ROLE_ADMIN)
                 )
-            );
+            ;
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param Booking $subject
+     * @param Booking              $subject
+     *
      * @return bool
      */
-    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject) ||
             (
-                $currentUser === 'anon.' &&
+                'anon.' === $currentUser &&
                 !$subject->getUser()
             );
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param Booking $subject
+     * @param Booking              $subject
+     *
      * @return bool
      */
-    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canDelete(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject);
     }
 
     /**
      * @param string $attribute
-     * @param mixed $subject
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports(string $attribute, $subject)

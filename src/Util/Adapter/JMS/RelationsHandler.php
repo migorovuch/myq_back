@@ -4,10 +4,8 @@ namespace App\Util\Adapter\JMS;
 
 use App\Exception\EntryNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
-use Doctrine\ORM\Mapping\ClassMetadata;
 use JMS\Serializer\JsonDeserializationVisitor;
 use JMS\Serializer\JsonSerializationVisitor;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class RelationsHandler.
@@ -57,7 +55,7 @@ class RelationsHandler
     public function deserializeRelation(JsonDeserializationVisitor $visitor, $relation, array $type)
     {
         $className = $type['params'][0]['name'] ?? null;
-        $required = !((isset($type['params'][1]) && $type['params'][1] === 'notrequired'));
+        $required = !((isset($type['params'][1]) && 'notrequired' === $type['params'][1]));
         if (!class_exists($className)) {
             throw new \InvalidArgumentException('Class name should be explicitly set for deserialization');
         }
@@ -101,11 +99,12 @@ class RelationsHandler
 
     /**
      * @param string $className
-     * @param mixed $identifier
-     * @param bool $required
+     * @param mixed  $identifier
+     * @param bool   $required
+     *
      * @return object
      */
-    private function deserializeIdentifier(string $className, string $identifier, bool $required= true)
+    private function deserializeIdentifier(string $className, string $identifier, bool $required = true)
     {
         /*if (method_exists($this->manager, 'getReference')) {
             return $this->manager->getReference($className, $identifier);

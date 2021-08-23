@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class CompanyFixture extends Fixture implements DependentFixtureInterface
 {
-
     const COMPANY_1 = 'company_1';
     const COMPANY_2 = 'company_2';
 

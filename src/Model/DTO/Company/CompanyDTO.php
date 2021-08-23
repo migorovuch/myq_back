@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CompanyDTO implements DTOInterface
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -53,6 +52,7 @@ class CompanyDTO implements DTOInterface
 
     /**
      * CompanyDTO constructor.
+     *
      * @param string|null $name
      * @param string|null $email
      * @param string|null $phone
@@ -133,5 +133,4 @@ class CompanyDTO implements DTOInterface
     {
         return $this->logo;
     }
-
 }

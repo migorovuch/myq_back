@@ -8,7 +8,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ApproveEmailDTO implements DTOInterface
 {
-
     /**
      * @var string
      *
@@ -29,6 +28,7 @@ class ApproveEmailDTO implements DTOInterface
 
     /**
      * ApproveEmailDTO constructor.
+     *
      * @param string|null $token
      * @param string|null $id
      */

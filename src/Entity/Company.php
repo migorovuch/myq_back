@@ -8,8 +8,8 @@ use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\HasLifecycleCallbacks
@@ -277,6 +277,7 @@ class Company implements EntityInterface
 
     /**
      * @param DateTime|null $createdAt
+     *
      * @return Company
      */
     public function setCreatedAt(?DateTime $createdAt): self
@@ -296,6 +297,7 @@ class Company implements EntityInterface
 
     /**
      * @param DateTime|null $updatedAt
+     *
      * @return Company
      */
     public function setUpdatedAt(?DateTime $updatedAt): self
@@ -312,7 +314,7 @@ class Company implements EntityInterface
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
     }

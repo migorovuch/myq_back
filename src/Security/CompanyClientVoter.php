@@ -12,8 +12,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class CompanyClientVoter extends AbstractVoter
 {
     /**
-     * @param array $attributes
-     * @param CompanyClient $subject
+     * @param array          $attributes
+     * @param CompanyClient  $subject
      * @param TokenInterface $token
      *
      * @return bool
@@ -36,39 +36,42 @@ class CompanyClientVoter extends AbstractVoter
 
     /**
      * @param UserInterface|string $currentUser
-     * @param CompanyClient $subject
+     * @param CompanyClient        $subject
+     *
      * @return bool
      */
-    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return true;
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param CompanyClient $subject
+     * @param CompanyClient        $subject
+     *
      * @return bool
      */
-    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $currentUser->isRole(User::ROLE_ADMIN) ||
             (
-                $currentUser !== 'anon.' &&
+                'anon.' !== $currentUser &&
                 $subject->getCompany()->getUser()->getId() === $currentUser->getId()
             );
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param CompanyClient $subject
+     * @param CompanyClient        $subject
+     *
      * @return bool
      */
-    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $currentUser->isRole(User::ROLE_ADMIN) ||
-            ($currentUser === 'anon.' && !$subject->getUser()) ||
+            ('anon.' === $currentUser && !$subject->getUser()) ||
             (
-                $currentUser !== 'anon.' &&
+                'anon.' !== $currentUser &&
                 (
                     $subject->getCompany()->getUser()->getId() === $currentUser->getId() ||
                     ($subject->getUser() && $subject->getUser()->getId() === $currentUser->getId())
@@ -78,17 +81,19 @@ class CompanyClientVoter extends AbstractVoter
 
     /**
      * @param UserInterface|string $currentUser
-     * @param CompanyClient $subject
+     * @param CompanyClient        $subject
+     *
      * @return bool
      */
-    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canDelete(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return false;
     }
 
     /**
      * @param string $attribute
-     * @param mixed $subject
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports(string $attribute, $subject)
