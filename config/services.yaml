@@ -99,3 +99,7 @@ services:
     TelegramBot\Api\BotApi:
         arguments:
             $token: '%env(string:TELEGRAM_BOT_TOKEN)%'
+
+    App\Security\TelegramWebhookTokenChecker:
+        arguments:
+            $webhookToken: '%env(string:TELEGRAM_WEBHOOK_TOKEN)%'

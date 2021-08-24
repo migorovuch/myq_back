@@ -2,22 +2,37 @@
 
 namespace App\Controller;
 
-use JMS\Serializer\SerializerInterface;
+use App\Model\DTO\Telegram\UpdateDTO;
+use App\Model\Manager\BotRequestHandlerInterface;
 use Psr\Log\LoggerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
 class TelegramController extends AbstractController
 {
     /**
-     * @Route("/telegram/{webhookToken}", name="api_telegram_webhook")
+     * TelegramController constructor.
      */
-    public function webhook(string $webhookToken, Request $request, LoggerInterface $logger, SerializerInterface $serializer): Response
+    public function __construct(
+        protected LoggerInterface $logger,
+        protected BotRequestHandlerInterface $botRequestHandler
+    )
+    {}
+
+    /**
+     * @Route("/telegram/{webhookToken}", name="api_telegram_webhook")
+     * @ParamConverter("updateDTO", converter="fos_rest.request_body")
+     */
+    public function webhook(string $webhookToken, UpdateDTO $updateDTO): Response
     {
-        $data = $serializer->serialize($request->request->all(), 'json');
-        $logger->info('Webhook data', ['data' => $data]);
+        $this->botRequestHandler->handleRequest(
+            $webhookToken,
+            $updateDTO->getMessage()->getChat()->getId(),
+            $updateDTO->getMessage()->getText()
+        );
+        $this->logger->info('Webhook data', ['data' => $updateDTO]);
 
         return new Response();
     }
