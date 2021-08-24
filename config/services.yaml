@@ -95,3 +95,7 @@ services:
     App\Service\FileUploader:
         arguments:
             $targetDirectory: '%kernel.project_dir%/public/media'
+
+    TelegramBot\Api\BotApi:
+        arguments:
+            $token: '%env(string:TELEGRAM_BOT_TOKEN)%'
