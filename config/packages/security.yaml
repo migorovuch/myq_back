@@ -58,6 +58,7 @@ security:
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
+        - { path: ^/api/telegram/.*, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/registration, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/approve-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
