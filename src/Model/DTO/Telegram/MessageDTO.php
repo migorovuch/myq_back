@@ -14,12 +14,12 @@ class MessageDTO implements DTOInterface
     protected ?int $messageId;
 
     /**
-     * @Serializer\Type("App\Model\DTO\Telegram\MessageDTO\MessageFromDTO")
+     * @Serializer\Type("App\Model\DTO\Telegram\MessageFromDTO")
      */
     protected ?MessageFromDTO $from;
 
     /**
-     * @Serializer\Type("App\Model\DTO\Telegram\MessageDTO\MessageChatDTO")
+     * @Serializer\Type("App\Model\DTO\Telegram\MessageChatDTO")
      */
     protected ?MessageChatDTO $chat;
 
