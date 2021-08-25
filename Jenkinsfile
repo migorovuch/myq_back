@@ -5,9 +5,9 @@ pipeline {
 
     stage('Build environment') {
       steps {
-        sh 'docker build -t myq_php --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
-        sh 'docker build -t myq_nginx --no-cache -f ./docker/nginx/prod/Dockerfile ./'
-        sh 'docker build -t myq_mysql --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
+        sh 'docker build -t myq_php -f ./docker/php-fpm/prod/Dockerfile ./'
+        sh 'docker build -t myq_nginx -f ./docker/nginx/prod/Dockerfile ./'
+        sh 'docker build -t myq_mysql -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
       }
     }
 

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\CompanyChat;
+use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,8 +15,10 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CompanyChatRepository extends EntityRepository
 {
-    public function __construct(ManagerRegistry $registry)
-    {
-        parent::__construct($registry, CompanyChat::class);
+    public function __construct(
+        ManagerRegistry $registry,
+        PropertyInfoExtractorFactory $propertyInfoExtractorFactory = null
+    ) {
+        parent::__construct($registry, CompanyChat::class, $propertyInfoExtractorFactory);
     }
 }
