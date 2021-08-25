@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\Model\EntityInterface;
 use App\Repository\CompanyChatRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
@@ -9,7 +10,7 @@ use JMS\Serializer\Annotation as Serializer;
 /**
  * @ORM\Entity(repositoryClass=CompanyChatRepository::class)
  */
-class CompanyChat
+class CompanyChat implements EntityInterface
 {
 
     const DEFAULT_CHAT_LANGUAGE = 'uk';
