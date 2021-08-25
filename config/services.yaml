@@ -79,11 +79,11 @@ services:
     App\Model\Manager\UserManagerInterface:
         class: App\Model\Manager\UserManager
         arguments:
-            $appName: '%env(string:APP_NAME)%'
-            $appEmail: '%env(string:APP_EMAIL)%'
-            $appUrl: '%env(string:VUE_APP_APP_URL)%'
-            $appEnv: '%env(string:APP_ENV)%'
-            $signingKey: '%env(string:SIGNING_KEY)%'
+            $appName: '%env(APP_NAME)%'
+            $appEmail: '%env(APP_EMAIL)%'
+            $appUrl: '%env(VUE_APP_APP_URL)%'
+            $appEnv: '%env(APP_ENV)%'
+            $signingKey: '%env(SIGNING_KEY)%'
 
     gedmo.listener.timestampable:
         class: Gedmo\Timestampable\TimestampableListener
@@ -98,12 +98,12 @@ services:
 
     TelegramBot\Api\BotApi:
         arguments:
-            $token: '%env(string:TELEGRAM_BOT_TOKEN)%'
+            $token: '%env(TELEGRAM_BOT_TOKEN)%'
 
     App\Security\TelegramWebhookTokenChecker:
         arguments:
-            $webhookToken: '%env(string:TELEGRAM_WEBHOOK_TOKEN)%'
+            $webhookToken: '%env(TELEGRAM_WEBHOOK_TOKEN)%'
 
     App\Model\Manager\TelegramBotRequestHandler:
         arguments:
-            $appLocales: '%env(string:SUPPORTED_LOCALE)%'
+            $appLocales: '%env(SUPPORTED_LOCALE)%'

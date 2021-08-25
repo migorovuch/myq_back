@@ -7,14 +7,12 @@ use Psr\Log\LoggerInterface;
 
 class TelegramWebhookTokenChecker
 {
-    private string $webhookToken;
 
     /**
      * TelegramWebhookTokenChecker constructor.
      */
-    public function __construct(protected LoggerInterface $logger, string $webhookToken)
+    public function __construct(protected LoggerInterface $logger, protected string $webhookToken)
     {
-        $this->webhookToken = str_replace("'", '', $webhookToken);
     }
 
     public function checkToken(string $webhookToken)
