@@ -103,3 +103,7 @@ services:
     App\Security\TelegramWebhookTokenChecker:
         arguments:
             $webhookToken: '%env(string:TELEGRAM_WEBHOOK_TOKEN)%'
+
+    App\Model\Manager\TelegramBotRequestHandler:
+        arguments:
+            $appLocales: '%env(string:SUPPORTED_LOCALE)%'

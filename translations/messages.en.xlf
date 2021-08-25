@@ -1,30 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
 <xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" xmlns:jms="urn:jms:translation" version="1.2">
-  <file date="2021-07-24T11:45:13Z" source-language="en" target-language="en" datatype="plaintext" original="not.available">
+  <file date="2021-08-25T15:38:36Z" source-language="en" target-language="en" datatype="plaintext" original="not.available">
     <header>
       <tool tool-id="JMSTranslationBundle" tool-name="JMSTranslationBundle" tool-version="1.1.0-DEV"/>
       <note>The source node in most cases contains the sample message as written by the developer. If it looks like a dot-delimitted string such as "form.label.firstname", then the developer has not provided a default message.</note>
     </header>
     <body>
+      <trans-unit id="d4d925f35a8b4feaa29c565df3a4c24920a8914b" resname="%days% day(s) %hours% hour(s) %minutes% minutes">
+        <source>%days% day(s) %hours% hour(s) %minutes% minutes</source>
+        <target state="new">%days% day(s) %hours% hour(s) %minutes% minutes</target>
+        <jms:reference-file line="55">/../../../.././src/Validator/ConstraintBookingScheduleAcceptTimeValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="1d7fbf90838293b0af7042a8b465efed56d9dce2" resname="%hours% hour(s) %minutes% minutes">
+        <source>%hours% hour(s) %minutes% minutes</source>
+        <target state="new">%hours% hour(s) %minutes% minutes</target>
+        <jms:reference-file line="57">/../../../.././src/Validator/ConstraintBookingScheduleAcceptTimeValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="aa00b1cd832b37d9dc41fcd547bc7d1dc8c86ff3" resname="%minutes% minutes">
+        <source>%minutes% minutes</source>
+        <target state="new">%minutes% minutes</target>
+        <jms:reference-file line="59">/../../../.././src/Validator/ConstraintBookingScheduleAcceptTimeValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="0e4e2633e5d1779c66e6094980d08b6dbaa7169a" resname="Action &quot;%action%&quot; not found">
+        <source>Action "%action%" not found</source>
+        <target state="new">Action "%action%" not found</target>
+        <jms:reference-file line="107">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="ef5b45b0f519bc029b02cc7e7a87fc5e46127610" resname="Authentication failed!">
+        <source>Authentication failed!</source>
+        <target state="new">Authentication failed!</target>
+        <jms:reference-file line="78">/../../../.././src/EventSubscriber/ApiExceptionSubscriber.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="c09367a6c07c56d2a72db4aac51716286feb9dd8" resname="Booking %bookingTime% approved">
+        <source>Booking %bookingTime% approved</source>
+        <target state="new">Booking %bookingTime% approved</target>
+        <jms:reference-file line="174">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="b53192e3cd8df8738372704355ed1c790f12126e" resname="Booking %bookingTime% cancelled">
+        <source>Booking %bookingTime% cancelled</source>
+        <target state="new">Booking %bookingTime% cancelled</target>
+        <jms:reference-file line="191">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="c66d87b299a90faec4b66043fee6eaa9ba45f002" resname="Booking %id% not found">
+        <source>Booking %id% not found</source>
+        <target state="new">Booking %id% not found</target>
+        <jms:reference-file line="224">/../../../.././src/Model/Manager/BookingManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="f0a4bda63528e4caf7baf090579f1da41d7a92e9" resname="Chat language has been changed">
+        <source>Chat language has been changed</source>
+        <target state="new">Chat language has been changed</target>
+        <jms:reference-file line="90">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="31dcf1fae39936481474ef414d829e06c2221bf5" resname="Company successfully added. Now you will receive notifications about company events.">
+        <source>Company successfully added. Now you will receive notifications about company events.</source>
+        <target state="new">Company successfully added. Now you will receive notifications about company events.</target>
+        <jms:reference-file line="150">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="a7d3617460629b9b4fe040112adfd2a6a4c5956b" resname="Confirm booking">
+        <source>Confirm booking</source>
+        <target state="new">Confirm booking</target>
+        <jms:reference-file line="33">/../../../.././src/Model/Manager/CompanyChatManager.php</jms:reference-file>
+      </trans-unit>
       <trans-unit id="9bf0c6168b65c8cef91b67d0ed9ea094e5c7894b" resname="Confirm your account on %appName%">
         <source>Confirm your account on %appName%</source>
-        <target state="new">Confirm your account on %appName%</target>
-        <jms:reference-file line="142">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+        <target>Confirm your account on %appName%</target>
+        <jms:reference-file line="186">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="f70340dabf4d47b594f630d8775ec6d775fbc575" resname="Decline booking">
+        <source>Decline booking</source>
+        <target state="new">Decline booking</target>
+        <jms:reference-file line="38">/../../../.././src/Model/Manager/CompanyChatManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="fd7de2c594b56895622ba8b78dad36e9bd560ae7" resname="Incorrect booking duration">
+        <source>Incorrect booking duration</source>
+        <target state="new">Incorrect booking duration</target>
+        <jms:reference-file line="49">/../../../.././src/Validator/ConstraintBookingScheduleDurationValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="9a73fab771439f9dbb9ed674879c92d463d2d1bb" resname="Incorrect credentials">
+        <source>Incorrect credentials</source>
+        <target state="new">Incorrect credentials</target>
+        <jms:reference-file line="64">/../../../.././src/Validator/ConstraintAccountValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="ab31c540610430da052c8ce4ba9c002d41820774" resname="Invalid credentials.">
+        <source>Invalid credentials.</source>
+        <target state="new">Invalid credentials.</target>
+        <jms:reference-file line="30">/../../../.././src/EventListener/AuthenticationFailureListener.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="4bd04ba73cb82578ecff22b808ce142753f80e0f" resname="Ooops something went wrong!">
+        <source>Ooops something went wrong!</source>
+        <target state="new">Ooops something went wrong!</target>
+        <jms:reference-file line="88">/../../../.././src/EventSubscriber/ApiExceptionSubscriber.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="75d5e56fd7a10f4efa0c418074a262de11619358" resname="Provide company Access Token (Company Settings -&gt; Access Token)">
+        <source><![CDATA[Provide company Access Token (Company Settings -> Access Token)]]></source>
+        <target state="new"><![CDATA[Provide company Access Token (Company Settings -> Access Token)]]></target>
+        <jms:reference-file line="122">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="2d1d4c2765a85142f33f1cc48fe83f9d97d5ca09" resname="Resource not found">
+        <source>Resource not found</source>
+        <target state="new">Resource not found</target>
+        <jms:reference-file line="83">/../../../.././src/EventSubscriber/ApiExceptionSubscriber.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="5e74f14681142e7db91d06bbbf4853d075a4f77e" resname="Schedule is not available for booking">
+        <source>Schedule is not available for booking</source>
+        <target state="new">Schedule is not available for booking</target>
+        <jms:reference-file line="43">/../../../.././src/Validator/ConstraintBookingScheduleAcceptTimeValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="daea52c9548e6859ab50c129e5bf13f78c9236da" resname="Select language">
+        <source>Select language</source>
+        <target state="new">Select language</target>
+        <jms:reference-file line="60">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="1ca25af791e93aa18cdee936091ee50cf9b53799" resname="The user with this email already exists">
+        <source>The user with this email already exists</source>
+        <target state="new">The user with this email already exists</target>
+        <jms:reference-file line="48">/../../../.././src/Validator/ConstraintAccountUniqueEmailValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="f8719bf45d820574de94436878cfe0aa75fe57ca" resname="The user with this nickname already exists">
+        <source>The user with this nickname already exists</source>
+        <target state="new">The user with this nickname already exists</target>
+        <jms:reference-file line="55">/../../../.././src/Validator/ConstraintAccountUniqueEmailValidator.php</jms:reference-file>
       </trans-unit>
       <trans-unit id="5545ef55055b77e537d44eb9963a257b1545c8d2" resname="There was a problem handling your password reset request - %reason%">
         <source>There was a problem handling your password reset request - %reason%</source>
-        <target state="new">There was a problem handling your password reset request - %reason%</target>
-        <jms:reference-file line="206">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+        <target>There was a problem handling your password reset request - %reason%</target>
+        <jms:reference-file line="251">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
       </trans-unit>
       <trans-unit id="49b14e17d7a37d4d16f99bb6fb9ef5fe01d1979b" resname="There was a problem validating your reset request - %reason%">
         <source>There was a problem validating your reset request - %reason%</source>
-        <target state="new">There was a problem validating your reset request - %reason%</target>
-        <jms:reference-file line="231">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+        <target>There was a problem validating your reset request - %reason%</target>
+        <jms:reference-file line="271">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="1ae1e9c87ef9b4d4c8c1548b74954b656bffcc47" resname="These dates are not allowed for booking">
+        <source>These dates are not allowed for booking</source>
+        <target state="new">These dates are not allowed for booking</target>
+        <jms:reference-file line="70">/../../../.././src/Validator/ConstraintBookingAvailabilityValidator.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="c9eadea2443cb12ec40ec86ed06d93cf5424d6ca" resname="This booking is only available for authorized users. Please, sign in.">
+        <source>This booking is only available for authorized users. Please, sign in.</source>
+        <target state="new">This booking is only available for authorized users. Please, sign in.</target>
+        <jms:reference-file line="141">/../../../.././src/Model/Manager/BookingManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="fe857e85146e3e56c0774c557f4324472c9d2e83" resname="Validation failed with %count% error(s).">
+        <source>Validation failed with %count% error(s).</source>
+        <target state="new">Validation failed with %count% error(s).</target>
+        <jms:reference-file line="67">/../../../.././src/EventSubscriber/ApiExceptionSubscriber.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="8a3a4aae1bb751942f3746b5882e0e8d14fc28ba" resname="You have a new booking">
+        <source>You have a new booking</source>
+        <target state="new">You have a new booking</target>
+        <jms:reference-file line="55">/../../../.././src/Model/Manager/CompanyChatManager.php</jms:reference-file>
       </trans-unit>
       <trans-unit id="7340fe8fc9198ae8e543e14b694fa5b6a0c352cf" resname="Your password reset request">
         <source>Your password reset request</source>
-        <target state="new">Your password reset request</target>
-        <jms:reference-file line="194">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+        <target>Your password reset request</target>
+        <jms:reference-file line="240">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="2a477eac7bef321fd4094085097b1d88edc102f5" resname="available for booking in">
+        <source>available for booking in</source>
+        <target state="new">available for booking in</target>
+        <jms:reference-file line="61">/../../../.././src/Validator/ConstraintBookingScheduleAcceptTimeValidator.php</jms:reference-file>
       </trans-unit>
     </body>
   </file>

@@ -22,7 +22,8 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setEmail('company1@gmail.com')
             ->setName('Company 1')
             ->setPhone('9823094823094')
-            ->setStatus(Company::STATUS_ON);
+            ->setStatus(Company::STATUS_ON)
+            ->generateAccessToken();
 
         $manager->persist($company1);
 
@@ -34,7 +35,8 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setEmail('company2@gmail.com')
             ->setName('Company 2')
             ->setPhone('9823094823094')
-            ->setStatus(Company::STATUS_ON);
+            ->setStatus(Company::STATUS_ON)
+            ->generateAccessToken();
 
         $manager->persist($company2);
 

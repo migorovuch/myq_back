@@ -122,6 +122,11 @@ class Booking implements EntityInterface
         return $this->end;
     }
 
+    public function getHumanReadableTime($format = null, $format2 = null): string
+    {
+        return $this->getStart()->format($format ?? 'd/m H:i').' - '.$this->getEnd()->format($format2 ?? 'H:i');
+    }
+
     public function setEnd(\DateTimeInterface $end): self
     {
         $this->end = $end;

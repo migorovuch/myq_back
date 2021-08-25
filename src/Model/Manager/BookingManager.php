@@ -25,30 +25,28 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
 {
-    protected CompanyClientManagerInterface $companyClientManager;
-    private TranslatorInterface $translator;
 
     /**
      * BookingManager constructor.
      *
-     * @param EntityManagerInterface        $entityManager
-     * @param BookingRepository             $bookingRepository
-     * @param Security                      $security
-     * @param DTOExporterInterface          $bookingDtoExporter
+     * @param EntityManagerInterface $entityManager
+     * @param BookingRepository $bookingRepository
+     * @param Security $security
+     * @param DTOExporterInterface $bookingDtoExporter
+     * @param TranslatorInterface $translator
      * @param CompanyClientManagerInterface $companyClientManager
-     * @param TranslatorInterface           $translator
+     * @param CompanyChatManagerInterface $companyChatManager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         BookingRepository $bookingRepository,
         Security $security,
         DTOExporterInterface $bookingDtoExporter,
-        CompanyClientManagerInterface $companyClientManager,
-        TranslatorInterface $translator
+        protected TranslatorInterface $translator,
+        protected CompanyClientManagerInterface $companyClientManager,
+        protected CompanyChatManagerInterface $companyChatManager
     ) {
         parent::__construct($entityManager, $bookingRepository, $security, $bookingDtoExporter);
-        $this->companyClientManager = $companyClientManager;
-        $this->translator = $translator;
     }
 
     /**
@@ -213,6 +211,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             ->setClient($companyClient);
         $this->denyAccessUnlessGranted(BookingVoter::CREATE, $entity);
         $this->save($entity);
+        $this->companyChatManager->sendNewBookingNotification($data->getSchedule()->getCompany(), $entity);
 
         return $entity;
     }

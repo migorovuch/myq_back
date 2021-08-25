@@ -70,7 +70,7 @@ class CompanyController extends AbstractBaseController
      */
     public function myCompanies(): Response
     {
-        return $this->response($this->getUser()->getFirstCompany() ?? [], Response::HTTP_OK, ['company']);
+        return $this->response($this->getUser()->getFirstCompany() ?? [], Response::HTTP_OK, ['company', 'company_access_token']);
     }
 
     /**

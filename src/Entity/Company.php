@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Model\Manager\BotRequestHandlerInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\CompanyRepository;
 use DateTime;
@@ -106,6 +107,12 @@ class Company implements EntityInterface
      * @Serializer\Groups({"company_updated"})
      */
     protected ?DateTime $updatedAt = null;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company_access_token"})
+     */
+    protected $accessToken;
 
     public function __construct()
     {
@@ -317,5 +324,20 @@ class Company implements EntityInterface
         if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
+    }
+
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
+    }
+
+    public function generateAccessToken(): self
+    {
+        $this->accessToken =
+            BotRequestHandlerInterface::ACTION_COMPANY.
+            BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.
+            md5(random_int(100000, 999999));
+
+        return $this;
     }
 }
