@@ -16,9 +16,10 @@ interface BookingManagerInterface extends CRUDManagerInterface
     public function buildMyBookingFindDTO(AbstractFindDTO $data): BookingFindDTO;
 
     /**
+     * @param string $companyId
      * @param string $bookingId
      * @param int $status
      * @return mixed
      */
-    public function changeBookingStatus(string $bookingId, int $status): Booking;
+    public function changeBookingStatus(string $companyId, string $bookingId, int $status): Booking;
 }

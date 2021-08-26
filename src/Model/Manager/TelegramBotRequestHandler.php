@@ -8,7 +8,9 @@ use App\Entity\CompanyChat;
 use App\Exception\BotRequestHandler\ActionNotFoundException;
 use App\Exception\BotRequestHandler\RequiredPayloadNotFoundException;
 use App\Exception\EntryNotFoundException;
+use App\Model\DTO\BotMessageDTOInterface;
 use App\Model\DTO\CompanyChat\CompanyChatDTO;
+use App\Model\DTO\Telegram\CallbackQueryDTO;
 use App\Security\TelegramWebhookTokenChecker;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use TelegramBot\Api\BotApi;
@@ -41,11 +43,25 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         $this->appLocales = explode(',', $appLocales);
     }
 
-    public function handleRequest(string $webhookToken, int $chatId, string $message)
+    public function handleRequest(string $webhookToken, BotMessageDTOInterface $botMessageDTO)
     {
         $this->telegramWebhookTokenChecker->checkToken($webhookToken);
+        if ($botMessageDTO->getMessage()) {
+            $this->processMessage(
+                $botMessageDTO->getMessage()->getChat()->getId(),
+                $botMessageDTO->getMessage()->getText()
+            );
+        } elseif ($botMessageDTO->getCallbackQuery()) {
+            $this->processCallback($botMessageDTO->getCallbackQuery());
+        }
+    }
+    protected function processMessage(int $chatId, string $message)
+    {
         /** @var CompanyChat|null $companyChat */
         $companyChat = $this->companyChatManager->findOneBy(['chatId' => $chatId]);
+        if (!$companyChat) {
+            throw new EntryNotFoundException('Chat '.$chatId.' not found');
+        }
         $locale = $companyChat ? $companyChat->getChatLanguage() : CompanyChat::DEFAULT_CHAT_LANGUAGE;
         if (!$companyChat) {
             if (in_array($message, $this->appLocales) && count($this->appLocales) > 1) {
@@ -96,12 +112,6 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
             );
         } else {
             switch ($message) {
-                case $this->companyChatManager->getConfirmBookingActionString($companyChat):
-                    $this->approveBooking($companyChat);
-                    break;
-                case $this->companyChatManager->getDeclineBookingActionString($companyChat):
-                    $this->cancelBooking($companyChat);
-                    break;
                 default:
                     throw new ActionNotFoundException(
                         $this->translator->trans(
@@ -112,6 +122,25 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
                         )
                     );
             }
+        }
+    }
+
+    protected function processCallback(CallbackQueryDTO $callbackQuery)
+    {
+        /** @var CompanyChat|null $companyChat */
+        $companyChat = $this->companyChatManager->findOneBy(['chatId' => $callbackQuery->getMessage()->getChat()->getId()]);
+        if (!$companyChat) {
+            throw new EntryNotFoundException('Chat '.$callbackQuery->getMessage()->getChat()->getId().' not found');
+        }
+        $payload = explode(self::MESSAGE_PAYLOAD_DELIMITER, $callbackQuery->getData());
+        $action = array_shift($payload);
+        switch ($action) {
+            case self::ACTION_CONFIRM_BOOKING:
+                $this->approveBooking($companyChat, reset($payload));
+                break;
+            case self::ACTION_DECLINE_BOOKING:
+                $this->cancelBooking($companyChat, reset($payload));
+                break;
         }
     }
 
@@ -163,12 +192,12 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         return str_contains($message, self::ACTION_COMPANY.self::MESSAGE_PAYLOAD_DELIMITER);
     }
 
-    protected function approveBooking(CompanyChat $companyChat)
+    protected function approveBooking(CompanyChat $companyChat, string $payload)
     {
-        if (empty($companyChat->getPayload())) {
+        if (empty($payload)) {
             throw new RequiredPayloadNotFoundException();
         }
-        $booking = $this->bookingManager->changeBookingStatus($companyChat->getPayload(), Booking::STATUS_ACCEPTED);
+        $booking = $this->bookingManager->changeBookingStatus($companyChat->getCompany()->getId(), $payload, Booking::STATUS_ACCEPTED);
         $this->botApi->sendMessage(
             $companyChat->getChatId(),
             $this->translator->trans(
@@ -180,12 +209,12 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         );
     }
 
-    protected function cancelBooking(CompanyChat $companyChat)
+    protected function cancelBooking(CompanyChat $companyChat, string $payload)
     {
-        if (empty($companyChat->getPayload())) {
+        if (empty($payload)) {
             throw new RequiredPayloadNotFoundException();
         }
-        $booking = $this->bookingManager->changeBookingStatus($companyChat->getPayload(), Booking::STATUS_DECLINED);
+        $booking = $this->bookingManager->changeBookingStatus($companyChat->getCompany()->getId(), $payload, Booking::STATUS_DECLINED);
         $this->botApi->sendMessage(
             $companyChat->getChatId(),
             $this->translator->trans(

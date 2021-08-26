@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
 use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -122,11 +123,6 @@ class Booking implements EntityInterface
         return $this->end;
     }
 
-    public function getHumanReadableTime($format = null, $format2 = null): string
-    {
-        return $this->getStart()->format($format ?? 'd/m H:i').' - '.$this->getEnd()->format($format2 ?? 'H:i');
-    }
-
     public function setEnd(\DateTimeInterface $end): self
     {
         $this->end = $end;
@@ -137,6 +133,17 @@ class Booking implements EntityInterface
     public function getTitle(): ?string
     {
         return $this->title;
+    }
+
+    public function getHumanReadableTime($format = null, $format2 = null): string
+    {
+        $timezone = new DateTimeZone(
+            timezone_name_from_abbr("", $this->getSchedule()->getCompany()->getTimezoneoffset(), 1)
+        );
+        $start = $this->getStart()->setTimezone($timezone);
+        $end = $this->getEnd()->setTimezone($timezone);
+
+        return $start->format($format ?? 'd/m (H:i').' - '.$end->format($format2 ?? 'H:i)');
     }
 
     public function setTitle(?string $title): self

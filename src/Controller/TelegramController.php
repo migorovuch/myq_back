@@ -27,12 +27,8 @@ class TelegramController extends AbstractController
      */
     public function webhook(string $webhookToken, UpdateDTO $updateDTO): Response
     {
-        $this->botRequestHandler->handleRequest(
-            $webhookToken,
-            $updateDTO->getMessage()->getChat()->getId(),
-            $updateDTO->getMessage()->getText()
-        );
         $this->logger->info('Webhook data', ['data' => $updateDTO]);
+        $this->botRequestHandler->handleRequest($webhookToken, $updateDTO);
 
         return new Response();
     }

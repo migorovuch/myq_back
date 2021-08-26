@@ -114,6 +114,11 @@ class Company implements EntityInterface
      */
     protected $accessToken;
 
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $timezoneoffset;
+
     public function __construct()
     {
         $this->schedules = new ArrayCollection();
@@ -337,6 +342,18 @@ class Company implements EntityInterface
             BotRequestHandlerInterface::ACTION_COMPANY.
             BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.
             md5(random_int(100000, 999999));
+
+        return $this;
+    }
+
+    public function getTimezoneoffset(): ?int
+    {
+        return $this->timezoneoffset;
+    }
+
+    public function setTimezoneoffset(?int $timezoneoffset): self
+    {
+        $this->timezoneoffset = $timezoneoffset;
 
         return $this;
     }

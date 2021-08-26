@@ -68,7 +68,7 @@ class CompanyClientVoter extends AbstractVoter
      */
     protected function canView(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
-        return $currentUser->isRole(User::ROLE_ADMIN) ||
+        return ('anon.' !== $currentUser && $currentUser->isRole(User::ROLE_ADMIN)) ||
             ('anon.' === $currentUser && !$subject->getUser()) ||
             (
                 'anon.' !== $currentUser &&

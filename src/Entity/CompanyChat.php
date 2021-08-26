@@ -46,7 +46,7 @@ class CompanyChat implements EntityInterface
      */
     private $payload;
 
-    public function getId(): ?int
+    public function getId(): ?string
     {
         return $this->id;
     }

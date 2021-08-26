@@ -13,7 +13,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Contracts\Translation\TranslatorInterface;
 use TelegramBot\Api\BotApi;
-use TelegramBot\Api\Types\ReplyKeyboardMarkup;
+use TelegramBot\Api\Types\Inline\InlineKeyboardMarkup;
 
 class CompanyChatManager extends AbstractCRUDManager implements CompanyChatManagerInterface
 {
@@ -23,19 +23,10 @@ class CompanyChatManager extends AbstractCRUDManager implements CompanyChatManag
         Security $security,
         DTOExporterInterface $companyChatDtoExporter,
         protected TranslatorInterface $translator,
-        protected BotApi $botApi
+        protected BotApi $botApi,
+        protected string $appUrl
     ) {
         parent::__construct($entityManager, $companyChatRepository, $security, $companyChatDtoExporter);
-    }
-
-    public function getConfirmBookingActionString(CompanyChat $companyChat): string
-    {
-        return $this->translator->trans('Confirm booking', [], 'messages', $companyChat->getChatLanguage());
-    }
-
-    public function getDeclineBookingActionString(CompanyChat $companyChat): string
-    {
-        return $this->translator->trans('Decline booking', [], 'messages', $companyChat->getChatLanguage());
     }
 
     public function sendNewBookingNotification(Company $company, Booking $booking)
@@ -43,13 +34,21 @@ class CompanyChatManager extends AbstractCRUDManager implements CompanyChatManag
         $chatList = $this->findByDTO(new CompanyChatFindDTO($company));
         /** @var CompanyChat $companyChat */
         foreach ($chatList as $companyChat) {
-            $keyboard = new ReplyKeyboardMarkup(
+            $keyboard = new InlineKeyboardMarkup(
                 [
-                    $this->getConfirmBookingActionString($companyChat),
-                    $this->getDeclineBookingActionString($companyChat),
-                ],
-                true
-            ); // true for one-time keyboard
+                    [
+                        [
+                            'text' => $this->translator->trans('Confirm', [], 'messages', $companyChat->getChatLanguage()),
+                            'callback_data' => BotRequestHandlerInterface::ACTION_CONFIRM_BOOKING.BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.$booking->getId()
+                        ],
+                        [
+                            'text' => $this->translator->trans('Decline', [], 'messages', $companyChat->getChatLanguage()),
+                            'callback_data' => BotRequestHandlerInterface::ACTION_DECLINE_BOOKING.BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.$booking->getId()
+                        ],
+                    ],
+                ]
+            );
+            $bookingsLink = $this->appUrl.'#/company/bookings';
             $this->botApi->sendMessage(
                 $companyChat->getChatId(),
                 $this->translator->trans(
@@ -57,12 +56,13 @@ class CompanyChatManager extends AbstractCRUDManager implements CompanyChatManag
                     [],
                     'messages',
                     $companyChat->getChatLanguage()
-                ).' - '.$booking->getHumanReadableTime(),
+                ).' - '.$booking->getHumanReadableTime().PHP_EOL.$bookingsLink,
                 null,
                 false,
                 null,
                 $keyboard
             );
+            // TODO: remove chat payload
             $this->change($companyChat->getId(), new CompanyChatDTO(null, null, null, $booking->getId()));
         }
     }

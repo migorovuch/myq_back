@@ -56,9 +56,9 @@
         <target state="new">Компанія успішно додана. Тепер ви будете отримувати сповіщення про події компанії.</target>
         <jms:reference-file line="150">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
       </trans-unit>
-      <trans-unit id="a7d3617460629b9b4fe040112adfd2a6a4c5956b" resname="Confirm booking">
-        <source>Confirm booking</source>
-        <target state="new">Підтвердити бронювання</target>
+      <trans-unit id="a7d3617460629b9b4fe040112adfd2a6a4c5956b" resname="Confirm">
+        <source>Confirm</source>
+        <target state="new">Підтвердити</target>
         <jms:reference-file line="33">/../../../.././src/Model/Manager/CompanyChatManager.php</jms:reference-file>
       </trans-unit>
       <trans-unit id="9bf0c6168b65c8cef91b67d0ed9ea094e5c7894b" resname="Confirm your account on %appName%">
@@ -66,9 +66,9 @@
         <target>Підтвердіть ваш акаунт на %appName%</target>
         <jms:reference-file line="186">/../../../.././src/Model/Manager/UserManager.php</jms:reference-file>
       </trans-unit>
-      <trans-unit id="f70340dabf4d47b594f630d8775ec6d775fbc575" resname="Decline booking">
-        <source>Decline booking</source>
-        <target state="new">Скасувати бронювання</target>
+      <trans-unit id="f70340dabf4d47b594f630d8775ec6d775fbc575" resname="Decline">
+        <source>Decline</source>
+        <target state="new">Скасувати</target>
         <jms:reference-file line="38">/../../../.././src/Model/Manager/CompanyChatManager.php</jms:reference-file>
       </trans-unit>
       <trans-unit id="fd7de2c594b56895622ba8b78dad36e9bd560ae7" resname="Incorrect booking duration">

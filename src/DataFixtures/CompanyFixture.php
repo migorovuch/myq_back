@@ -23,7 +23,8 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setName('Company 1')
             ->setPhone('9823094823094')
             ->setStatus(Company::STATUS_ON)
-            ->generateAccessToken();
+            ->generateAccessToken()
+            ->setTimezoneoffset(10800);
 
         $manager->persist($company1);
 
@@ -36,7 +37,8 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setName('Company 2')
             ->setPhone('9823094823094')
             ->setStatus(Company::STATUS_ON)
-            ->generateAccessToken();
+            ->generateAccessToken()
+            ->setTimezoneoffset(10800);
 
         $manager->persist($company2);
 

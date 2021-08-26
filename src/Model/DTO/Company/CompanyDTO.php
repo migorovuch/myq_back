@@ -27,6 +27,12 @@ class CompanyDTO implements DTOInterface
     protected ?string $phone = null;
 
     /**
+     * @Assert\Type("integer", groups={"Default"})
+     * @Serializer\Type("integer")
+     */
+    protected ?int $timezoneoffset = null;
+
+    /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
@@ -61,13 +67,14 @@ class CompanyDTO implements DTOInterface
      * @param string|null $description
      */
     public function __construct(
-        ?string $name,
-        ?string $email,
-        ?string $phone,
-        ?string $address,
-        ?string $addressLink,
-        ?string $description,
-        ?string $logo
+        ?string $name = null,
+        ?string $email = null,
+        ?string $phone = null,
+        ?string $address = null,
+        ?string $addressLink = null,
+        ?string $description = null,
+        ?string $logo = null,
+        ?int $timezoneoffset = null
     ) {
         $this->email = $email;
         $this->phone = $phone;
@@ -76,6 +83,7 @@ class CompanyDTO implements DTOInterface
         $this->description = $description;
         $this->name = $name;
         $this->logo = $logo;
+        $this->timezoneoffset = $timezoneoffset;
     }
 
     /**
@@ -132,5 +140,13 @@ class CompanyDTO implements DTOInterface
     public function getLogo(): ?string
     {
         return $this->logo;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getTimezoneoffset(): ?int
+    {
+        return $this->timezoneoffset;
     }
 }

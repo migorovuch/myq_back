@@ -107,3 +107,8 @@ services:
     App\Model\Manager\TelegramBotRequestHandler:
         arguments:
             $appLocales: '%env(SUPPORTED_LOCALE)%'
+
+    App\Model\Manager\CompanyChatManagerInterface:
+        class: App\Model\Manager\CompanyChatManager
+        arguments:
+            $appUrl: '%env(VUE_APP_APP_URL)%'
