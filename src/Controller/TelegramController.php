@@ -16,7 +16,7 @@ class TelegramController extends AbstractController
      * TelegramController constructor.
      */
     public function __construct(
-        protected LoggerInterface $logger,
+        protected LoggerInterface $appLogger,
         protected BotRequestHandlerInterface $botRequestHandler
     )
     {}
@@ -27,7 +27,7 @@ class TelegramController extends AbstractController
      */
     public function webhook(string $webhookToken, UpdateDTO $updateDTO): Response
     {
-        $this->logger->info('Webhook data', ['data' => $updateDTO]);
+        $this->appLogger->info('Webhook data', ['data' => $updateDTO]);
         $this->botRequestHandler->handleRequest($webhookToken, $updateDTO);
 
         return new Response();

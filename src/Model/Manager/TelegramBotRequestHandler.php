@@ -89,7 +89,7 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
                 );
                 $this->askCompanyAccessToken($chatId, $locale);
             }
-        } elseif (!$companyChat->getCompany()) {
+        } elseif (!$companyChat->getCompany() || $this->isMessageContainsAccessToken($message)) {
             if ($this->isMessageContainsAccessToken($message)) {
                 $companyChat = $this->setCompanyChatCompany($chatId, $message, $companyChat);
             } else {

@@ -20,26 +20,16 @@ use Throwable;
  */
 class ApiExceptionSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected LoggerInterface $logger;
-    protected TranslatorInterface $translator;
-    protected string $appEnv;
 
     /**
      * ApiExceptionSubscriber constructor.
      *
-     * @param LoggerInterface     $logger
+     * @param LoggerInterface     $appLogger
      * @param TranslatorInterface $translator
      * @param string              $appEnv
      */
-    public function __construct(LoggerInterface $logger, TranslatorInterface $translator, string $appEnv)
-    {
-        $this->logger = $logger;
-        $this->appEnv = $appEnv;
-        $this->translator = $translator;
-    }
+    public function __construct(protected LoggerInterface $appLogger, protected TranslatorInterface $translator, protected string $appEnv)
+    {}
 
     /**
      * @param ExceptionEvent $event
@@ -130,7 +120,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
             ];
         }
 
-        $this->logger->error($exception->getMessage(), $log);
+        $this->appLogger->error($exception->getMessage(), $log);
     }
 
     /**

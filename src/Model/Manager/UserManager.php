@@ -69,7 +69,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      */
     protected TranslatorInterface $translator;
     private CompanyClientManagerInterface $companyClientManager;
-    private LoggerInterface $logger;
+    private LoggerInterface $appLogger;
     private string $appEnv;
 
     /**
@@ -84,7 +84,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
      * @param MailerInterface               $mailer
      * @param TranslatorInterface           $translator
      * @param CompanyClientManagerInterface $companyClientManager
-     * @param LoggerInterface               $logger
+     * @param LoggerInterface               $appLogger
      * @param string                        $appName
      * @param string                        $appEmail
      * @param string                        $appUrl
@@ -101,7 +101,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         MailerInterface $mailer,
         TranslatorInterface $translator,
         CompanyClientManagerInterface $companyClientManager,
-        LoggerInterface $logger,
+        LoggerInterface $appLogger,
         string $appName,
         string $appEmail,
         string $appUrl,
@@ -119,7 +119,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $this->appUrl = $appUrl;
         $this->signingKey = $signingKey;
         $this->companyClientManager = $companyClientManager;
-        $this->logger = $logger;
+        $this->appLogger = $appLogger;
         $this->appEnv = $appEnv;
     }
 
@@ -195,7 +195,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
                 );
             $this->mailer->send($email);
         } catch (Throwable $exception) {
-            $this->logger->error('Send registration email exception: '.$exception->getMessage());
+            $this->appLogger->error('Send registration email exception: '.$exception->getMessage());
         }
     }
 
