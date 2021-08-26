@@ -25,9 +25,9 @@ class Log
     protected string $message;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="text")
      */
-    protected array $context = [];
+    protected string $context;
 
     /**
      * @ORM\Column(type="smallint")
@@ -45,9 +45,9 @@ class Log
     protected string $channel;
 
     /**
-     * @ORM\Column(type="array")
+     * @ORM\Column(type="text")
      */
-    protected array $extra = [];
+    protected string $extra;
 
     /**
      * @ORM\Column(type="datetime")
@@ -86,12 +86,12 @@ class Log
         return $this;
     }
 
-    public function getContext(): ?array
+    public function getContext(): ?string
     {
         return $this->context;
     }
 
-    public function setContext(array $context): self
+    public function setContext(string $context): self
     {
         $this->context = $context;
 
@@ -134,12 +134,12 @@ class Log
         return $this;
     }
 
-    public function getExtra(): ?array
+    public function getExtra(): ?string
     {
         return $this->extra;
     }
 
-    public function setExtra(array $extra): self
+    public function setExtra(string $extra): self
     {
         $this->extra = $extra;
 

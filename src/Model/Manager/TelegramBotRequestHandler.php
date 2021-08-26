@@ -59,9 +59,6 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
     {
         /** @var CompanyChat|null $companyChat */
         $companyChat = $this->companyChatManager->findOneBy(['chatId' => $chatId]);
-        if (!$companyChat) {
-            throw new EntryNotFoundException('Chat '.$chatId.' not found');
-        }
         $locale = $companyChat ? $companyChat->getChatLanguage() : CompanyChat::DEFAULT_CHAT_LANGUAGE;
         if (!$companyChat) {
             if (in_array($message, $this->appLocales) && count($this->appLocales) > 1) {
@@ -129,9 +126,6 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
     {
         /** @var CompanyChat|null $companyChat */
         $companyChat = $this->companyChatManager->findOneBy(['chatId' => $callbackQuery->getMessage()->getChat()->getId()]);
-        if (!$companyChat) {
-            throw new EntryNotFoundException('Chat '.$callbackQuery->getMessage()->getChat()->getId().' not found');
-        }
         $payload = explode(self::MESSAGE_PAYLOAD_DELIMITER, $callbackQuery->getData());
         $action = array_shift($payload);
         switch ($action) {
