@@ -21,5 +21,5 @@ interface BookingManagerInterface extends CRUDManagerInterface
      * @param int $status
      * @return mixed
      */
-    public function changeBookingStatus(string $companyId, string $bookingId, int $status): Booking;
+    public function changeBookingStatus(string $companyId, string $bookingId, int $status);
 }

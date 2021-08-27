@@ -101,4 +101,20 @@ class BookingRepository extends EntityRepository
 
         return $queryBuilder;
     }
+
+    public function changeCompanyBookingStatus(string $companyId, string $bookingId, int $status)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb->update('t')
+            ->innerJoin('t.schedule', 's')
+            ->innerJoin('s.company', 'c')
+            ->set('t.status', ':status')
+            ->setParameter('status', $status)
+            ->andWhere('c.id = :company')
+            ->setParameter('company', $companyId)
+            ->andWhere('t.id = :booking')
+            ->setParameter('booking', $bookingId);
+
+        return $qb->getQuery()->execute();
+    }
 }

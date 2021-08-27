@@ -191,16 +191,18 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         if (empty($payload)) {
             throw new RequiredPayloadNotFoundException();
         }
-        $booking = $this->bookingManager->changeBookingStatus($companyChat->getCompany()->getId(), $payload, Booking::STATUS_ACCEPTED);
-        $this->botApi->sendMessage(
-            $companyChat->getChatId(),
-            $this->translator->trans(
-                'Booking %bookingTime% approved',
-                ['%bookingTime%' => $booking->getHumanReadableTime()],
-                'messages',
-                $companyChat->getChatLanguage()
-            )
-        );
+        if(!empty($this->bookingManager->changeBookingStatus($companyChat->getCompany()->getId(), $payload, Booking::STATUS_ACCEPTED))) {
+            $booking = $this->bookingManager->find($payload);
+            $this->botApi->sendMessage(
+                $companyChat->getChatId(),
+                $this->translator->trans(
+                    'Booking %bookingTime% approved',
+                    ['%bookingTime%' => $booking->getHumanReadableTime()],
+                    'messages',
+                    $companyChat->getChatLanguage()
+                )
+            );
+        }
     }
 
     protected function cancelBooking(CompanyChat $companyChat, string $payload)
@@ -208,15 +210,17 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         if (empty($payload)) {
             throw new RequiredPayloadNotFoundException();
         }
-        $booking = $this->bookingManager->changeBookingStatus($companyChat->getCompany()->getId(), $payload, Booking::STATUS_DECLINED);
-        $this->botApi->sendMessage(
-            $companyChat->getChatId(),
-            $this->translator->trans(
-                'Booking %bookingTime% cancelled',
-                ['%bookingTime%' => $booking->getHumanReadableTime()],
-                'messages',
-                $companyChat->getChatLanguage()
-            )
-        );
+        if(!empty($this->bookingManager->changeBookingStatus($companyChat->getCompany()->getId(), $payload, Booking::STATUS_DECLINED))) {
+            $booking = $this->bookingManager->find($payload);
+            $this->botApi->sendMessage(
+                $companyChat->getChatId(),
+                $this->translator->trans(
+                    'Booking %bookingTime% cancelled',
+                    ['%bookingTime%' => $booking->getHumanReadableTime()],
+                    'messages',
+                    $companyChat->getChatLanguage()
+                )
+            );
+        }
     }
 }
