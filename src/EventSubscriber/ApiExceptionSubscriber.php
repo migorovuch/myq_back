@@ -100,7 +100,7 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
                 'file' => $exception->getFile(),
                 'line' => $exception->getLine(),
             ],
-            'trace' => $exception->getTrace(),
+            'trace' => $exception->getTraceAsString(),
         ];
         if (isset($exception->getTrace()[0]['file'])) {
             $log['called']['file'] = $exception->getTrace()[0]['file'];

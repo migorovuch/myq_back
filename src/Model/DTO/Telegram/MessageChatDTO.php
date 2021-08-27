@@ -10,32 +10,32 @@ class MessageChatDTO implements DTOInterface
     /**
      * @Serializer\Type("int")
      */
-    protected ?int $id;
+    protected ?int $id = null;
 
     /**
      * @Serializer\Type("boolean")
      */
-    protected ?bool $isBoot;
+    protected ?bool $isBoot = null;
 
     /**
      * @Serializer\Type("string")
      */
-    protected ?string $firstName;
+    protected ?string $firstName = null;
 
     /**
      * @Serializer\Type("string")
      */
-    protected ?string $lastName;
+    protected ?string $lastName = null;
 
     /**
      * @Serializer\Type("string")
      */
-    protected ?string $username;
+    protected ?string $username = null;
 
     /**
      * @Serializer\Type("string")
      */
-    protected ?string $type;
+    protected ?string $type = null;
 
     /**
      * MessageChatDTO constructor.

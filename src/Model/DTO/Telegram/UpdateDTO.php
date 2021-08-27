@@ -10,7 +10,7 @@ class UpdateDTO implements BotMessageDTOInterface
     /**
      * @Serializer\Type("int")
      */
-    protected ?int $updateId;
+    protected ?int $updateId = null;
 
     /**
      * @Serializer\Type("App\Model\DTO\Telegram\MessageDTO")

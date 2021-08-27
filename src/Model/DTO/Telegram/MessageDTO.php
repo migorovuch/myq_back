@@ -11,17 +11,17 @@ class MessageDTO implements DTOInterface
     /**
      * @Serializer\Type("int")
      */
-    protected ?int $messageId;
+    protected ?int $messageId = null;
 
     /**
      * @Serializer\Type("App\Model\DTO\Telegram\MessageFromDTO")
      */
-    protected ?MessageFromDTO $from;
+    protected ?MessageFromDTO $from = null;
 
     /**
      * @Serializer\Type("App\Model\DTO\Telegram\MessageChatDTO")
      */
-    protected ?MessageChatDTO $chat;
+    protected ?MessageChatDTO $chat = null;
 
     /**
      * @Serializer\Type("DateTime<'U'>")
@@ -31,12 +31,12 @@ class MessageDTO implements DTOInterface
     /**
      * @Serializer\Type("string")
      */
-    protected ?string $text;
+    protected ?string $text = null;
 
     /**
      * @Serializer\Type("array")
      */
-    protected ?array $entities;
+    protected ?array $entities = null;
 
     /**
      * MessageDTO constructor.

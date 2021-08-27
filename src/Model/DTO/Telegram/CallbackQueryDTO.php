@@ -10,27 +10,27 @@ class CallbackQueryDTO implements DTOInterface
     /**
      * @Serializer\Type("int")
      */
-    protected ?int $id;
+    protected ?int $id = null;
 
     /**
      * @Serializer\Type("App\Model\DTO\Telegram\MessageFromDTO")
      */
-    protected ?MessageFromDTO $from;
+    protected ?MessageFromDTO $from = null;
 
     /**
      * @Serializer\Type("App\Model\DTO\Telegram\MessageDTO")
      */
-    protected ?MessageDTO $message;
+    protected ?MessageDTO $message = null;
 
     /**
      * @Serializer\Type("int")
      */
-    protected ?int $chatInstance;
+    protected ?int $chatInstance = null;
 
     /**
      * @Serializer\Type("string")
      */
-    protected ?string $data;
+    protected ?string $data = null;
 
     /**
      * CallbackQueryDTO constructor.
