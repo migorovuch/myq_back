@@ -216,8 +216,18 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         return $entity;
     }
 
+    /**
+     * @param string $companyId
+     * @param string $bookingId
+     * @param int $status
+     * @return Booking
+     */
     public function changeBookingStatus(string $companyId, string $bookingId, int $status)
     {
-        return $this->entityRepository->changeCompanyBookingStatus($companyId, $bookingId, $status);
+        $booking = $this->entityRepository->findCompanyBooking($companyId, $bookingId);
+        $booking->setStatus($status);
+        $this->save($booking);
+
+        return $booking;
     }
 }

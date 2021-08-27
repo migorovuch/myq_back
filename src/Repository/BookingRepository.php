@@ -102,19 +102,22 @@ class BookingRepository extends EntityRepository
         return $queryBuilder;
     }
 
-    public function changeCompanyBookingStatus(string $companyId, string $bookingId, int $status)
+    /**
+     * @param string $companyId
+     * @param string $bookingId
+     * @return Booking
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCompanyBooking(string $companyId, string $bookingId)
     {
-        $qb = $this->createQueryBuilder('t');
-        $qb->update('t')
+        return $this->createQueryBuilder('t')
             ->innerJoin('t.schedule', 's')
-            ->innerJoin('s.company', 'c')
-            ->set('t.status', ':status')
-            ->setParameter('status', $status)
-            ->andWhere('c.id = :company')
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $bookingId)
+            ->andWhere('s.company = :company')
             ->setParameter('company', $companyId)
-            ->andWhere('t.id = :booking')
-            ->setParameter('booking', $bookingId);
-
-        return $qb->getQuery()->execute();
+            ->getQuery()
+            ->getSingleResult();
     }
 }
