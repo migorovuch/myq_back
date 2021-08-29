@@ -40,12 +40,12 @@ class CompanyChatManager extends AbstractCRUDManager implements CompanyChatManag
                         [
                             'text' => $this->translator->trans('Confirm', [], 'messages',
                                 $companyChat->getChatLanguage()),
-                            'callback_data' => BotRequestHandlerInterface::ACTION_CONFIRM_BOOKING.BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.$booking->getId()
+                            'callback_data' => BotRequestHandlerInterface::ACTION_CONFIRM_BOOKING.BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.$booking->getId(),
                         ],
                         [
                             'text' => $this->translator->trans('Decline', [], 'messages',
                                 $companyChat->getChatLanguage()),
-                            'callback_data' => BotRequestHandlerInterface::ACTION_DECLINE_BOOKING.BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.$booking->getId()
+                            'callback_data' => BotRequestHandlerInterface::ACTION_DECLINE_BOOKING.BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.$booking->getId(),
                         ],
                     ],
                 ]
@@ -58,7 +58,7 @@ class CompanyChatManager extends AbstractCRUDManager implements CompanyChatManag
                     [],
                     'messages',
                     $companyChat->getChatLanguage()
-                ).' - '.$booking->getSchedule()->getName().' '.$booking->getHumanReadableTime().PHP_EOL.$bookingsLink,
+                ).' - '.$booking->getSchedule()->getName().' '.$booking->getHumanReadableTime().\PHP_EOL.$bookingsLink,
                 null,
                 false,
                 null,

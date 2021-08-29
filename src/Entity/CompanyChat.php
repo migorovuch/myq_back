@@ -12,7 +12,6 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class CompanyChat implements EntityInterface
 {
-
     const DEFAULT_CHAT_LANGUAGE = 'uk';
 
     /**

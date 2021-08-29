@@ -29,9 +29,10 @@ class CompanyChatDTO implements DTOInterface
 
     /**
      * CompanyChatDTO constructor.
+     *
      * @param Company|null $company
-     * @param string|null $chatId
-     * @param string|null $chatLanguage
+     * @param string|null  $chatId
+     * @param string|null  $chatLanguage
      */
     public function __construct(
         ?Company $company = null,
@@ -76,5 +77,4 @@ class CompanyChatDTO implements DTOInterface
     {
         return $this->payload;
     }
-    
 }

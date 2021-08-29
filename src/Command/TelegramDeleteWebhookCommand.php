@@ -16,6 +16,7 @@ class TelegramDeleteWebhookCommand extends Command
 
     /**
      * TelegramSetWebhookCommand constructor.
+     *
      * @param BotApi $botApi
      */
     public function __construct(protected BotApi $botApi)

@@ -6,7 +6,6 @@ use App\Model\DTO\BotMessageDTOInterface;
 
 interface BotRequestHandlerInterface
 {
-
     const MESSAGE_PAYLOAD_DELIMITER = ':';
 
     const ACTION_COMPANY = 'cmp';

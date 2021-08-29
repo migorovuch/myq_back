@@ -20,7 +20,6 @@ use Throwable;
  */
 class ApiExceptionSubscriber implements EventSubscriberInterface
 {
-
     /**
      * ApiExceptionSubscriber constructor.
      *
@@ -29,7 +28,8 @@ class ApiExceptionSubscriber implements EventSubscriberInterface
      * @param string              $appEnv
      */
     public function __construct(protected LoggerInterface $appLogger, protected TranslatorInterface $translator, protected string $appEnv)
-    {}
+    {
+    }
 
     /**
      * @param ExceptionEvent $event

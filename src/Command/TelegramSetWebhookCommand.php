@@ -17,6 +17,7 @@ class TelegramSetWebhookCommand extends Command
 
     /**
      * TelegramSetWebhookCommand constructor.
+     *
      * @param BotApi $botApi
      */
     public function __construct(protected BotApi $botApi)
@@ -42,7 +43,7 @@ class TelegramSetWebhookCommand extends Command
             $result = '';
             $webhookInfo = $this->botApi->getWebhookInfo();
             if (($existWebhookURL = $webhookInfo->getUrl())) {
-                if($io->ask('Telegram webhook already configured - '.$existWebhookURL.PHP_EOL.'Do you want to change it?')) {
+                if ($io->ask('Telegram webhook already configured - '.$existWebhookURL.\PHP_EOL.'Do you want to change it?')) {
                     $result = $this->botApi->setWebhook($webhookURL);
                 }
             } else {

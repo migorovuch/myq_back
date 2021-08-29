@@ -18,18 +18,18 @@ use TelegramBot\Api\Types\ReplyKeyboardMarkup;
 
 class TelegramBotRequestHandler implements BotRequestHandlerInterface
 {
-
     protected array $appLocales = [];
 
     /**
      * TelegramBotRequestHandler constructor.
+     *
      * @param CompanyChatManagerInterface $companyChatManager
-     * @param BookingManagerInterface $bookingManager
-     * @param CompanyManagerInterface $companyManager
+     * @param BookingManagerInterface     $bookingManager
+     * @param CompanyManagerInterface     $companyManager
      * @param TelegramWebhookTokenChecker $telegramWebhookTokenChecker
-     * @param TranslatorInterface $translator
-     * @param BotApi $botApi
-     * @param string $appLocales
+     * @param TranslatorInterface         $translator
+     * @param BotApi                      $botApi
+     * @param string                      $appLocales
      */
     public function __construct(
         protected CompanyChatManagerInterface $companyChatManager,
@@ -62,12 +62,12 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         $companyChat = $this->companyChatManager->findOneBy(['chatId' => $chatId]);
         $locale = $companyChat ? $companyChat->getChatLanguage() : CompanyChat::DEFAULT_CHAT_LANGUAGE;
         if (!$companyChat) {
-            if (in_array($message, $this->appLocales) && count($this->appLocales) > 1) {
+            if (\in_array($message, $this->appLocales) && \count($this->appLocales) > 1) {
                 $companyChat = $this->companyChatManager->create(
                     new CompanyChatDTO(null, $chatId, $message)
                 );
                 $this->askCompanyAccessToken($chatId, $locale);
-            } elseif (count($this->appLocales) > 1) {
+            } elseif (\count($this->appLocales) > 1) {
                 $keyboard = new ReplyKeyboardMarkup([$this->appLocales], true); // true for one-time keyboard
                 $this->botApi->sendMessage(
                     $chatId,
@@ -93,7 +93,7 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
             } else {
                 $this->askCompanyAccessToken($chatId, $locale);
             }
-        } elseif (in_array($message, $this->appLocales) && count($this->appLocales) > 1) {
+        } elseif (\in_array($message, $this->appLocales) && \count($this->appLocales) > 1) {
             /** @var CompanyChat $companyChat */
             $companyChat = $this->companyChatManager->change(
                 $companyChat->getId(),
@@ -111,14 +111,7 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
         } else {
             switch ($message) {
                 default:
-                    throw new ActionNotFoundException(
-                        $this->translator->trans(
-                            'Action "%action%" not found',
-                            ['%action%' => $message],
-                            'messages',
-                            $companyChat->getChatLanguage()
-                        )
-                    );
+                    throw new ActionNotFoundException($this->translator->trans('Action "%action%" not found', ['%action%' => $message], 'messages', $companyChat->getChatLanguage()));
             }
         }
     }
@@ -206,7 +199,6 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
                 $companyChat->getChatLanguage()
             )
         );
-
     }
 
     protected function cancelBooking(CompanyChat $companyChat, string $payload)
@@ -229,5 +221,4 @@ class TelegramBotRequestHandler implements BotRequestHandlerInterface
             )
         );
     }
-
 }

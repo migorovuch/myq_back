@@ -39,8 +39,9 @@ class MessageFromDTO implements DTOInterface
 
     /**
      * MessageFromDTO constructor.
-     * @param int|null $id
-     * @param bool|null $isBoot
+     *
+     * @param int|null    $id
+     * @param bool|null   $isBoot
      * @param string|null $firstName
      * @param string|null $lastName
      * @param string|null $username

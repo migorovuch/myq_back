@@ -105,7 +105,9 @@ class BookingRepository extends EntityRepository
     /**
      * @param string $companyId
      * @param string $bookingId
+     *
      * @return Booking
+     *
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */

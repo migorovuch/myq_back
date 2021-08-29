@@ -18,8 +18,8 @@ class TelegramController extends AbstractController
     public function __construct(
         protected LoggerInterface $appLogger,
         protected BotRequestHandlerInterface $botRequestHandler
-    )
-    {}
+    ) {
+    }
 
     /**
      * @Route("/telegram/{webhookToken}", name="api_telegram_webhook")

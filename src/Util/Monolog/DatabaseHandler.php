@@ -5,14 +5,13 @@ namespace App\Util\Monolog;
 use App\Entity\Log;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use JMS\Serializer\Exception\Exception as SerializerException;
 use JMS\Serializer\SerializerInterface;
 use Monolog\Handler\AbstractProcessingHandler;
 use Symfony\Component\Security\Core\Security;
-use JMS\Serializer\Exception\Exception as SerializerException;
 
 class DatabaseHandler extends AbstractProcessingHandler
 {
-
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected Security $security,

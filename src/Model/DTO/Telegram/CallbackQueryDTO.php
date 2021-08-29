@@ -34,11 +34,12 @@ class CallbackQueryDTO implements DTOInterface
 
     /**
      * CallbackQueryDTO constructor.
-     * @param int|null $id
+     *
+     * @param int|null            $id
      * @param MessageFromDTO|null $from
-     * @param MessageDTO|null $message
-     * @param int|null $chatInstance
-     * @param string|null $data
+     * @param MessageDTO|null     $message
+     * @param int|null            $chatInstance
+     * @param string|null         $data
      */
     public function __construct(
         ?int $id,

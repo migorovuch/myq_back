@@ -3,9 +3,7 @@
 namespace App\Model\DTO\CompanyChat;
 
 use App\Entity\Company;
-use App\Entity\CompanyChat;
 use App\Model\DTO\AbstractFindDTO;
-use App\Model\DTO\DTOInterface;
 use App\Model\DTO\PageDTO;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -35,9 +33,10 @@ class CompanyChatFindDTO extends AbstractFindDTO
 
     /**
      * CompanyChatDTO constructor.
+     *
      * @param Company|null $company
-     * @param string|null $chatId
-     * @param string|null $chatLanguage
+     * @param string|null  $chatId
+     * @param string|null  $chatLanguage
      */
     public function __construct(
         ?Company $company = null,
@@ -86,5 +85,4 @@ class CompanyChatFindDTO extends AbstractFindDTO
     {
         return $this->payload;
     }
-    
 }

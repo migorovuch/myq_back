@@ -7,7 +7,6 @@ use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Exception\AccessDeniedException;
-use App\Exception\EntryNotFoundException;
 use App\Exception\UnauthorizedBookingException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
@@ -25,17 +24,16 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
 {
-
     /**
      * BookingManager constructor.
      *
-     * @param EntityManagerInterface $entityManager
-     * @param BookingRepository $bookingRepository
-     * @param Security $security
-     * @param DTOExporterInterface $bookingDtoExporter
-     * @param TranslatorInterface $translator
+     * @param EntityManagerInterface        $entityManager
+     * @param BookingRepository             $bookingRepository
+     * @param Security                      $security
+     * @param DTOExporterInterface          $bookingDtoExporter
+     * @param TranslatorInterface           $translator
      * @param CompanyClientManagerInterface $companyClientManager
-     * @param CompanyChatManagerInterface $companyChatManager
+     * @param CompanyChatManagerInterface   $companyChatManager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -219,7 +217,8 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
     /**
      * @param string $companyId
      * @param string $bookingId
-     * @param int $status
+     * @param int    $status
+     *
      * @return Booking
      */
     public function changeBookingStatus(string $companyId, string $bookingId, int $status)

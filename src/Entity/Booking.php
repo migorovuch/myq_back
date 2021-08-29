@@ -138,7 +138,7 @@ class Booking implements EntityInterface
     public function getHumanReadableTime($format = null, $format2 = null): string
     {
         $timezone = new DateTimeZone(
-            timezone_name_from_abbr("", $this->getSchedule()->getCompany()->getTimezoneoffset(), 1)
+            timezone_name_from_abbr('', $this->getSchedule()->getCompany()->getTimezoneoffset(), 1)
         );
         $start = $this->getStart()->setTimezone($timezone);
         $end = $this->getEnd()->setTimezone($timezone);

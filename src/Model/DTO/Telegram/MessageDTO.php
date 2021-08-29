@@ -40,12 +40,13 @@ class MessageDTO implements DTOInterface
 
     /**
      * MessageDTO constructor.
-     * @param int|null $messageId
-     * @param MessageFromDTO|null $from
-     * @param MessageChatDTO|null $chat
+     *
+     * @param int|null               $messageId
+     * @param MessageFromDTO|null    $from
+     * @param MessageChatDTO|null    $chat
      * @param DateTimeInterface|null $date
-     * @param string|null $text
-     * @param array|null $entities
+     * @param string|null            $text
+     * @param array|null             $entities
      */
     public function __construct(
         ?int $messageId,

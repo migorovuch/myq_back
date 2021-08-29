@@ -24,8 +24,9 @@ class UpdateDTO implements BotMessageDTOInterface
 
     /**
      * UpdateDTO constructor.
-     * @param int|null $updateId
-     * @param MessageDTO|null $message
+     *
+     * @param int|null              $updateId
+     * @param MessageDTO|null       $message
      * @param CallbackQueryDTO|null $callbackQuery
      */
     public function __construct(?int $updateId, ?MessageDTO $message, ?CallbackQueryDTO $callbackQuery)

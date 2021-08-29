@@ -29,9 +29,10 @@ class CompanyChatVoter extends AbstractVoter
     {
         return true;
     }
+
     /**
      * @param array          $attributes
-     * @param CompanyChat        $subject
+     * @param CompanyChat    $subject
      * @param TokenInterface $token
      *
      * @return bool

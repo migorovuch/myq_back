@@ -7,7 +7,6 @@ use Psr\Log\LoggerInterface;
 
 class TelegramWebhookTokenChecker
 {
-
     /**
      * TelegramWebhookTokenChecker constructor.
      */
