@@ -60,7 +60,7 @@ class CompanyController extends AbstractBaseController
     {
         $company = $this->companyManager->update($id, $companyDTO);
 
-        return $this->response($company, Response::HTTP_OK, ['company']);
+        return $this->response($company, Response::HTTP_OK, ['company', 'company_access_token']);
     }
 
     /**

@@ -38,12 +38,14 @@ class ScheduleDTO implements DTOInterface
 
     /**
      * @Assert\Type("integer")
+     * @Assert\PositiveOrZero(message="This value should be greater or equal than 0")
      * @Serializer\Type("integer")
      */
     protected ?int $bookingDuration = Schedule::DEFAULT_BOOKING_DURATION;
 
     /**
      * @Assert\Type("integer")
+     * @Assert\PositiveOrZero(message="This value should be greater or equal than 0")
      * @Assert\LessThan("maxBookingTime", groups={"Default"}, message="This value should be lower than Max. booking time")
      * @Serializer\Type("integer")
      */
