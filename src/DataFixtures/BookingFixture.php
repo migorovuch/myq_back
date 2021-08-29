@@ -7,10 +7,10 @@ use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use DateInterval;
+use DateTime;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use DateTime;
 
 class BookingFixture extends Fixture implements DependentFixtureInterface
 {
@@ -30,11 +30,11 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
 
         $generateStartDate = function () use ($days, $hours, $minutes) {
             $start = new DateTime();
-            $startDayKey = random_int(0, count($days) - 1);
-            $startHoursKey = random_int(0, count($hours) - 1);
-            $startMinuteKey = random_int(0, count($minutes) - 1);
+            $startDayKey = random_int(0, \count($days) - 1);
+            $startHoursKey = random_int(0, \count($hours) - 1);
+            $startMinuteKey = random_int(0, \count($minutes) - 1);
 
-            return $start->modify($days[$startDayKey] . ' day')->setTime($hours[$startHoursKey],
+            return $start->modify($days[$startDayKey].' day')->setTime($hours[$startHoursKey],
                 $minutes[$startMinuteKey]);
         };
 
@@ -49,17 +49,17 @@ class BookingFixture extends Fixture implements DependentFixtureInterface
             }
         };
 
-        for ($i = 1; $i <= self::BOOKINGS_COUNT; $i++) {
+        for ($i = 1; $i <= self::BOOKINGS_COUNT; ++$i) {
             $startDate = $selectStartDate($createdBookingsDates);
             $endDate = clone $startDate;
             $endDate = $endDate->add(new DateInterval('PT30M'));
             $clientNumber = random_int(1, CompanyClientFixture::CLIENTS_COUNT);
             /** @var CompanyClient $client */
-            $client = $this->getReference(CompanyClientFixture::COMPANY_CLIENT_ . $clientNumber);
+            $client = $this->getReference(CompanyClientFixture::COMPANY_CLIENT_.$clientNumber);
             $booking = new Booking();
             $booking
                 ->setSchedule($schedule)
-                ->setCustomerComment('some comment ' . $i)
+                ->setCustomerComment('some comment '.$i)
                 ->setStart($startDate)
                 ->setEnd($endDate)
                 ->setStatus(Booking::STATUS_ACCEPTED)

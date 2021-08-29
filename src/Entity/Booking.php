@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Model\Model\EntityInterface;
 use App\Repository\BookingRepository;
 use DateTime;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 
@@ -14,7 +15,6 @@ use JMS\Serializer\Annotation as Serializer;
  */
 class Booking implements EntityInterface
 {
-
     const STATUS_NEW = 0;
     const STATUS_ACCEPTED = 1;
     const STATUS_DECLINED = 2;
@@ -135,6 +135,17 @@ class Booking implements EntityInterface
         return $this->title;
     }
 
+    public function getHumanReadableTime($format = null, $format2 = null): string
+    {
+        $timezone = new DateTimeZone(
+            timezone_name_from_abbr('', $this->getSchedule()->getCompany()->getTimezoneoffset(), 1)
+        );
+        $start = $this->getStart()->setTimezone($timezone);
+        $end = $this->getEnd()->setTimezone($timezone);
+
+        return $start->format($format ?? 'd/m (H:i').' - '.$end->format($format2 ?? 'H:i)');
+    }
+
     public function setTitle(?string $title): self
     {
         $this->title = $title;
@@ -200,6 +211,7 @@ class Booking implements EntityInterface
 
     /**
      * @param DateTime $updatedAt
+     *
      * @return Booking
      */
     public function setUpdatedAt(DateTime $updatedAt): self
@@ -210,7 +222,7 @@ class Booking implements EntityInterface
     }
 
     /**
-     * @return null|CompanyClient
+     * @return CompanyClient|null
      */
     public function getClient()
     {
@@ -219,6 +231,7 @@ class Booking implements EntityInterface
 
     /**
      * @param CompanyClient|null $client
+     *
      * @return Booking
      */
     public function setClient(?CompanyClient $client): self
@@ -235,7 +248,7 @@ class Booking implements EntityInterface
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
     }

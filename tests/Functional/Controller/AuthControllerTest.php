@@ -100,7 +100,7 @@ class AuthControllerTest extends AbstractBaseController
             'nickname' => '-',
             'email' => 'testuser123@site.com',
             'password' => '12345678',
-            'roles' => ["ROLE_USER"]
+            'roles' => ['ROLE_USER'],
         ];
 
         $this->successRegistration($data, 'ROLE_USER');

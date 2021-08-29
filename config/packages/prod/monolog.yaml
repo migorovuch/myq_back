@@ -1,4 +1,5 @@
 monolog:
+    channels: [ app ]
     handlers:
         main:
             type: fingers_crossed
@@ -9,6 +10,11 @@ monolog:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
             level: info
+        doctrine:
+            type: service
+            id: App\Util\Monolog\DatabaseHandler
+            level: info
+            channels: [app]
         console:
             type: console
             process_psr_3_messages: false

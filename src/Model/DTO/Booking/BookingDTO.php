@@ -6,25 +6,26 @@ use App\Entity\Booking;
 use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
+use App\Validator\ConstraintBookingAvailability;
 use App\Validator\ConstraintBookingScheduleAcceptTime;
 use App\Validator\ConstraintBookingScheduleDuration;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use App\Validator\ConstraintBookingAvailability;
 
 /**
- * Class BookingDTO
+ * Class BookingDTO.
+ *
  * @ConstraintBookingAvailability
  * @ConstraintBookingScheduleDuration
  * @ConstraintBookingScheduleAcceptTime
  */
 class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     *
      * @var string|null
      */
     protected ?string $id = null;
@@ -33,6 +34,7 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      * @Assert\Type("int", groups={"Default"})
      * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})
      * @Serializer\Type("integer")
+     *
      * @var int|null
      */
     protected ?int $status = Booking::STATUS_NEW;
@@ -96,17 +98,18 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
 
     /**
      * BookingDTO constructor.
-     * @param string|null $id
-     * @param int|null $status
-     * @param Schedule|null $schedule
-     * @param DateTime|null $filterFrom
-     * @param DateTime|null $filterTo
-     * @param string|null $title
-     * @param string|null $customerComment
+     *
+     * @param string|null        $id
+     * @param int|null           $status
+     * @param Schedule|null      $schedule
+     * @param DateTime|null      $filterFrom
+     * @param DateTime|null      $filterTo
+     * @param string|null        $title
+     * @param string|null        $customerComment
      * @param CompanyClient|null $client
-     * @param string|null $userName
-     * @param string|null $userPhone
-     * @param bool|null $newClient
+     * @param string|null        $userName
+     * @param string|null        $userPhone
+     * @param bool|null          $newClient
      */
     public function __construct(
         ?string $id = null,

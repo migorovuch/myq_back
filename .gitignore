@@ -27,3 +27,4 @@
 ###< symfony/phpunit-bridge ###
 
 /public/front/
+/.php_cs.cache

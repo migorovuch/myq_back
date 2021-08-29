@@ -13,7 +13,8 @@ class AuthenticationFailureListener
      * AuthenticationFailureListener constructor.
      */
     public function __construct(protected TranslatorInterface $translator)
-    {}
+    {
+    }
 
     /**
      * @param AuthenticationFailureEvent $event

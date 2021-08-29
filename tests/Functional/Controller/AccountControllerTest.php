@@ -1,12 +1,9 @@
 <?php
 
-
 namespace App\Tests\Functional\Controller;
-
 
 class AccountControllerTest extends AbstractBaseController
 {
-
     public function login(array $data)
     {
         $this->sendPostRequest('/api/login_check', [], $data);
@@ -39,7 +36,7 @@ class AccountControllerTest extends AbstractBaseController
             [],
             $newAccountData +
             [
-                'token' => $loginContent['token']
+                'token' => $loginContent['token'],
             ]
         );
         $this->assertSuccessResponse($response);
@@ -67,7 +64,7 @@ class AccountControllerTest extends AbstractBaseController
             [],
             $newAccountData +
             [
-                'token' => $loginContent['token']
+                'token' => $loginContent['token'],
             ]
         );
         $accountContent = json_decode($response->getContent(), true);

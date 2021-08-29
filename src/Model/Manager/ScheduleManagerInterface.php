@@ -8,6 +8,7 @@ interface ScheduleManagerInterface extends CRUDManagerInterface
 {
     /**
      * @param ScheduleFindDTO $data
+     *
      * @return array
      */
     public function findPublicByDTO(ScheduleFindDTO $data): array;

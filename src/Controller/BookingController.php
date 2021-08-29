@@ -2,13 +2,13 @@
 
 namespace App\Controller;
 
-use App\Model\DTO\Booking\ChangeBookingDTO;
-use App\Model\Manager\BookingManagerInterface;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
-use Symfony\Component\HttpFoundation\Response;
+use App\Model\DTO\Booking\ChangeBookingDTO;
+use App\Model\Manager\BookingManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -43,14 +43,16 @@ class BookingController extends AbstractBaseController
             'schedule_company',
             'company_id',
             'company_name',
-            'company_client_pseudonym'
+            'company_client_pseudonym',
         ];
     }
 
     /**
      * @Rest\Post("/", name="create")
      * @ParamConverter("bookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
      * @param BookingDTO $bookingDTO
+     *
      * @return Response
      */
     public function create(BookingDTO $bookingDTO): Response
@@ -67,8 +69,10 @@ class BookingController extends AbstractBaseController
     /**
      * @Rest\Put("/{id}", name="update")
      * @ParamConverter("bookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
-     * @param string $id
+     *
+     * @param string     $id
      * @param BookingDTO $bookingDTO
+     *
      * @return Response
      */
     public function update(string $id, BookingDTO $bookingDTO): Response
@@ -81,8 +85,10 @@ class BookingController extends AbstractBaseController
     /**
      * @Rest\Patch("/{id}", name="change")
      * @ParamConverter("changeBookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
-     * @param string $id
+     *
+     * @param string           $id
      * @param ChangeBookingDTO $changeBookingDTO
+     *
      * @return Response
      */
     public function change(string $id, ChangeBookingDTO $changeBookingDTO): Response
@@ -99,7 +105,9 @@ class BookingController extends AbstractBaseController
      *     converter="query_converter",
      *     options={"paramName"="filter", "validationGroups"="Default", "validationGroupsRole"={"ROLE_USER"="booking_company"}}
      * )
+     *
      * @param BookingFindDTO $bookingFindDTO
+     *
      * @return Response
      */
     public function search(BookingFindDTO $bookingFindDTO): Response
@@ -124,10 +132,12 @@ class BookingController extends AbstractBaseController
      *     converter="query_converter",
      *     options={"paramName"="filter", "validationGroups"="Default"}
      * )
+     *
      * @param BookingFindDTO $bookingFindDTO
+     *
      * @return Response
      */
-    public function myBookings(BookingFindDTO $bookingFindDTO) : Response
+    public function myBookings(BookingFindDTO $bookingFindDTO): Response
     {
         $bookingFindDTO = $this->bookingManager->buildMyBookingFindDTO($bookingFindDTO);
         $result = $this->bookingManager->findByDTO($bookingFindDTO);
@@ -136,7 +146,7 @@ class BookingController extends AbstractBaseController
         return $this->response(
             [
                 'data' => $result,
-                'total' => $total
+                'total' => $total,
             ],
             Response::HTTP_OK,
             [
@@ -160,10 +170,12 @@ class BookingController extends AbstractBaseController
 
     /**
      * @Rest\Get ("/{id}", name="booking")
+     *
      * @param string $id
+     *
      * @return Response
      */
-    public function booking(string $id) : Response
+    public function booking(string $id): Response
     {
         $company = $this->bookingManager->find($id);
         if (!$company) {

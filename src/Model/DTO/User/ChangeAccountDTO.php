@@ -9,13 +9,13 @@ use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * Class ChangeAccountDTO
+ * Class ChangeAccountDTO.
+ *
  * @ConstraintAccount
  * @ConstraintAccountUniqueEmail
  */
 class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
 {
-
     /**
      * @var string
      *
@@ -89,6 +89,7 @@ class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
 
     /**
      * ChangeAccountDTO constructor.
+     *
      * @param string $id
      * @param string $nickname
      * @param string $fullName

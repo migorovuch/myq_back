@@ -11,7 +11,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class CompanyClientFixture extends Fixture implements DependentFixtureInterface
 {
-
     const CLIENTS_COUNT = 10;
     const COMPANY_CLIENT_ = 'company_client_';
 
@@ -31,20 +30,20 @@ class CompanyClientFixture extends Fixture implements DependentFixtureInterface
         $manager->persist($companyClient);
         $manager->flush();
 
-        $this->addReference(self::COMPANY_CLIENT_ . '1', $companyClient);
+        $this->addReference(self::COMPANY_CLIENT_.'1', $companyClient);
 
-        for ($i = 2; $i <= self::CLIENTS_COUNT; $i++) {
+        for ($i = 2; $i <= self::CLIENTS_COUNT; ++$i) {
             $companyClient = new CompanyClient();
             $companyClient
                 ->setCompany($company1)
                 ->setStatus(CompanyClient::STATUS_ON)
-                ->setName('Test User name' . $i)
-                ->setPseudonym('Test User name' . $i)
-                ->setPhone('11111' . $i);
+                ->setName('Test User name'.$i)
+                ->setPseudonym('Test User name'.$i)
+                ->setPhone('11111'.$i);
             $manager->persist($companyClient);
             $manager->flush();
 
-            $this->addReference(self::COMPANY_CLIENT_ . $i, $companyClient);
+            $this->addReference(self::COMPANY_CLIENT_.$i, $companyClient);
         }
     }
 
@@ -52,7 +51,7 @@ class CompanyClientFixture extends Fixture implements DependentFixtureInterface
     {
         return [
             UserFixtures::class,
-            CompanyFixture::class
+            CompanyFixture::class,
         ];
     }
 }

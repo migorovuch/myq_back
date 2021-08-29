@@ -5,7 +5,8 @@ namespace App\Validator;
 use Symfony\Component\Validator\Constraint;
 
 /**
- * Class ConstraintAccountEmail
+ * Class ConstraintAccountEmail.
+ *
  * @Annotation
  */
 class ConstraintAccountUniqueEmail extends Constraint
@@ -23,7 +24,7 @@ class ConstraintAccountUniqueEmail extends Constraint
     public function getTargets()
     {
         return [
-            self::CLASS_CONSTRAINT
+            self::CLASS_CONSTRAINT,
         ];
     }
 }

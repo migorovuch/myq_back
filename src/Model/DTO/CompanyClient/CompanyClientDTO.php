@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CompanyClientDTO implements DTOInterface
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -50,12 +49,13 @@ class CompanyClientDTO implements DTOInterface
 
     /**
      * CompanyClientDTO constructor.
-     * @param User|null $user
-     * @param string|null $name
-     * @param string|null $phone
+     *
+     * @param User|null    $user
+     * @param string|null  $name
+     * @param string|null  $phone
      * @param Company|null $company
-     * @param int $status
-     * @param string|null $pseudonym
+     * @param int          $status
+     * @param string|null  $pseudonym
      */
     public function __construct(
         User $user = null,

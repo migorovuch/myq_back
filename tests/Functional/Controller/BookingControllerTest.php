@@ -5,12 +5,13 @@ namespace App\Tests\Functional\Controller;
 use DateTime;
 
 /**
- * Class BookingControllerTest
+ * Class BookingControllerTest.
  */
 class BookingControllerTest extends AbstractBaseController
 {
     /**
      * @param string $email
+     *
      * @return array
      */
     protected function findCompanyByEmail(string $email)
@@ -22,6 +23,7 @@ class BookingControllerTest extends AbstractBaseController
 
     /**
      * @param array $filter
+     *
      * @return array
      */
     protected function findCompanySchedule(array $filter)
@@ -40,7 +42,7 @@ class BookingControllerTest extends AbstractBaseController
 
         $now = new DateTime();
         $daysCount = 5;
-        $bookingDay = ((int)$now->format('N')) + $daysCount;
+        $bookingDay = ((int) $now->format('N')) + $daysCount;
         if ($bookingDay > 7) {
             $bookingDay -= 7;
         }
@@ -71,7 +73,7 @@ class BookingControllerTest extends AbstractBaseController
     }
 
     /**
-     * Schedule should not be available for unauthorized users
+     * Schedule should not be available for unauthorized users.
      */
     public function testCreateBookingUnauthorizedFail()
     {
@@ -82,11 +84,11 @@ class BookingControllerTest extends AbstractBaseController
 
         $now = new DateTime();
         $daysCount = 5;
-        $bookingDay = ((int)$now->format('N')) + $daysCount;
+        $bookingDay = ((int) $now->format('N')) + $daysCount;
         if ($bookingDay > 7) {
             $bookingDay -= 7;
         }
-        if ($bookingDay !== 1 && $bookingDay !== 7) {
+        if (1 !== $bookingDay && 7 !== $bookingDay) {
             $daysCount += (7 - $bookingDay);
         }
         $start = (new DateTime())->modify($daysCount.' day')->setTime(11, 0, 0);
@@ -126,11 +128,11 @@ class BookingControllerTest extends AbstractBaseController
 
         $now = new DateTime();
         $daysCount = 5;
-        $bookingDay = ((int)$now->format('N')) + $daysCount;
+        $bookingDay = ((int) $now->format('N')) + $daysCount;
         if ($bookingDay > 7) {
             $bookingDay -= 7;
         }
-        if ($bookingDay !== 1 && $bookingDay !== 7) {
+        if (1 !== $bookingDay && 7 !== $bookingDay) {
             $daysCount += (7 - $bookingDay);
         }
         $start = (new DateTime())->modify($daysCount.' day')->setTime(11, 0, 0);
@@ -148,7 +150,7 @@ class BookingControllerTest extends AbstractBaseController
                 'user_phone' => '223123123123',
             ] +
             [
-                'token' => $token
+                'token' => $token,
             ]
         );
         $this->assertSuccessResponse($response);

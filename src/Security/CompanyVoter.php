@@ -9,23 +9,22 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class CompanyVoter extends AbstractVoter
 {
-
-    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return true;
     }
 
-    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $subject->getUser()->getId() === $currentUser->getId() || $currentUser->isRole(User::ROLE_ADMIN);
     }
 
-    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
-        return $this->canEdit($currentUser, $subject) || $subject->getStatus() === Company::STATUS_ON;
+        return $this->canEdit($currentUser, $subject) || Company::STATUS_ON === $subject->getStatus();
     }
 
-    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canDelete(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject);
     }

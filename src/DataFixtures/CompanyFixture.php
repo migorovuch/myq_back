@@ -9,7 +9,6 @@ use Doctrine\Persistence\ObjectManager;
 
 class CompanyFixture extends Fixture implements DependentFixtureInterface
 {
-
     const COMPANY_1 = 'company_1';
     const COMPANY_2 = 'company_2';
 
@@ -23,7 +22,9 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setEmail('company1@gmail.com')
             ->setName('Company 1')
             ->setPhone('9823094823094')
-            ->setStatus(Company::STATUS_ON);
+            ->setStatus(Company::STATUS_ON)
+            ->generateAccessToken()
+            ->setTimezoneoffset(10800);
 
         $manager->persist($company1);
 
@@ -35,7 +36,9 @@ class CompanyFixture extends Fixture implements DependentFixtureInterface
             ->setEmail('company2@gmail.com')
             ->setName('Company 2')
             ->setPhone('9823094823094')
-            ->setStatus(Company::STATUS_ON);
+            ->setStatus(Company::STATUS_ON)
+            ->generateAccessToken()
+            ->setTimezoneoffset(10800);
 
         $manager->persist($company2);
 

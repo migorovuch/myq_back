@@ -18,21 +18,21 @@ class ConstraintAccountUniqueEmailValidator extends ConstraintValidator
 
     /**
      * ConstraintAccountEmailValidator constructor.
+     *
      * @param UserManagerInterface $userManager
-     * @param TranslatorInterface $translator
+     * @param TranslatorInterface  $translator
      */
     public function __construct(
         UserManagerInterface $userManager,
         TranslatorInterface $translator
     ) {
-
         $this->userManager = $userManager;
         $this->translator = $translator;
     }
 
     /**
      * @param RegistrationDTO|ChangeAccountDTO|ChangeUserDTO $value
-     * @param Constraint $constraint
+     * @param Constraint                                     $constraint
      */
     public function validate($value, Constraint $constraint)
     {

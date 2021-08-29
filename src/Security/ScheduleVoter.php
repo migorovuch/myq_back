@@ -9,50 +9,54 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 class ScheduleVoter extends AbstractVoter
 {
-
     /**
      * @param UserInterface|string $currentUser
-     * @param Schedule $subject
+     * @param Schedule             $subject
+     *
      * @return bool
      */
-    protected function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canCreate(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return true;
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param Schedule $subject
+     * @param Schedule             $subject
+     *
      * @return bool
      */
-    protected function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canEdit(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $subject->getCompany()->getUser()->getId() === $currentUser->getId() || $currentUser->isRole(User::ROLE_ADMIN);
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param Schedule $subject
+     * @param Schedule             $subject
+     *
      * @return bool
      */
-    protected function canView(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canView(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject) || $subject->getEnabled();
     }
 
     /**
      * @param UserInterface|string $currentUser
-     * @param Schedule $subject
+     * @param Schedule             $subject
+     *
      * @return bool
      */
-    protected function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool
+    protected function canDelete(UserInterface | string $currentUser, EntityInterface $subject): bool
     {
         return $this->canEdit($currentUser, $subject);
     }
 
     /**
      * @param string $attribute
-     * @param mixed $subject
+     * @param mixed  $subject
+     *
      * @return bool
      */
     protected function supports(string $attribute, $subject)

@@ -5,10 +5,10 @@ namespace App\Controller;
 use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\DTO\User\ResetPasswordDTO;
 use App\Model\Manager\UserManagerInterface;
-use Symfony\Component\Routing\Annotation\Route;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractBaseController
@@ -30,6 +30,7 @@ class ResetPasswordController extends AbstractBaseController
      * @param ResetPasswordDTO $resetPasswordDTO
      *
      * @return Response
+     *
      * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
      */
     public function request(ResetPasswordDTO $resetPasswordDTO): Response
@@ -40,10 +41,10 @@ class ResetPasswordController extends AbstractBaseController
 
         return $this->response([
             'message' => sprintf(
-                'Password Reset Email Sent. 
+                'Password Reset Email Sent.
 An email has been sent that contains a link that you can click to reset your password. This link will expire in %s hour(s).
 If you don\'t receive an email please check your spam folder or try again',
-                ($tokenLifetime/3600)
+                ($tokenLifetime / 3600)
             ),
             'tokenLifetime' => $tokenLifetime,
         ]);

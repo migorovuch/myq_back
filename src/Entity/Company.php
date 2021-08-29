@@ -2,14 +2,15 @@
 
 namespace App\Entity;
 
+use App\Model\Manager\BotRequestHandlerInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\CompanyRepository;
 use DateTime;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use JMS\Serializer\Annotation as Serializer;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\HasLifecycleCallbacks
@@ -106,6 +107,17 @@ class Company implements EntityInterface
      * @Serializer\Groups({"company_updated"})
      */
     protected ?DateTime $updatedAt = null;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     * @Serializer\Groups({"company_access_token"})
+     */
+    protected $accessToken;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $timezoneoffset;
 
     public function __construct()
     {
@@ -277,6 +289,7 @@ class Company implements EntityInterface
 
     /**
      * @param DateTime|null $createdAt
+     *
      * @return Company
      */
     public function setCreatedAt(?DateTime $createdAt): self
@@ -296,6 +309,7 @@ class Company implements EntityInterface
 
     /**
      * @param DateTime|null $updatedAt
+     *
      * @return Company
      */
     public function setUpdatedAt(?DateTime $updatedAt): self
@@ -312,8 +326,35 @@ class Company implements EntityInterface
     public function updatedTimestamps(): void
     {
         $this->setUpdatedAt(new DateTime('now'));
-        if ($this->getCreatedAt() === null) {
+        if (null === $this->getCreatedAt()) {
             $this->setCreatedAt(new DateTime('now'));
         }
+    }
+
+    public function getAccessToken(): ?string
+    {
+        return $this->accessToken;
+    }
+
+    public function generateAccessToken(): self
+    {
+        $this->accessToken =
+            BotRequestHandlerInterface::ACTION_COMPANY.
+            BotRequestHandlerInterface::MESSAGE_PAYLOAD_DELIMITER.
+            md5(random_int(100000, 999999));
+
+        return $this;
+    }
+
+    public function getTimezoneoffset(): ?int
+    {
+        return $this->timezoneoffset;
+    }
+
+    public function setTimezoneoffset(?int $timezoneoffset): self
+    {
+        $this->timezoneoffset = $timezoneoffset;
+
+        return $this;
     }
 }

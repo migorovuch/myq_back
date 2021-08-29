@@ -2,12 +2,11 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\File\Exception\FileException;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\String\Slugger\SluggerInterface;
 
 /**
- * Class FileUploader
+ * Class FileUploader.
  */
 class FileUploader
 {
@@ -22,7 +21,8 @@ class FileUploader
 
     /**
      * FileUploader constructor.
-     * @param string $targetDirectory
+     *
+     * @param string           $targetDirectory
      * @param SluggerInterface $slugger
      */
     public function __construct(string $targetDirectory, SluggerInterface $slugger)
@@ -33,21 +33,22 @@ class FileUploader
 
     /**
      * @param UploadedFile $file
-     * @param string|null $fileName
+     * @param string|null  $fileName
+     *
      * @return string
      */
     public function upload(UploadedFile $file, string $directory = '', string $fileName = null): string
     {
         if (!$fileName) {
-            $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
+            $originalFilename = pathinfo($file->getClientOriginalName(), \PATHINFO_FILENAME);
             $safeFilename = $this->slugger->slug($originalFilename);
-            $fileName = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
+            $fileName = $safeFilename.'-'.uniqid().'.'.$file->guessExtension();
         } else {
-            $fileName = $this->slugger->slug($fileName) . '.' . $file->guessExtension();
+            $fileName = $this->slugger->slug($fileName).'.'.$file->guessExtension();
         }
-        $file->move($this->getTargetDirectory() . $directory, $fileName);
+        $file->move($this->getTargetDirectory().$directory, $fileName);
 
-        return $directory . DIRECTORY_SEPARATOR . $fileName;
+        return $directory.\DIRECTORY_SEPARATOR.$fileName;
     }
 
     /**

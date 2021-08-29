@@ -56,7 +56,7 @@ class QueryParamConverter implements ParamConverterInterface
         $param = $option['paramName'];
         $className = $configuration->getClass();
         $object = null;
-        if($request->query->has($param)) {
+        if ($request->query->has($param)) {
             $object = $this->serializer->deserialize(
                 $this->serializer->serialize(
                     $request->query->get($param),
@@ -91,7 +91,7 @@ class QueryParamConverter implements ParamConverterInterface
                 throw new ValidationFailedException($validationErrors);
             }
         } else {
-            $object = new $className;
+            $object = new $className();
         }
         $request->attributes->set($configuration->getName(), $object);
     }

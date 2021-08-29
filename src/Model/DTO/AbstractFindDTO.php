@@ -9,7 +9,6 @@ use JMS\Serializer\Annotation as Serializer;
  */
 abstract class AbstractFindDTO implements DTOInterface
 {
-
     const CONDITION_AND = 'and';
     const CONDITION_OR = 'or';
 
@@ -34,9 +33,9 @@ abstract class AbstractFindDTO implements DTOInterface
     /**
      * AbstractFindDTO constructor.
      *
-     * @param array|null $sort
+     * @param array|null   $sort
      * @param PageDTO|null $page
-     * @param string $condition
+     * @param string       $condition
      */
     public function __construct(array $sort = null, PageDTO $page = null, string $condition = self::CONDITION_AND)
     {
@@ -44,6 +43,7 @@ abstract class AbstractFindDTO implements DTOInterface
         $this->page = $page;
         $this->condition = $condition;
     }
+
     /**
      * @Serializer\PostDeserialize()
      */
@@ -75,5 +75,4 @@ abstract class AbstractFindDTO implements DTOInterface
     {
         return $this->condition;
     }
-
 }

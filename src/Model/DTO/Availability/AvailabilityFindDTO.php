@@ -3,16 +3,15 @@
 namespace App\Model\DTO\Availability;
 
 use App\Entity\Company;
+use App\Entity\Schedule;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\PageDTO;
+use DateTimeInterface;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use DateTimeInterface;
-use App\Entity\Schedule;
 
 class AvailabilityFindDTO extends AbstractFindDTO
 {
-
     /**
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
@@ -42,13 +41,14 @@ class AvailabilityFindDTO extends AbstractFindDTO
 
     /**
      * AvailabilityFindDTO constructor.
-     * @param Schedule|null $schedule
-     * @param Company|null $company
+     *
+     * @param Schedule|null          $schedule
+     * @param Company|null           $company
      * @param DateTimeInterface|null $filterFrom
      * @param DateTimeInterface|null $filterTo
-     * @param array|null $sort
-     * @param PageDTO|null $page
-     * @param string $condition
+     * @param array|null             $sort
+     * @param PageDTO|null           $page
+     * @param string                 $condition
      */
     public function __construct(
         ?Schedule $schedule = null,
@@ -97,5 +97,4 @@ class AvailabilityFindDTO extends AbstractFindDTO
     {
         return $this->company;
     }
-
 }

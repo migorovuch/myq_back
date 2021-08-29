@@ -24,33 +24,32 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 
 class BookingManager extends AbstractCRUDManager implements BookingManagerInterface
 {
-    protected CompanyClientManagerInterface $companyClientManager;
-    private TranslatorInterface $translator;
-
     /**
      * BookingManager constructor.
-     * @param EntityManagerInterface $entityManager
-     * @param BookingRepository $bookingRepository
-     * @param Security $security
-     * @param DTOExporterInterface $bookingDtoExporter
+     *
+     * @param EntityManagerInterface        $entityManager
+     * @param BookingRepository             $bookingRepository
+     * @param Security                      $security
+     * @param DTOExporterInterface          $bookingDtoExporter
+     * @param TranslatorInterface           $translator
      * @param CompanyClientManagerInterface $companyClientManager
-     * @param TranslatorInterface $translator
+     * @param CompanyChatManagerInterface   $companyChatManager
      */
     public function __construct(
         EntityManagerInterface $entityManager,
         BookingRepository $bookingRepository,
         Security $security,
         DTOExporterInterface $bookingDtoExporter,
-        CompanyClientManagerInterface $companyClientManager,
-        TranslatorInterface $translator
+        protected TranslatorInterface $translator,
+        protected CompanyClientManagerInterface $companyClientManager,
+        protected CompanyChatManagerInterface $companyChatManager
     ) {
         parent::__construct($entityManager, $bookingRepository, $security, $bookingDtoExporter);
-        $this->companyClientManager = $companyClientManager;
-        $this->translator = $translator;
     }
 
     /**
      * @param BookingFindDTO $data
+     *
      * @return array|mixed
      */
     public function findByDTO(AbstractFindDTO $data)
@@ -79,14 +78,14 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function buildMyBookingFindDTO(AbstractFindDTO $data): BookingFindDTO
     {
         /** @var User $currentUser */
         $currentUser = $this->security->getUser();
         $client = $data->getClient();
-        if(
+        if (
             !$currentUser &&
             (
                 ($client && $client->getUser()) ||
@@ -96,7 +95,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             throw new AccessDeniedException();
         }
         // update client-user relation
-        if($currentUser && ($client = $data->getClient()) && !$client->getUser()) {
+        if ($currentUser && ($client = $data->getClient()) && !$client->getUser()) {
             $client->setUser($currentUser);
             $this->save($client);
         }
@@ -134,7 +133,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         /** @var Booking $entity */
         $entity = $this->prepareEntity($entity, $data);
         if (
-            $entity->getSchedule()->getBookingCondition() === Schedule::BOOKING_CONDITION_AUTHORIZED_USERS &&
+            Schedule::BOOKING_CONDITION_AUTHORIZED_USERS === $entity->getSchedule()->getBookingCondition() &&
             !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)
         ) {
             throw new UnauthorizedBookingException($this->translator->trans('This booking is only available for authorized users. Please, sign in.'));
@@ -146,19 +145,19 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             case Schedule::ACCEPT_BOOKING_ACCEPT_ALL:
                 $status = Booking::STATUS_ACCEPTED;
                 break;
-            case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS;
+            case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS:
                 if (
                     $entity->getClient() &&
                     $entity->getSchedule()->getCompany()->getId() === $entity->getClient()->getCompany()->getId() &&
-                    $entity->getClient()->getStatus() === CompanyClient::STATUS_ON
+                    CompanyClient::STATUS_ON === $entity->getClient()->getStatus()
                 ) {
                     $status = Booking::STATUS_ACCEPTED;
                 } else {
                     $status = Booking::STATUS_NEW;
                 }
                 break;
-            case Schedule::ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE; // TODO
-            case Schedule::ACCEPT_BOOKING_DECLINE_ALL;
+            case Schedule::ACCEPT_BOOKING_ACCEPT_AFTER_PAY_ADVANCE: // TODO
+            case Schedule::ACCEPT_BOOKING_DECLINE_ALL:
                 $status = Booking::STATUS_DECLINED;
                 break;
             default:
@@ -199,7 +198,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
                 $data->getUserName(),
                 $data->getUserPhone(),
                 $data->getSchedule()->getCompany(),
-                $entity->getSchedule()->getAcceptBookingCondition() === Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS ?
+                Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS === $entity->getSchedule()->getAcceptBookingCondition() ?
                     CompanyClient::STATUS_OFF :
                     CompanyClient::STATUS_ON
             );
@@ -210,7 +209,24 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             ->setClient($companyClient);
         $this->denyAccessUnlessGranted(BookingVoter::CREATE, $entity);
         $this->save($entity);
+        $this->companyChatManager->sendNewBookingNotification($data->getSchedule()->getCompany(), $entity);
 
         return $entity;
+    }
+
+    /**
+     * @param string $companyId
+     * @param string $bookingId
+     * @param int    $status
+     *
+     * @return Booking
+     */
+    public function changeBookingStatus(string $companyId, string $bookingId, int $status)
+    {
+        $booking = $this->entityRepository->findCompanyBooking($companyId, $bookingId);
+        $booking->setStatus($status);
+        $this->save($booking);
+
+        return $booking;
     }
 }

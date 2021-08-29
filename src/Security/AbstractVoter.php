@@ -26,7 +26,7 @@ abstract class AbstractVoter extends Voter implements VoterInterface
     protected function voteOnAttribute($attributes, $subject, TokenInterface $token)
     {
         $currentUser = $token->getUser();
-        if ($currentUser !== 'anon.') {
+        if ('anon.' !== $currentUser) {
             switch ($attributes) {
                 case static::CREATE:
                     return $this->canCreate($currentUser, $subject);
@@ -44,34 +44,34 @@ abstract class AbstractVoter extends Voter implements VoterInterface
     }
 
     /**
-     * @param UserInterface|string   $currentUser
-     * @param EntityInterface $subject
+     * @param UserInterface|string $currentUser
+     * @param EntityInterface      $subject
      *
      * @return bool
      */
-    protected abstract function canCreate(UserInterface|string $currentUser, EntityInterface $subject): bool;
+    abstract protected function canCreate(UserInterface | string $currentUser, EntityInterface $subject): bool;
 
     /**
-     * @param UserInterface|string   $currentUser
-     * @param EntityInterface $subject
+     * @param UserInterface|string $currentUser
+     * @param EntityInterface      $subject
      *
      * @return bool
      */
-    protected abstract function canEdit(UserInterface|string $currentUser, EntityInterface $subject): bool;
+    abstract protected function canEdit(UserInterface | string $currentUser, EntityInterface $subject): bool;
 
     /**
-     * @param UserInterface|string   $currentUser
-     * @param EntityInterface $subject
+     * @param UserInterface|string $currentUser
+     * @param EntityInterface      $subject
      *
      * @return bool
      */
-    protected abstract function canView(UserInterface|string $currentUser, EntityInterface $subject): bool;
+    abstract protected function canView(UserInterface | string $currentUser, EntityInterface $subject): bool;
 
     /**
-     * @param UserInterface|string   $currentUser
-     * @param EntityInterface $subject
+     * @param UserInterface|string $currentUser
+     * @param EntityInterface      $subject
      *
      * @return bool
      */
-    protected abstract function canDelete(UserInterface|string $currentUser, EntityInterface $subject): bool;
+    abstract protected function canDelete(UserInterface | string $currentUser, EntityInterface $subject): bool;
 }

@@ -20,7 +20,7 @@ class AvailabilityManager implements AvailabilityManagerInterface
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     public function findByDTO(AvailabilityFindDTO $data)
     {
@@ -39,7 +39,7 @@ class AvailabilityManager implements AvailabilityManagerInterface
         foreach ($bookings as $booking) {
             $bookingStart = clone $booking->getStart();
             $bookingEnd = clone $booking->getEnd();
-            $interval = new DateInterval("PT" . $data->getSchedule()->getTimeBetweenBookings() . 'M');
+            $interval = new DateInterval('PT'.$data->getSchedule()->getTimeBetweenBookings().'M');
             $bookingStart->sub($interval);
             $bookingEnd->add($interval);
             $dayKey = $bookingStart->format('Y-m-d');
@@ -57,7 +57,7 @@ class AvailabilityManager implements AvailabilityManagerInterface
                     } elseif ($bookingFromTime > $rangeFrom && $bookingToTime < $rangeTo) {
                         $days[$dayKey][] = [
                             'from' => $bookingEnd->format('H:i'),
-                            'to' => $range['to']
+                            'to' => $range['to'],
                         ];
                         $days[$dayKey][$rangeKay]['to'] = $bookingStart->format('H:i');
                     }

@@ -5,13 +5,12 @@ namespace App\Model\DTO\SpecialHours;
 use App\Entity\Schedule;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\PageDTO;
+use DateTimeInterface;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use DateTimeInterface;
 
 class SpecialHoursFindDTO extends AbstractFindDTO
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -62,17 +61,18 @@ class SpecialHoursFindDTO extends AbstractFindDTO
 
     /**
      * SpecialHoursFindDTO constructor.
-     * @param string|null $id
-     * @param Schedule|null $schedule
-     * @param int|null $repeatCondition
-     * @param int|null $repeatDay
+     *
+     * @param string|null            $id
+     * @param Schedule|null          $schedule
+     * @param int|null               $repeatCondition
+     * @param int|null               $repeatDay
      * @param DateTimeInterface|null $repeatDate
      * @param DateTimeInterface|null $filterFrom
      * @param DateTimeInterface|null $filterTo
-     * @param bool|null $available
-     * @param array|null $sort
-     * @param PageDTO|null $page
-     * @param string $condition
+     * @param bool|null              $available
+     * @param array|null             $sort
+     * @param PageDTO|null           $page
+     * @param string                 $condition
      */
     public function __construct(
         ?string $id = null,
@@ -161,5 +161,4 @@ class SpecialHoursFindDTO extends AbstractFindDTO
     {
         return $this->available;
     }
-
 }

@@ -3,12 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
-use App\Entity\Schedule;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\Common\Collections\Criteria;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -26,8 +24,9 @@ class BookingRepository extends EntityRepository
     }
 
     /**
-     * @param Criteria $criteria
+     * @param Criteria       $criteria
      * @param BookingFindDTO $data
+     *
      * @return Criteria
      */
     protected function buildCriteriaByDTO(Criteria $criteria, AbstractFindDTO $data): Criteria
@@ -44,8 +43,9 @@ class BookingRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder   $queryBuilder
      * @param BookingFindDTO $data
+     *
      * @return QueryBuilder
      */
     protected function buildQueryByDTO(QueryBuilder $queryBuilder, AbstractFindDTO $data): QueryBuilder
@@ -100,5 +100,26 @@ class BookingRepository extends EntityRepository
         }
 
         return $queryBuilder;
+    }
+
+    /**
+     * @param string $companyId
+     * @param string $bookingId
+     *
+     * @return Booking
+     *
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findCompanyBooking(string $companyId, string $bookingId)
+    {
+        return $this->createQueryBuilder('t')
+            ->innerJoin('t.schedule', 's')
+            ->andWhere('t.id = :id')
+            ->setParameter('id', $bookingId)
+            ->andWhere('s.company = :company')
+            ->setParameter('company', $companyId)
+            ->getQuery()
+            ->getSingleResult();
     }
 }

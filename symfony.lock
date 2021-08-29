@@ -628,6 +628,9 @@
             "config/packages/reset_password.yaml"
         ]
     },
+    "telegram-bot/api": {
+        "version": "v2.3.22"
+    },
     "theseer/tokenizer": {
         "version": "1.2.0"
     },

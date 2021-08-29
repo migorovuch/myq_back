@@ -3,8 +3,8 @@
 namespace App\Model\Manager;
 
 use App\Exception\AccessDeniedException;
-use App\Model\DTO\DTOInterface;
 use App\Model\DTO\AbstractFindDTO;
+use App\Model\DTO\DTOInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\EntityRepositoryInterface;
 use App\Security\AbstractVoter;
@@ -95,9 +95,6 @@ abstract class AbstractCRUDManager
         return $this->entityRepository->findByDTO($data);
     }
 
-    /**
-     * @inheritDoc
-     */
     public function countByDTO(AbstractFindDTO $data)
     {
         return $this->entityRepository->countByDTO($data);
@@ -166,7 +163,7 @@ abstract class AbstractCRUDManager
     }
 
     /**
-     * @param string $id
+     * @param string       $id
      * @param DTOInterface $data
      *
      * @return EntityInterface
@@ -182,7 +179,7 @@ abstract class AbstractCRUDManager
     }
 
     /**
-     * @param string $id
+     * @param string       $id
      * @param DTOInterface $data
      *
      * @return EntityInterface
@@ -199,8 +196,9 @@ abstract class AbstractCRUDManager
 
     /**
      * @param EntityInterface $entity
-     * @param DTOInterface $dto
-     * @param bool $setNullProperty
+     * @param DTOInterface    $dto
+     * @param bool            $setNullProperty
+     *
      * @return EntityInterface
      */
     protected function prepareEntity(EntityInterface $entity, DTOInterface $dto, bool $setNullProperty = true): EntityInterface

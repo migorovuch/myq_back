@@ -5,9 +5,9 @@ pipeline {
 
     stage('Build environment') {
       steps {
-        sh 'docker build -t myq_php --no-cache -f ./docker/php-fpm/prod/Dockerfile ./'
-        sh 'docker build -t myq_nginx --no-cache -f ./docker/nginx/prod/Dockerfile ./'
-        sh 'docker build -t myq_mysql --no-cache -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
+        sh 'docker build -t myq_php -f ./docker/php-fpm/prod/Dockerfile ./'
+        sh 'docker build -t myq_nginx -f ./docker/nginx/prod/Dockerfile ./'
+        sh 'docker build -t myq_mysql -f ./docker/mysql/prod/Dockerfile ./docker/mysql'
       }
     }
 
@@ -91,7 +91,6 @@ pipeline {
         sleep 30
         sh 'docker run -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
         sh 'docker run -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
-        sh 'docker exec myq_php chown -R www-data:www-data /var/www/html/var'
       }
     }
 
@@ -99,6 +98,7 @@ pipeline {
         steps {
             sh 'docker exec myq_php composer install'
             sh 'docker exec myq_php bin/console lexik:jwt:generate-keypair || true'
+            sh 'docker exec myq_php chown -R www-data:www-data /var/www/html/var'
         }
     }
 

@@ -36,6 +36,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
 
     /**
      * @param SpecialHoursFindDTO $data
+     *
      * @return array
      */
     public function findPublicByDTO(SpecialHoursFindDTO $data): array
@@ -65,6 +66,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
 
     /**
      * @param array $list
+     *
      * @return array
      */
     public function updateList(array $list): array
@@ -107,6 +109,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
      * @param Schedule $schedule
      * @param DateTime $start
      * @param DateTime $end
+     *
      * @return bool
      */
     public function checkScheduleAvailability(Schedule $schedule, DateTime $start, DateTime $end): bool
@@ -117,10 +120,10 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         /** @var SpecialHours $item */
         foreach ($specialHours as $item) {
             if (
-                $item->getRepeatCondition() === SpecialHours::REPEAT_EVERY_DAY ||
-                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_WEAK && ($start->format('N') - 1) == $item->getRepeatDay()) ||
-                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_MONTH && $start->format('d') == $item->getRepeatDate()->format('d')) ||
-                ($item->getRepeatCondition() === SpecialHours::REPEAT_ONCE_A_YEAR && $start->format('md') == $item->getRepeatDate()->format('md'))
+                SpecialHours::REPEAT_EVERY_DAY === $item->getRepeatCondition() ||
+                (SpecialHours::REPEAT_ONCE_A_WEAK === $item->getRepeatCondition() && ($start->format('N') - 1) == $item->getRepeatDay()) ||
+                (SpecialHours::REPEAT_ONCE_A_MONTH === $item->getRepeatCondition() && $start->format('d') == $item->getRepeatDate()->format('d')) ||
+                (SpecialHours::REPEAT_ONCE_A_YEAR === $item->getRepeatCondition() && $start->format('md') == $item->getRepeatDate()->format('md'))
             ) {
                 foreach ($item->getRanges() as $range) {
                     $comparingDateStart = clone $start;
@@ -142,6 +145,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
     /**
      * @param array $rangesArray1
      * @param array $rangesArray2
+     *
      * @return array
      */
     public function addRanges(array $rangesArray1, array $rangesArray2): array
@@ -160,6 +164,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
 
     /**
      * @param array $ranges
+     *
      * @return array
      */
     protected function sortRanges(array $ranges): array
@@ -170,6 +175,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
             if ($from1 == $from2) {
                 return 0;
             }
+
             return ($from1 < $from2) ? -1 : 1;
         });
 
@@ -179,6 +185,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
     /**
      * @param array $rangesArray
      * @param array $range
+     *
      * @return array
      */
     protected function addRange(array $rangesArray, array $range): array
@@ -222,6 +229,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
 
     /**
      * @param array $arrayRanges
+     *
      * @return array
      */
     protected function mergeRanges(array $arrayRanges): array
@@ -253,6 +261,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
 
     /**
      * @param AbstractFindDTO $data
+     *
      * @return array
      */
     public function getPeriodAvailability(AbstractFindDTO $data): array
@@ -293,7 +302,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         }
 
         /** @var DateTime $periodTo */
-        $periodTo =  $data->getFilterTo();
+        $periodTo = $data->getFilterTo();
         $periodTo = $periodTo->add(new DateInterval('P1D'));
         $period = new DatePeriod(
             $data->getFilterFrom(),
@@ -302,7 +311,7 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
         );
         $specialHoursPeriod = [];
         foreach ($period as $date) {
-            $key = $date->format("Y-m-d");
+            $key = $date->format('Y-m-d');
             if (!isset($specialHoursPeriod[$key])) {
                 $specialHoursPeriod[$key] = [];
             }
@@ -311,16 +320,16 @@ class SpecialHoursManager extends AbstractCRUDManager implements SpecialHoursMan
                     $specialHoursPeriod[$key][] = $dailySpecialHourItem->getRanges();
                 }
             }
-            $dayKey = (int)$date->format("w");
+            $dayKey = (int) $date->format('w');
             $dayKey = $dayKey ? $dayKey - 1 : 6;
             if (isset($weaklySpecialHours[$dayKey])) {
                 $specialHoursPeriod[$key] = $this->addRanges($specialHoursPeriod[$key], $weaklySpecialHours[$dayKey]);
             }
-            $monthKey = $date->format("d");
+            $monthKey = $date->format('d');
             if (isset($monthlySpecialHours[$monthKey])) {
                 $specialHoursPeriod[$key] = $this->addRanges($specialHoursPeriod[$key], $monthlySpecialHours[$monthKey]);
             }
-            $yearKey = $date->format("md");
+            $yearKey = $date->format('md');
             if (isset($yearlySpecialHours[$yearKey])) {
                 $specialHoursPeriod[$key] = $this->addRanges($specialHoursPeriod[$key], $yearlySpecialHours[$yearKey]);
             }

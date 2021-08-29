@@ -4,9 +4,9 @@ namespace App\Model\DTO\SpecialHours;
 
 use App\Entity\Schedule;
 use App\Model\DTO\DTOInterface;
+use DateTimeInterface;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
-use DateTimeInterface;
 
 class SpecialHoursDTO implements DTOInterface
 {
@@ -73,16 +73,17 @@ class SpecialHoursDTO implements DTOInterface
 
     /**
      * SpecialHoursDTO constructor.
-     * @param string|null $id
-     * @param Schedule|null $schedule
-     * @param array|null $ranges
+     *
+     * @param string|null            $id
+     * @param Schedule|null          $schedule
+     * @param array|null             $ranges
      * @param DateTimeInterface|null $startDate
      * @param DateTimeInterface|null $endDate
-     * @param int|null $repeatCondition
-     * @param int|null $repeatDay
+     * @param int|null               $repeatCondition
+     * @param int|null               $repeatDay
      * @param DateTimeInterface|null $repeatDate
-     * @param bool|null $available
-     * @param bool|null $deleted
+     * @param bool|null              $available
+     * @param bool|null              $deleted
      */
     public function __construct(
         ?string $id = null,

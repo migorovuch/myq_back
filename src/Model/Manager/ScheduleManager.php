@@ -10,16 +10,17 @@ use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Class ScheduleManager
+ * Class ScheduleManager.
  */
 class ScheduleManager extends AbstractCRUDManager implements ScheduleManagerInterface
 {
     /**
      * ScheduleManager constructor.
+     *
      * @param EntityManagerInterface $entityManager
-     * @param ScheduleRepository $scheduleRepository
-     * @param Security $security
-     * @param DTOExporterInterface $scheduleDtoExporter
+     * @param ScheduleRepository     $scheduleRepository
+     * @param Security               $security
+     * @param DTOExporterInterface   $scheduleDtoExporter
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -32,6 +33,7 @@ class ScheduleManager extends AbstractCRUDManager implements ScheduleManagerInte
 
     /**
      * @param ScheduleFindDTO $data
+     *
      * @return array
      */
     public function findPublicByDTO(ScheduleFindDTO $data): array

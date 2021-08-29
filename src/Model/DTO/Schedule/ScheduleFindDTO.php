@@ -10,7 +10,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class ScheduleFindDTO extends AbstractFindDTO
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -37,13 +36,14 @@ class ScheduleFindDTO extends AbstractFindDTO
 
     /**
      * ScheduleFindDTO constructor.
-     * @param string|null $id
+     *
+     * @param string|null  $id
      * @param Company|null $company
-     * @param string|null $name
-     * @param string|null $enabled
-     * @param array|null $sort
+     * @param string|null  $name
+     * @param string|null  $enabled
+     * @param array|null   $sort
      * @param PageDTO|null $page
-     * @param string $condition
+     * @param string       $condition
      */
     public function __construct(?string $id, ?Company $company, ?string $name, ?string $enabled, ?array $sort, ?PageDTO $page, string $condition = self::CONDITION_AND)
     {

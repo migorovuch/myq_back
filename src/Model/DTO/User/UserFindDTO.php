@@ -75,16 +75,16 @@ class UserFindDTO extends AbstractFindDTO
     /**
      * UserFindDTO constructor.
      *
-     * @param string|null $id
-     * @param string|null $email
-     * @param string|null $nickname
-     * @param array|null $roles
-     * @param int|null $status
+     * @param string|null   $id
+     * @param string|null   $email
+     * @param string|null   $nickname
+     * @param array|null    $roles
+     * @param int|null      $status
      * @param DateTime|null $dateCreate
      * @param DateTime|null $dateUpdate
-     * @param array|null $sort
-     * @param PageDTO|null $pageDTO
-     * @param string $condition
+     * @param array|null    $sort
+     * @param PageDTO|null  $pageDTO
+     * @param string        $condition
      */
     public function __construct(
         ?string $id,

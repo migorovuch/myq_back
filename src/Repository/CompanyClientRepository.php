@@ -7,8 +7,6 @@ use App\Entity\User;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\CompanyClient\CompanyClientFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -28,6 +26,7 @@ class CompanyClientRepository extends EntityRepository
 
     /**
      * @param CompanyClientFindDTO $data
+     *
      * @return array
      */
     public function findByDTO(AbstractFindDTO $data)
@@ -43,7 +42,7 @@ class CompanyClientRepository extends EntityRepository
                 ->andWhere('c.name LIKE :companyName')
                 ->setParameter('companyName', $data->getCompanyName());
         }
-        if ($data->getStatus() !== null) {
+        if (null !== $data->getStatus()) {
             $qb
                 ->andWhere('t.status = :status')
                 ->setParameter('status', $data->getStatus());
@@ -67,6 +66,7 @@ class CompanyClientRepository extends EntityRepository
 
     /**
      * @param User $user
+     *
      * @return int|mixed|string
      */
     public function changeClientDetails(User $user)

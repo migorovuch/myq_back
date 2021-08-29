@@ -14,10 +14,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class BookingFindDTO extends AbstractFindDTO
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     *
      * @var string|null
      */
     protected ?string $id = null;
@@ -26,6 +26,7 @@ class BookingFindDTO extends AbstractFindDTO
      * @Assert\Type("int", groups={"Default"})
      * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})
      * @Serializer\Type("integer")
+     *
      * @var int|null
      */
     protected ?int $status = null;
@@ -107,23 +108,24 @@ class BookingFindDTO extends AbstractFindDTO
 
     /**
      * BookingDTO constructor.
-     * @param string|null $id
-     * @param int|null $status
-     * @param string|null $scheduleName
-     * @param Schedule|null $schedule
-     * @param string|null $companyName
-     * @param Company|null $company
-     * @param DateTime|null $filterFrom
-     * @param DateTime|null $filterTo
-     * @param string|null $title
-     * @param string|null $customerComment
+     *
+     * @param string|null        $id
+     * @param int|null           $status
+     * @param string|null        $scheduleName
+     * @param Schedule|null      $schedule
+     * @param string|null        $companyName
+     * @param Company|null       $company
+     * @param DateTime|null      $filterFrom
+     * @param DateTime|null      $filterTo
+     * @param string|null        $title
+     * @param string|null        $customerComment
      * @param CompanyClient|null $client
-     * @param User|null $user
-     * @param string|null $userName
-     * @param string|null $userPhone
-     * @param array|null $sort
-     * @param PageDTO|null $page
-     * @param string|null $condition
+     * @param User|null          $user
+     * @param string|null        $userName
+     * @param string|null        $userPhone
+     * @param array|null         $sort
+     * @param PageDTO|null       $page
+     * @param string|null        $condition
      */
     public function __construct(
         ?string $id = null,

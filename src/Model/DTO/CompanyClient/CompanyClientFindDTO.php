@@ -11,7 +11,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CompanyClientFindDTO extends AbstractFindDTO
 {
-
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
@@ -69,14 +68,15 @@ class CompanyClientFindDTO extends AbstractFindDTO
 
     /**
      * CompanyClientFindDTO constructor.
-     * @param string|null $id
-     * @param string|null $name
-     * @param string|null $phone
-     * @param User|null $user
+     *
+     * @param string|null  $id
+     * @param string|null  $name
+     * @param string|null  $phone
+     * @param User|null    $user
      * @param Company|null $company
-     * @param int|null $status
-     * @param string|null $pseudonym
-     * @param int|null $numberOfBookings
+     * @param int|null     $status
+     * @param string|null  $pseudonym
+     * @param int|null     $numberOfBookings
      */
     public function __construct(
         ?string $id = null,

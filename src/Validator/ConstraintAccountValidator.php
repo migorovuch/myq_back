@@ -1,17 +1,16 @@
 <?php
 
-
 namespace App\Validator;
 
 use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\Manager\UserManagerInterface;
+use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Validator\Constraint;
 use Symfony\Component\Validator\ConstraintValidator;
 use Symfony\Component\Validator\Exception\UnexpectedTypeException;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Symfony\Component\Security\Core\Encoder\EncoderFactoryInterface;
 
 class ConstraintAccountValidator extends ConstraintValidator
 {
@@ -23,11 +22,12 @@ class ConstraintAccountValidator extends ConstraintValidator
 
     /**
      * ConstraintAccountValidator constructor.
-     * @param UserManagerInterface $userManager
+     *
+     * @param UserManagerInterface         $userManager
      * @param UserPasswordEncoderInterface $userPasswordEncoder
-     * @param Security $security
-     * @param TranslatorInterface $translator
-     * @param EncoderFactoryInterface $encoderFactory
+     * @param Security                     $security
+     * @param TranslatorInterface          $translator
+     * @param EncoderFactoryInterface      $encoderFactory
      */
     public function __construct(
         UserManagerInterface $userManager,
@@ -45,7 +45,7 @@ class ConstraintAccountValidator extends ConstraintValidator
 
     /**
      * @param ChangeAccountDTO $value
-     * @param Constraint $constraint
+     * @param Constraint       $constraint
      */
     public function validate($value, Constraint $constraint)
     {

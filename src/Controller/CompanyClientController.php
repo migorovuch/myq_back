@@ -3,21 +3,21 @@
 namespace App\Controller;
 
 use App\Entity\CompanyClient;
-use App\Exception\AccessDeniedException;
 use App\Model\DTO\CompanyClient\ChangeCompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientFindDTO;
 use App\Model\Manager\CompanyClientManagerInterface;
 use App\Security\CompanyClientVoter;
+use FOS\RestBundle\Controller\Annotations as Rest;
 use http\Client;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use FOS\RestBundle\Controller\Annotations as Rest;
 use Symfony\Component\Routing\Annotation\Route;
 
 /**
- * Class CompanyClientController
+ * Class CompanyClientController.
+ *
  * @Route("/clients", name="api_clients_")
  */
 class CompanyClientController extends AbstractBaseController
@@ -34,10 +34,12 @@ class CompanyClientController extends AbstractBaseController
 
     /**
      * @Rest\Get ("/{id}/app", name="client")
+     *
      * @param string $id
+     *
      * @return Response
      */
-    public function client(string $id) : Response
+    public function client(string $id): Response
     {
         /** @var CompanyClient $client */
         $client = $this->companyClientManager->find($id);
@@ -56,7 +58,9 @@ class CompanyClientController extends AbstractBaseController
      *     converter="query_converter",
      *     options={"paramName"="filter", "validationGroups"="Default", "validationGroupsRole"={"ROLE_USER"="client_company_notblank"}}
      * )
+     *
      * @param CompanyClientFindDTO $companyClientFindDTO
+     *
      * @return Response
      */
     public function search(CompanyClientFindDTO $companyClientFindDTO): Response
@@ -80,7 +84,9 @@ class CompanyClientController extends AbstractBaseController
     /**
      * @Rest\Patch ("/{id}", name="change")
      * @ParamConverter("companyClientDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
      * @param ChangeCompanyClientDTO $companyClientDTO
+     *
      * @return Response
      */
     public function change(string $id, ChangeCompanyClientDTO $companyClientDTO)

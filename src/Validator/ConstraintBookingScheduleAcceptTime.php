@@ -1,6 +1,5 @@
 <?php
 
-
 namespace App\Validator;
 
 use Symfony\Component\Validator\Constraint;
@@ -23,7 +22,7 @@ class ConstraintBookingScheduleAcceptTime extends Constraint
     public function getTargets()
     {
         return [
-            self::CLASS_CONSTRAINT
+            self::CLASS_CONSTRAINT,
         ];
     }
 }
