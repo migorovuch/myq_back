@@ -5,10 +5,12 @@ namespace App\Model\Manager;
 use App\Entity\CompanyClient;
 use App\Entity\User;
 use App\Exception\AccessDeniedException;
+use App\Exception\TryingToUseExistingAccountException;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Repository\CompanyClientRepository;
 use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\Security\Core\Exception\AuthenticationCredentialsNotFoundException;
 use Symfony\Component\Security\Core\Security;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -73,12 +75,12 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
      */
     public function checkExistingClientForBooking(CompanyClient $existingClient, ?UserInterface $currentUser): ?CompanyClient
     {
-//        if (
-//            ($existingClient->getUser() && !$currentUser) ||
-//            ($existingClient->getUser() && $currentUser && $existingClient->getUser()->getId() !== $currentUser->getId())
-//        ) {
-//            throw new AccessDeniedException();
-//        }
+        if ($existingClient->getUser() && !$currentUser) {
+            throw new TryingToUseExistingAccountException();
+        }
+        if ($existingClient->getUser() && $currentUser && $existingClient->getUser()->getId() !== $currentUser->getId()) {
+            throw new AccessDeniedException();
+        }
         if (
             ($existingClient->getUser() && $currentUser && $existingClient->getUser()->getId() === $currentUser->getId()) ||
             (!$existingClient->getUser() && !$currentUser)

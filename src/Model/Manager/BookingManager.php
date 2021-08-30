@@ -133,6 +133,12 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         /** @var Booking $entity */
         $entity = $this->prepareEntity($entity, $data);
         if (
+            $entity->getClient() &&
+            $entity->getClient()->getCompany()->getId() !== $data->getSchedule()->getCompany()->getId()
+        ) {
+            $entity->setClient(null);
+        }
+        if (
             Schedule::BOOKING_CONDITION_AUTHORIZED_USERS === $entity->getSchedule()->getBookingCondition() &&
             !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY)
         ) {
@@ -148,7 +154,6 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             case Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS:
                 if (
                     $entity->getClient() &&
-                    $entity->getSchedule()->getCompany()->getId() === $entity->getClient()->getCompany()->getId() &&
                     CompanyClient::STATUS_ON === $entity->getClient()->getStatus()
                 ) {
                     $status = Booking::STATUS_ACCEPTED;
