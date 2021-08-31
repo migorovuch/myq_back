@@ -52,6 +52,11 @@ class CompanyClientRepository extends EntityRepository
                 ->orWhere('t.pseudonym LIKE :pseudonym')
                 ->setParameter('pseudonym', $data->getName());
         }
+        if (!is_null($data->getDeleted())) {
+            $qb
+                ->andWhere('t.deleted = :deleted')
+                ->setParameter('deleted', $data->getDeleted());
+        }
         $qb = $this->paginationQueryByDTO($qb, $data);
         $query = $qb->getQuery();
 
@@ -84,5 +89,15 @@ class CompanyClientRepository extends EntityRepository
             ->getQuery();
 
         return $query->execute();
+    }
+
+    public function getListByIDsWithoutUser(array $ids): array
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        return $qb->andWhere($qb->expr()->in('t.id', $ids))
+            ->andWhere('t.user IS NULL')
+            ->getQuery()
+            ->getResult();
     }
 }

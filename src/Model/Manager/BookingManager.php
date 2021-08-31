@@ -67,8 +67,10 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             ) ||
             (
                 !$this->security->isGranted(AuthenticatedVoter::IS_AUTHENTICATED_FULLY) &&
-                $data->getClient() &&
-                !$data->getClient()->getUser()
+                (
+                    ($data->getClient() && !$data->getClient()->getUser()) ||
+                    !empty($data->getClients())
+                )
             )
         )) {
             throw new AccessDeniedException();
@@ -89,7 +91,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             !$currentUser &&
             (
                 ($client && $client->getUser()) ||
-                !$client
+                (!$client && empty($data->getClients()))
             )
         ) {
             throw new AccessDeniedException();
@@ -98,6 +100,15 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
         if ($currentUser && ($client = $data->getClient()) && !$client->getUser()) {
             $client->setUser($currentUser);
             $this->save($client);
+        }
+        if (!empty($data->getClients())) {
+            $clients = $this->companyClientManager->getListByIDs($data->getClients());
+            /** @var CompanyClient $client */
+            foreach ($clients as $client) {
+                if ($client->getUser() && !$currentUser) {
+                    throw new AccessDeniedException();
+                }
+            }
         }
 
         return new BookingFindDTO(
@@ -112,6 +123,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
             $data->getTitle(),
             $data->getCustomerComment(),
             $data->getClient(),
+            $data->getClients(),
             $currentUser,
             $data->getUserName(),
             $data->getUserPhone(),
@@ -182,6 +194,7 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
                 $companyClient = $this->companyClientManager->findOneBy([
                     'user' => $currentUser,
                     'company' => $data->getSchedule()->getCompany(),
+                    'deleted' => CompanyClient::STATE_NOT_DELETED,
                 ]);
             }
             // update user phone if it wasn't configured
@@ -208,6 +221,14 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
                     CompanyClient::STATUS_ON
             );
             $companyClient = $this->companyClientManager->create($companyClientDTO);
+        } elseif (
+            $companyClient->getName() != $data->getUserName() ||
+            $companyClient->getPhone() != $data->getUserPhone()
+        ) {
+            $companyClient
+                ->setName($data->getUserName())
+                ->setPhone($data->getUserPhone());
+            $this->save($companyClient);
         }
         $entity
             ->setStatus($status)

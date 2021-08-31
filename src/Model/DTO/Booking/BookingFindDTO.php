@@ -64,6 +64,11 @@ class BookingFindDTO extends AbstractFindDTO
     protected ?CompanyClient $client = null;
 
     /**
+     * @Serializer\Type("array<string>")
+     */
+    protected ?array $clients = null;
+
+    /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
      * @Serializer\Type("DateTime<'U'>")
      */
@@ -139,6 +144,7 @@ class BookingFindDTO extends AbstractFindDTO
         ?string $title = null,
         ?string $customerComment = null,
         ?CompanyClient $client = null,
+        ?array $clients = null,
         ?User $user = null,
         ?string $userName = null,
         ?string $userPhone = null,
@@ -161,6 +167,7 @@ class BookingFindDTO extends AbstractFindDTO
         $this->client = $client;
         $this->scheduleName = $scheduleName;
         $this->companyName = $companyName;
+        $this->clients = $clients;
     }
 
     /**
@@ -303,5 +310,13 @@ class BookingFindDTO extends AbstractFindDTO
         $this->userPhone = $userPhone;
 
         return $this;
+    }
+
+    /**
+     * @return array|null
+     */
+    public function getClients(): ?array
+    {
+        return $this->clients;
     }
 }

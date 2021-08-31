@@ -24,8 +24,8 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     /**
      * EntityRepository constructor.
      *
-     * @param ManagerRegistry                   $registry
-     * @param string                            $entityClass
+     * @param ManagerRegistry $registry
+     * @param string $entityClass
      * @param PropertyInfoExtractorFactory|null $propertyInfoExtractorFactory
      */
     public function __construct(
@@ -38,7 +38,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @param Criteria        $criteria
+     * @param Criteria $criteria
      * @param AbstractFindDTO $data
      *
      * @return Criteria
@@ -81,7 +81,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @param QueryBuilder    $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param AbstractFindDTO $data
      *
      * @return QueryBuilder
@@ -104,7 +104,7 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
     }
 
     /**
-     * @param QueryBuilder    $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param AbstractFindDTO $data
      *
      * @return QueryBuilder
@@ -175,5 +175,14 @@ class EntityRepository extends ServiceEntityRepository implements EntityReposito
         $qb = $this->buildQueryByDTO($qb, $data);
 
         return $qb->getQuery()->getSingleScalarResult();
+    }
+
+    public function getListByIDs(array $ids): array
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        return $qb->andWhere($qb->expr()->in('t.id', $ids))
+            ->getQuery()
+            ->getResult();
     }
 }
