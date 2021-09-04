@@ -24,4 +24,10 @@ interface EntityRepositoryInterface extends ObjectRepository
      * @return int
      */
     public function countByDTO(AbstractFindDTO $data);
+
+    /**
+     * @param array $ids
+     * @return array
+     */
+    public function getListByIDs(array $ids): array;
 }

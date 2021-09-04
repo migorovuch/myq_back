@@ -55,6 +55,7 @@ class CompanyClientVoter extends AbstractVoter
     {
         return $currentUser->isRole(User::ROLE_ADMIN) ||
             (
+                $subject->getDeleted() === CompanyClient::STATE_NOT_DELETED &&
                 'anon.' !== $currentUser &&
                 $subject->getCompany()->getUser()->getId() === $currentUser->getId()
             );

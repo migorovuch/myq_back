@@ -6,6 +6,7 @@ use App\Entity\CompanyClient;
 use App\Model\DTO\CompanyClient\ChangeCompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientFindDTO;
+use App\Model\DTO\User\ChangeUserClientsListDTO;
 use App\Model\Manager\CompanyClientManagerInterface;
 use App\Security\CompanyClientVoter;
 use FOS\RestBundle\Controller\Annotations as Rest;
@@ -33,6 +34,8 @@ class CompanyClientController extends AbstractBaseController
     }
 
     /**
+     * Keep it as it is. Using this endpoint we can check if client has existing account
+     *
      * @Rest\Get ("/{id}/app", name="client")
      *
      * @param string $id
@@ -82,9 +85,10 @@ class CompanyClientController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Patch ("/{id}", name="change")
+     * @Rest\Patch("/{id}", name="change")
      * @ParamConverter("companyClientDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @param string $id
      * @param ChangeCompanyClientDTO $companyClientDTO
      *
      * @return Response
@@ -96,5 +100,16 @@ class CompanyClientController extends AbstractBaseController
             Response::HTTP_OK,
             ['company_client', 'company_client_number_of_bookings', 'company_client_status', 'company_client_pseudonym']
         );
+    }
+
+    /**
+     * @Rest\Post("/update-clients", name="update_clients_relations")
+     * @ParamConverter("changeUserClientsListDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     */
+    public function updateUserClientsList(ChangeUserClientsListDTO $changeUserClientsListDTO): Response
+    {
+        $this->companyClientManager->updateUserClientsList($changeUserClientsListDTO->getClients());
+
+        return $this->response([]);
     }
 }

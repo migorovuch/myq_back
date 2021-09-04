@@ -22,6 +22,9 @@ class CompanyClient implements EntityInterface
     const STATUS_ON = 1;
     const STATUS_DEACTIVATED = 2;
 
+    const STATE_NOT_DELETED = 0;
+    const STATE_DELETED = 1;
+
     /**
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="UUID")
@@ -79,6 +82,12 @@ class CompanyClient implements EntityInterface
      * @Serializer\Groups({"company_client"})
      */
     protected ?DateTimeInterface $updatedAt = null;
+
+    /**
+     * @var int
+     * @ORM\Column(type="smallint")
+     */
+    protected $deleted = self::STATE_NOT_DELETED;
 
     /**
      * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="client")
@@ -278,4 +287,25 @@ class CompanyClient implements EntityInterface
 
         return $this;
     }
+
+    /**
+     * @param int $deleted
+     * @return CompanyClient
+     */
+    public function setDeleted(int $deleted): self
+    {
+        $this->deleted = $deleted;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeleted(): int
+    {
+        return $this->deleted;
+    }
+
+
 }

@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Entity\CompanyClient;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
@@ -24,7 +25,7 @@ class BookingRepository extends EntityRepository
     }
 
     /**
-     * @param Criteria       $criteria
+     * @param Criteria $criteria
      * @param BookingFindDTO $data
      *
      * @return Criteria
@@ -43,7 +44,7 @@ class BookingRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder   $queryBuilder
+     * @param QueryBuilder $queryBuilder
      * @param BookingFindDTO $data
      *
      * @return QueryBuilder
@@ -98,6 +99,10 @@ class BookingRepository extends EntityRepository
                 ->andWhere('c.id = :companyid')
                 ->setParameter('companyid', $data->getCompany()->getId());
         }
+        if ($data->getClients()) {
+            $queryBuilder
+                ->andWhere($queryBuilder->expr()->in('t.client', $data->getClients()));
+        }
 
         return $queryBuilder;
     }
@@ -122,4 +127,25 @@ class BookingRepository extends EntityRepository
             ->getQuery()
             ->getSingleResult();
     }
+
+    /**
+     * @param CompanyClient $companyClientFrom
+     * @param CompanyClient $companyClientTo
+     * @return int|mixed|string
+     */
+    public function changeBookingsClient(CompanyClient $companyClientFrom, CompanyClient $companyClientTo)
+    {
+        $query = $this->createQueryBuilder('')
+            ->update(Booking::class, 't')
+
+            ->set('t.client', ':clientTo')
+            ->setParameter('clientTo', $companyClientTo)
+
+            ->where('t.client = :clientFrom')
+            ->setParameter('clientFrom', $companyClientFrom)
+            ->getQuery();
+
+        return $query->execute();
+    }
+
 }

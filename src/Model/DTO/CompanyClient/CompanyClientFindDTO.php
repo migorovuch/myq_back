@@ -3,6 +3,7 @@
 namespace App\Model\DTO\CompanyClient;
 
 use App\Entity\Company;
+use App\Entity\CompanyClient;
 use App\Entity\User;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\PageDTO;
@@ -67,16 +68,27 @@ class CompanyClientFindDTO extends AbstractFindDTO
     protected ?int $numberOfBookings = null;
 
     /**
+     * @Assert\Type("int", groups={"Default"})
+     * @Serializer\Type("integer")
+     */
+    protected ?int $deleted = CompanyClient::STATE_NOT_DELETED;
+
+    /**
      * CompanyClientFindDTO constructor.
      *
-     * @param string|null  $id
-     * @param string|null  $name
-     * @param string|null  $phone
-     * @param User|null    $user
+     * @param string|null $id
+     * @param string|null $name
+     * @param string|null $phone
+     * @param User|null $user
      * @param Company|null $company
-     * @param int|null     $status
-     * @param string|null  $pseudonym
-     * @param int|null     $numberOfBookings
+     * @param string|null $companyName
+     * @param int|null $status
+     * @param string|null $pseudonym
+     * @param int|null $numberOfBookings
+     * @param int|null $deleted
+     * @param array|null $sort
+     * @param PageDTO|null $pageDTO
+     * @param string|null $condition
      */
     public function __construct(
         ?string $id = null,
@@ -88,6 +100,7 @@ class CompanyClientFindDTO extends AbstractFindDTO
         ?int $status = null,
         ?string $pseudonym = null,
         ?int $numberOfBookings = null,
+        ?int $deleted = CompanyClient::STATE_NOT_DELETED,
         ?array $sort = null,
         ?PageDTO $pageDTO = null,
         ?string $condition = self::CONDITION_AND
@@ -102,6 +115,7 @@ class CompanyClientFindDTO extends AbstractFindDTO
         $this->pseudonym = $pseudonym;
         $this->numberOfBookings = $numberOfBookings;
         $this->companyName = $companyName;
+        $this->deleted = $deleted;
     }
 
     /**
@@ -174,5 +188,13 @@ class CompanyClientFindDTO extends AbstractFindDTO
     public function getNumberOfBookings(): ?int
     {
         return $this->numberOfBookings;
+    }
+
+    /**
+     * @return int|null
+     */
+    public function getDeleted(): ?int
+    {
+        return $this->deleted;
     }
 }

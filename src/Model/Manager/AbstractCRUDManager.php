@@ -17,25 +17,6 @@ use Symfony\Component\Security\Core\Security;
  */
 abstract class AbstractCRUDManager
 {
-    /**
-     * @var EntityManagerInterface
-     */
-    protected $entityManager;
-
-    /**
-     * @var EntityRepositoryInterface
-     */
-    protected $entityRepository;
-
-    /**
-     * @var Security
-     */
-    protected $security;
-
-    /**
-     * @var DTOExporterInterface
-     */
-    protected $DTOExporter;
 
     /**
      * CRUDManager constructor.
@@ -46,16 +27,11 @@ abstract class AbstractCRUDManager
      * @param DTOExporterInterface      $DTOExporter
      */
     public function __construct(
-        EntityManagerInterface $entityManager,
-        EntityRepositoryInterface $entityRepository,
-        Security $security,
-        DTOExporterInterface $DTOExporter
-    ) {
-        $this->entityManager = $entityManager;
-        $this->entityRepository = $entityRepository;
-        $this->security = $security;
-        $this->DTOExporter = $DTOExporter;
-    }
+        protected EntityManagerInterface $entityManager,
+        protected EntityRepositoryInterface $entityRepository,
+        protected Security $security,
+        protected DTOExporterInterface $DTOExporter
+    ) {}
 
     /**
      * @param string $id
@@ -192,6 +168,15 @@ abstract class AbstractCRUDManager
         $this->save($entity);
 
         return $entity;
+    }
+
+    /**
+     * @param array $ids
+     * @return array
+     */
+    public function getListByIDs(array $ids): array
+    {
+        return $this->entityRepository->getListByIDs($ids);
     }
 
     /**

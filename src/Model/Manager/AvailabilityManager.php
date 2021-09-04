@@ -26,7 +26,7 @@ class AvailabilityManager implements AvailabilityManagerInterface
     {
         $bookings = $this->bookingRepository->findByDTO(new BookingFindDTO(
             null,
-            null,
+            Booking::STATUS_ACCEPTED,
             null,
             $data->getSchedule(),
             null,

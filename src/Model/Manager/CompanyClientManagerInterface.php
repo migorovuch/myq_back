@@ -4,6 +4,7 @@ namespace App\Model\Manager;
 
 use App\Entity\CompanyClient;
 use App\Entity\User;
+use App\Model\DTO\User\ChangeUserClientsListDTO;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 interface CompanyClientManagerInterface extends CRUDManagerInterface
@@ -20,4 +21,10 @@ interface CompanyClientManagerInterface extends CRUDManagerInterface
      * @param User $user
      */
     public function changeClientDetails(User $user);
+
+    /**
+     * @param array $clientsIDs
+     * @return array
+     */
+    public function updateUserClientsList(array $clientsIDs): array;
 }
