@@ -9,7 +9,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ChangeUserClientsListDTO implements DTOInterface
 {
     /**
-     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("array<string>")
      */
     protected ?array $clients = null;

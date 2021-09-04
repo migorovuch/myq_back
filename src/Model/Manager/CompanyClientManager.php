@@ -113,6 +113,9 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
      */
     public function updateUserClientsList(array $clientsIDs): array
     {
+        if (empty($clientsIDs)) {
+            return [];
+        }
         $currentUser = $this->security->getUser();
         /** @var CompanyClient[] $companyClients */
         $companyClients = $this->entityRepository->getListByIDsWithoutUser($clientsIDs);

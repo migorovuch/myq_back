@@ -37,13 +37,9 @@ class BookingController extends AbstractBaseController
             'schedule_booking_duration',
             'schedule_min_booking_time',
             'schedule_max_booking_time',
-            'booking_client',
-            'booking_title',
-            'company_client',
             'schedule_company',
             'company_id',
             'company_name',
-            'company_client_pseudonym',
         ];
     }
 
@@ -58,11 +54,15 @@ class BookingController extends AbstractBaseController
     public function create(BookingDTO $bookingDTO): Response
     {
         $booking = $this->bookingManager->create($bookingDTO);
+        $serializationGroups = array_merge($this->serializeGroups, [
+            'company_client',
+            'booking_client',
+        ]);
 
         return $this->response(
             $booking,
             Response::HTTP_OK,
-            $this->serializeGroups
+            $serializationGroups
         );
     }
 
@@ -77,9 +77,15 @@ class BookingController extends AbstractBaseController
      */
     public function update(string $id, BookingDTO $bookingDTO): Response
     {
-        $company = $this->bookingManager->update($id, $bookingDTO);
+        $booking = $this->bookingManager->update($id, $bookingDTO);
+        $serializationGroups = array_merge($this->serializeGroups, [
+                'booking_title',
+                'company_client',
+                'booking_client',
+                'company_client_pseudonym',
+            ]);
 
-        return $this->response($company, Response::HTTP_OK, $this->serializeGroups);
+        return $this->response($booking, Response::HTTP_OK, $serializationGroups);
     }
 
     /**
@@ -93,9 +99,15 @@ class BookingController extends AbstractBaseController
      */
     public function change(string $id, ChangeBookingDTO $changeBookingDTO): Response
     {
-        $company = $this->bookingManager->change($id, $changeBookingDTO);
+        $booking = $this->bookingManager->change($id, $changeBookingDTO);
+        $serializationGroups = array_merge($this->serializeGroups, [
+                'booking_title',
+                'company_client',
+                'booking_client',
+                'company_client_pseudonym',
+            ]);
 
-        return $this->response($company, Response::HTTP_OK, $this->serializeGroups);
+        return $this->response($booking, Response::HTTP_OK, $serializationGroups);
     }
 
     /**
@@ -114,14 +126,20 @@ class BookingController extends AbstractBaseController
     {
         $data = $this->bookingManager->findByDTO($bookingFindDTO);
         $total = $this->bookingManager->countByDTO($bookingFindDTO);
+        $serializationGroups = array_merge($this->serializeGroups, [
+                'booking_title',
+                'company_client',
+                'booking_client',
+                'company_client_pseudonym',
+            ]);
 
         return $this->response(
             [
                 'data' => $data,
-                'total' => $total,
+                'total' => $total
             ],
             Response::HTTP_OK,
-            $this->serializeGroups
+            $serializationGroups
         );
     }
 
@@ -142,6 +160,10 @@ class BookingController extends AbstractBaseController
         $bookingFindDTO = $this->bookingManager->buildMyBookingFindDTO($bookingFindDTO);
         $result = $this->bookingManager->findByDTO($bookingFindDTO);
         $total = $this->bookingManager->countByDTO($bookingFindDTO);
+        $serializationGroups = array_merge($this->serializeGroups, [
+                'company_client',
+                'booking_client',
+            ]);
 
         return $this->response(
             [
@@ -149,22 +171,7 @@ class BookingController extends AbstractBaseController
                 'total' => $total,
             ],
             Response::HTTP_OK,
-            [
-                'booking',
-                'booking_schedule',
-                'schedule_id',
-                'schedule_name',
-                'schedule_description',
-                'schedule_booking_duration',
-                'schedule_min_booking_time',
-                'schedule_max_booking_time',
-                'booking_client',
-                'booking_title',
-                'company_client',
-                'schedule_company',
-                'company_id',
-                'company_name',
-            ]
+            $serializationGroups
         );
     }
 
