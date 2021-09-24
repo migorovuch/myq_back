@@ -14,7 +14,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ConstraintAccount
  * @ConstraintAccountUniqueEmail
  */
-class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
+class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
 {
     /**
      * @var string
@@ -61,7 +61,7 @@ class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
      * )
      * @Serializer\Type("string")
      */
-    protected ?string $password = null;
+    protected ?string $oldPassword = null;
 
     /**
      * @var string
@@ -75,7 +75,7 @@ class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
-    protected ?string $newPassword = null;
+    protected ?string $password = null;
 
     /**
      * @var string
@@ -94,17 +94,17 @@ class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
      * @param string $nickname
      * @param string $fullName
      * @param string $phone
+     * @param string $oldPassword
      * @param string $password
-     * @param string $newPassword
      * @param string $email
      */
-    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $password, string $newPassword, string $email)
+    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $oldPassword, string $password, string $email)
     {
         $this->nickname = $nickname;
         $this->fullName = $fullName;
         $this->phone = $phone;
+        $this->oldPassword = $oldPassword;
         $this->password = $password;
-        $this->newPassword = $newPassword;
         $this->email = $email;
         $this->id = $id;
     }
@@ -144,17 +144,17 @@ class ChangeAccountDTO implements DTOInterface, NewPasswordAwareInterface
     /**
      * @return string|null
      */
-    public function getPassword(): ?string
+    public function getOldPassword(): ?string
     {
-        return $this->password;
+        return $this->oldPassword;
     }
 
     /**
      * @return string|null
      */
-    public function getNewPassword(): ?string
+    public function getPassword(): ?string
     {
-        return $this->newPassword;
+        return $this->password;
     }
 
     /**

@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ConstraintAccountUniqueEmail
  */
-class RegistrationDTO implements DTOInterface
+class RegistrationDTO implements DTOInterface, PasswordAwareInterface
 {
     /**
      * @var string

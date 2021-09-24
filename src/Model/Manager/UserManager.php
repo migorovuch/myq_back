@@ -8,7 +8,7 @@ use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangeAccountDTO;
 use App\Model\DTO\User\ChangePasswordDTO;
-use App\Model\DTO\User\NewPasswordAwareInterface;
+use App\Model\DTO\User\PasswordAwareInterface;
 use App\Model\Model\EntityInterface;
 use App\Repository\UserRepository;
 use App\Security\AbstractVoter;
@@ -291,8 +291,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
     {
         /** @var User $user */
         $user = $this->find($this->security->getUser()->getId());
-        if ($data->getNewPassword() && $data->getPassword()) {
-            $password = $this->userPasswordEncoder->encodePassword($user, $data->getNewPassword());
+        if ($data->getPassword() && $data->getOldPassword()) {
+            $password = $this->userPasswordEncoder->encodePassword($user, $data->getPassword());
             $user->setPassword($password);
         }
         $user
@@ -354,8 +354,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $oldStatus = $entity->getStatus();
         /** @var User $entity */
         $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
-        if ($dto instanceof NewPasswordAwareInterface && !empty($dto->getNewPassword())) {
-            $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $dto->getNewPassword()));
+        if ($dto instanceof PasswordAwareInterface && !empty($dto->getPassword())) {
+            $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $dto->getPassword()));
         }
         if (!$this->security->isGranted(User::ROLE_ADMIN)) {
             $entity->setStatus($oldStatus);

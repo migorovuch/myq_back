@@ -2,10 +2,10 @@
 
 namespace App\Model\DTO\User;
 
-interface NewPasswordAwareInterface
+interface PasswordAwareInterface
 {
     /**
      * @return string|null
      */
-    public function getNewPassword(): ?string;
+    public function getPassword(): ?string;
 }

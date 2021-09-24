@@ -52,17 +52,17 @@ class ConstraintAccountValidator extends ConstraintValidator
         if (!$constraint instanceof ConstraintAccount) {
             throw new UnexpectedTypeException($constraint, ConstraintAccount::class);
         }
-        if ($value->getNewPassword()) {
+        if ($value->getPassword()) {
             $user = $this->userManager->find($this->security->getUser()->getId());
             if (
                 !$this->encoderFactory->getEncoder($user)->isPasswordValid(
                     $user->getPassword(),
-                    $value->getPassword(),
+                    $value->getOldPassword(),
                     $user->getSalt()
                 )
             ) {
                 $this->context->buildViolation($this->translator->trans('Incorrect credentials'))
-                    ->atPath('password')
+                    ->atPath('oldPassword')
                     ->addViolation();
             }
         }
