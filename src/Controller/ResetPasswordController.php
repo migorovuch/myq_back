@@ -8,7 +8,9 @@ use App\Model\Manager\UserManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/reset-password')]
 class ResetPasswordController extends AbstractBaseController
@@ -28,24 +30,21 @@ class ResetPasswordController extends AbstractBaseController
      * @ParamConverter("resetPasswordDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
      * @param ResetPasswordDTO $resetPasswordDTO
-     *
+     * @param TranslatorInterface $translator
      * @return Response
      *
-     * @throws \Symfony\Component\Mailer\Exception\TransportExceptionInterface
+     * @throws TransportExceptionInterface
      */
-    public function request(ResetPasswordDTO $resetPasswordDTO): Response
+    public function request(ResetPasswordDTO $resetPasswordDTO, TranslatorInterface $translator): Response
     {
         $tokenLifetime = $this->userManager->processSendingPasswordResetEmail(
             $resetPasswordDTO->getEmail()
         );
 
         return $this->response([
-            'message' => sprintf(
-                'Password Reset Email Sent.
-An email has been sent that contains a link that you can click to reset your password. This link will expire in %s hour(s).
-If you don\'t receive an email please check your spam folder or try again',
-                ($tokenLifetime / 3600)
-            ),
+            'message' => $translator->trans('Password Reset Email Sent.
+An email has been sent that contains a link that you can click to reset your password. This link will expire in %tokenLifetime% hour(s).
+If you don\'t receive an email please check your spam folder or try again', ['%tokenLifetime%' => $tokenLifetime]),
             'tokenLifetime' => $tokenLifetime,
         ]);
     }

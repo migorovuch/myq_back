@@ -1,11 +1,16 @@
 monolog:
     handlers:
         main:
-            type: stream
-            path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
-            channels: ["!event"]
+            type: fingers_crossed
+            action_level: debug
+            handler: nested
+            buffer_size: 50 # How many messages should be saved? Prevent memory leaks
         nested:
             type: stream
             path: "%kernel.logs_dir%/%kernel.environment%.log"
-            level: debug
+            level: info
+        doctrine:
+            type: service
+            id: App\Util\Monolog\DatabaseHandler
+            level: info
+            channels: [app]

@@ -9,7 +9,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 /**
  * Class ChangePasswordDTO.
  */
-class ChangePasswordDTO implements DTOInterface
+class ChangePasswordDTO implements DTOInterface, PasswordAwareInterface
 {
     /**
      * @var string

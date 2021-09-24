@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ConstraintAccountUniqueEmail
  */
-class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
+class ChangeUserDTO implements DTOInterface, PasswordAwareInterface
 {
     /**
      * @var string
@@ -66,7 +66,7 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
      * )
      * @Serializer\Type("string")
      */
-    protected ?string $newPassword = null;
+    protected ?string $password = null;
 
     /**
      * @var string
@@ -102,18 +102,18 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
      * @param string $nickname
      * @param string $fullName
      * @param string $phone
-     * @param string $newPassword
+     * @param string $password
      * @param string $email
      * @param int    $status
      * @param array  $roles
      */
-    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $newPassword, string $email, int $status, array $roles)
+    public function __construct(string $id, string $nickname, string $fullName, string $phone, string $password, string $email, int $status, array $roles)
     {
         $this->status = $status;
         $this->nickname = $nickname;
         $this->fullName = $fullName;
         $this->phone = $phone;
-        $this->newPassword = $newPassword;
+        $this->password = $password;
         $this->email = $email;
         $this->id = $id;
         $this->roles = $roles;
@@ -154,9 +154,9 @@ class ChangeUserDTO implements DTOInterface, NewPasswordAwareInterface
     /**
      * @return string|null
      */
-    public function getNewPassword(): ?string
+    public function getPassword(): ?string
     {
-        return $this->newPassword;
+        return $this->password;
     }
 
     /**
