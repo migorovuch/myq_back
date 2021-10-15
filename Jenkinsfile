@@ -86,11 +86,11 @@ pipeline {
                 set +x
                 docker run -t -d --network=myq_network -v $VOLUMES_PATH/mysql:/var/lib/mysql -p 3307:3306 --name myq_mysql --env-file .env myq_mysql
             '''
-        }
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
-        sleep 30
-        sh 'docker run -t -d --network=myq_network --name myq_php --env-file .env myq_php php-fpm'
-        sh 'docker run -t -d --network=myq_network -p 80:80 --name myq_nginx --env-file .env myq_nginx'
+            sleep 30
+            sh 'docker run -t -d --network=myq_network -v $VOLUMES_PATH/media:/var/www/html/public/media --name myq_php --env-file .env myq_php php-fpm'
+            sh 'docker run -t -d --network=myq_network -v $VOLUMES_PATH/media:/var/www/html/public/media -p 80:80 --name myq_nginx --env-file .env myq_nginx'
+        }
       }
     }
 
