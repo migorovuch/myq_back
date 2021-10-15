@@ -46,23 +46,23 @@ pipeline {
       steps {
         sh 'docker exec myq_php_test bin/phpunit --log-junit var/testResults/phpunit.xml --coverage-clover var/testResults/clover.xml'
         sh 'docker cp myq_php_test:/var/www/html/var/testResults/phpunit.xml ./testResults.xml'
-//         sh 'docker cp myq_php:/var/www/html/var/testResults/clover.xml ./clover.xml'
+        sh 'docker cp myq_php_test:/var/www/html/var/testResults/clover.xml ./clover.xml'
         junit '**/testResults.xml'
       }
     }
 
-//     stage('Code coverage') {
-//       steps {
-//         step([
-//           $class: 'CloverPublisher',
-//           cloverReportDir: '.',
-//           cloverReportFileName: 'clover.xml',
-//           healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
-//           unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
-//           failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
-//         ])
-//       }
-//     }
+    stage('Code coverage') {
+      steps {
+        step([
+          $class: 'CloverPublisher',
+          cloverReportDir: '.',
+          cloverReportFileName: 'clover.xml',
+          healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
+          unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
+          failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
+        ])
+      }
+    }
 
     stage('Stop TEST environment') {
       steps {
