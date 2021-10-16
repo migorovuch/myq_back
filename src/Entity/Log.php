@@ -60,9 +60,9 @@ class Log
     protected string $formatted;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\User")
+     * @ORM\Column(type="string", length=255, name="user_id", nullable=true)
      */
-    protected ?User $user = null;
+    protected ?string $userId = null;
 
     public function __construct()
     {
@@ -170,14 +170,14 @@ class Log
         return $this;
     }
 
-    public function getUser(): ?User
+    public function getUserId(): ?string
     {
-        return $this->user;
+        return $this->userId;
     }
 
-    public function setUser(?User $user): self
+    public function setUserId(?string $userId): self
     {
-        $this->user = $user;
+        $this->userId = $userId;
 
         return $this;
     }
