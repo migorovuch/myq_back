@@ -45,7 +45,7 @@ class DatabaseHandler extends AbstractProcessingHandler
         $user = $this->security->getUser();
 
         if ($user instanceof User) {
-            $log->setUser($user);
+            $log->setUserId($user->getId());
         }
 
         $this->entityManager->persist($log);
