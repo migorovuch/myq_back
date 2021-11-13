@@ -15,7 +15,7 @@ RUN docker-php-ext-enable xdebug
 
 COPY ./docker/php-fpm/symfony.ini /usr/local/etc/php/conf.d
 COPY ./docker/php-fpm/symfony.ini /usr/local/etc/php/cli/conf.d
-COPY ./docker/php-fpm/xdebug.ini  /usr/local/etc/php/conf.d
+COPY ./docker/php-fpm/prod/xdebug.ini  /usr/local/etc/php/conf.d
 COPY ./docker/php-fpm/symfony.pool.conf /usr/local/etc/php/php-fpm.d/
 COPY ./. /var/www/html/
 
