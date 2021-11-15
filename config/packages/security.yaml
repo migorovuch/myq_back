@@ -59,6 +59,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/api/telegram/.*, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/doc, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
+        - { path: ^/api/doc.json, roles: [IS_AUTHENTICATED_ANONYMOUSLY] }
         - { path: ^/api/login_check, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/registration, roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/approve-email, roles: IS_AUTHENTICATED_ANONYMOUSLY }
