@@ -108,10 +108,10 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
     }
 
     /**
-     * @param array $clientsIDs
+     * @param array|null $clientsIDs
      * @return CompanyClient[]
      */
-    public function updateUserClientsList(array $clientsIDs): array
+    public function updateUserClientsList(?array $clientsIDs): array
     {
         if (empty($clientsIDs)) {
             return [];
