@@ -12,6 +12,14 @@ use OpenApi\Annotations as OA;
 class ValidationFailed implements DTOInterface
 {
     /**
+     * @OA\Property(
+     *      type="array",
+     *      @OA\Items(
+     *          type="object",
+     *          ref=@Model(type=ValidationFieldFailed::class)
+     *      ),
+     *      description="Error fields"
+     * )
      * @var ValidationFieldFailed[]
      */
     private array $errors;

@@ -52,14 +52,7 @@ class AccountController extends AbstractBaseController
      *          ref=@Model(type=User::class, groups={"user_id", "user_phone", "user_nickname", "user_password", "user_old_password", "user_email", "user_fullname"})
      *      )
      * )
-     * @OA\Response(
-     *      response="422",
-     *      description="Validation error data",
-     *      @OA\JsonContent(
-     *          type="object",
-     *          ref=@Model(type=ValidationFailed::class)
-     *      )
-     * )
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
      * @Security(name="Bearer")
      *
      * @param ChangeAccountDTO $changeUserDTO

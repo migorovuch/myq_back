@@ -9,6 +9,10 @@ use FOS\RestBundle\Controller\Annotations as Rest;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use App\Entity\User;
+use OpenApi\Annotations as OA;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use App\Model\DTO\Response\Error\ValidationFailed;
 
 /**
  * Class UserController.
@@ -36,6 +40,11 @@ class AuthController extends AbstractBaseController
      * @Rest\Post("/registration", name="registration")
      * @ParamConverter("registrationDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @OA\Tag(name="Auth")
+     * @OA\RequestBody(required=true, description="Registrations data", @OA\JsonContent(type="object", ref=@Model(type=RegistrationDTO::class)))
+     * @OA\Response(response="200", description="Returns Account Data", @OA\JsonContent(type="object", ref=@Model(type=User::class, groups={"user"})))
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
+     *
      * @param RegistrationDTO $registrationDTO
      *
      * @return Response
@@ -50,6 +59,11 @@ class AuthController extends AbstractBaseController
     /**
      * @Rest\Post("/approve-email", name="approve_email")
      * @ParamConverter("approveEmailDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
+     * @OA\Tag(name="Auth")
+     * @OA\RequestBody(required=true, description="Confirmation data", @OA\JsonContent(type="object", ref=@Model(type=ApproveEmailDTO::class)))
+     * @OA\Response(response="200", description="Account approved successfully")
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
      *
      * @param ApproveEmailDTO $approveEmailDTO
      *
