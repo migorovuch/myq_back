@@ -9,14 +9,7 @@ nelmio_api_doc:
                 ValidationFailedException:
                     description: "Validation failed exception"
                     type: object
-                    properties:
-                        title:
-                            type: string
-                            example: 'Validation failed with N error(s).'
-                        errors:
-                            type: array
-                            items:
-                                type: string
+                    ref: App\Model\DTO\Response\Error\ValidationFailed
             securitySchemes:
                 Bearer:
                     type: http

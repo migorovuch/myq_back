@@ -22,6 +22,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_id"})
      */
     protected string $id;
 
@@ -31,6 +32,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_nickname"})
      */
     protected string $nickname;
     /**
@@ -39,6 +41,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_fullname"})
      */
     protected ?string $fullName = null;
     /**
@@ -47,6 +50,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_phone"})
      */
     protected ?string $phone = null;
 
@@ -60,6 +64,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      *     message = "Don't use the name of this application as your password."
      * )
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user_old_password"})
      */
     protected ?string $oldPassword = null;
 
@@ -74,6 +79,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * )
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user_password"})
      */
     protected ?string $password = null;
 
@@ -84,6 +90,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\Email(groups={"Default"}, message="Invalid email format")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_email"})
      */
     protected $email;
 
