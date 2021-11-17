@@ -13,6 +13,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use Nelmio\ApiDocBundle\Annotation\Security;
 use OpenApi\Annotations as OA;
 use App\Model\DTO\Response\Error\ValidationFailed;
+use Nelmio\ApiDocBundle\Annotation\Operation;
 
 /**
  * Class AccountController.
@@ -36,6 +37,7 @@ class AccountController extends AbstractBaseController
      * @Rest\Put("/", name="change_my")
      * @ParamConverter("changeUserDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @Operation(description="Change account data", operationId="api_account_change")
      * @OA\RequestBody(
      *     description="Update account data",
      *     required=true,

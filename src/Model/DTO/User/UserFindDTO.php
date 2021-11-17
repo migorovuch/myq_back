@@ -7,6 +7,7 @@ use App\Model\DTO\PageDTO;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+use OpenApi\Annotations as OA;
 
 class UserFindDTO extends AbstractFindDTO
 {
@@ -37,7 +38,8 @@ class UserFindDTO extends AbstractFindDTO
     /**
      * @var array
      *
-     * @Assert\Choice(multiple=true, callback={"App\Model\Model\AbstractUser", "getRolesList"}, message="Wrong roles selected", groups={"Default"})
+     * @OA\Property(type="array", @OA\Items(type="string"), description="User roles")
+     * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getRolesList"}, message="Wrong roles selected", groups={"Default"})
      * @Serializer\Type("array")
      */
     protected $roles;

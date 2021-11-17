@@ -13,6 +13,7 @@ use App\Entity\User;
 use OpenApi\Annotations as OA;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use App\Model\DTO\Response\Error\ValidationFailed;
+use Nelmio\ApiDocBundle\Annotation\Operation;
 
 /**
  * Class UserController.
@@ -40,6 +41,7 @@ class AuthController extends AbstractBaseController
      * @Rest\Post("/registration", name="registration")
      * @ParamConverter("registrationDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @Operation(description="Registration", operationId="api_auth_registration")
      * @OA\Tag(name="Auth")
      * @OA\RequestBody(required=true, description="Registrations data", @OA\JsonContent(type="object", ref=@Model(type=RegistrationDTO::class)))
      * @OA\Response(response="200", description="Returns Account Data", @OA\JsonContent(type="object", ref=@Model(type=User::class, groups={"user"})))
@@ -60,6 +62,7 @@ class AuthController extends AbstractBaseController
      * @Rest\Post("/approve-email", name="approve_email")
      * @ParamConverter("approveEmailDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @Operation(description="Registration", operationId="api_auth_approve_email")
      * @OA\Tag(name="Auth")
      * @OA\RequestBody(required=true, description="Confirmation data", @OA\JsonContent(type="object", ref=@Model(type=ApproveEmailDTO::class)))
      * @OA\Response(response="200", description="Account approved successfully")
@@ -74,17 +77,5 @@ class AuthController extends AbstractBaseController
         $this->userManager->approveEmail($approveEmailDTO);
 
         return $this->response([]);
-    }
-
-    /**
-     * @Rest\Get("/user/{id}/app", name="user")
-     *
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function user(string $id)
-    {
-        return $this->response($this->userManager->find($id), Response::HTTP_OK, ['user']);
     }
 }

@@ -7,6 +7,7 @@ use App\Entity\CompanyClient;
 use App\Entity\Schedule;
 use App\Entity\User;
 use App\Exception\AccessDeniedException;
+use App\Exception\EntryNotFoundException;
 use App\Exception\UnauthorizedBookingException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\Booking\BookingDTO;
@@ -250,6 +251,9 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
     public function changeBookingStatus(string $companyId, string $bookingId, int $status)
     {
         $booking = $this->entityRepository->findCompanyBooking($companyId, $bookingId);
+        if (!$booking) {
+            throw new EntryNotFoundException($this->translator->trans('Booking not found'));
+        }
         $booking->setStatus($status);
         $this->save($booking);
 
