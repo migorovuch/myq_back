@@ -2,10 +2,15 @@
 
 namespace App\Controller;
 
+use App\Entity\User;
+use App\Model\DTO\Response\Error\ValidationFailed;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\RegistrationDTO;
 use App\Model\Manager\UserManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -36,6 +41,12 @@ class AuthController extends AbstractBaseController
      * @Rest\Post("/registration", name="registration")
      * @ParamConverter("registrationDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @Operation(description="Registration", operationId="api_auth_registration")
+     * @OA\Tag(name="Auth")
+     * @OA\RequestBody(required=true, description="Registrations data", @OA\JsonContent(type="object", ref=@Model(type=RegistrationDTO::class)))
+     * @OA\Response(response="200", description="Returns Account Data", @OA\JsonContent(type="object", ref=@Model(type=User::class, groups={"user"})))
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
+     *
      * @param RegistrationDTO $registrationDTO
      *
      * @return Response
@@ -51,6 +62,12 @@ class AuthController extends AbstractBaseController
      * @Rest\Post("/approve-email", name="approve_email")
      * @ParamConverter("approveEmailDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @Operation(description="Registration", operationId="api_auth_approve_email")
+     * @OA\Tag(name="Auth")
+     * @OA\RequestBody(required=true, description="Confirmation data", @OA\JsonContent(type="object", ref=@Model(type=ApproveEmailDTO::class)))
+     * @OA\Response(response="200", description="Account approved successfully")
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
+     *
      * @param ApproveEmailDTO $approveEmailDTO
      *
      * @return Response
@@ -60,17 +77,5 @@ class AuthController extends AbstractBaseController
         $this->userManager->approveEmail($approveEmailDTO);
 
         return $this->response([]);
-    }
-
-    /**
-     * @Rest\Get("/user/{id}/app", name="user")
-     *
-     * @param string $id
-     *
-     * @return Response
-     */
-    public function user(string $id)
-    {
-        return $this->response($this->userManager->find($id), Response::HTTP_OK, ['user']);
     }
 }

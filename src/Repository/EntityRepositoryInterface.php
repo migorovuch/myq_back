@@ -27,6 +27,7 @@ interface EntityRepositoryInterface extends ObjectRepository
 
     /**
      * @param array $ids
+     *
      * @return array
      */
     public function getListByIDs(array $ids): array;

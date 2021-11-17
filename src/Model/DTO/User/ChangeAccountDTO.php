@@ -17,28 +17,31 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_id"})
      */
-    protected string $id;
+    protected ?string $id = null;
 
-    /**
-     * @var string
-     *
-     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
-     * @Assert\Type("string", groups={"Default"})
-     * @Serializer\Type("string")
-     */
-    protected string $nickname;
     /**
      * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_nickname"})
+     */
+    protected ?string $nickname = null;
+    /**
+     * @var string|null
+     *
+     * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_fullname"})
      */
     protected ?string $fullName = null;
     /**
@@ -47,6 +50,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_phone"})
      */
     protected ?string $phone = null;
 
@@ -60,11 +64,12 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      *     message = "Don't use the name of this application as your password."
      * )
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user_old_password"})
      */
     protected ?string $oldPassword = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\Length(
      *     min="6",
@@ -74,18 +79,20 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * )
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user_password"})
      */
     protected ?string $password = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Email(groups={"Default"}, message="Invalid email format")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"user", "user_email"})
      */
-    protected $email;
+    protected ?string $email = null;
 
     /**
      * ChangeAccountDTO constructor.
@@ -110,33 +117,33 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNickname(): string
+    public function getNickname(): ?string
     {
         return $this->nickname;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFullName(): string
+    public function getFullName(): ?string
     {
         return $this->fullName;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -158,9 +165,9 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }

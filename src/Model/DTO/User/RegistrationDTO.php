@@ -5,6 +5,7 @@ namespace App\Model\DTO\User;
 use App\Model\DTO\DTOInterface;
 use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
+use OpenApi\Annotations as OA;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -80,6 +81,7 @@ class RegistrationDTO implements DTOInterface, PasswordAwareInterface
      * @Assert\NotNull(groups={"Default"}, message="This value should not be blank")
      * @Assert\Choice(multiple=true, callback={"App\Entity\User", "getPublicRolesList"}, message="Wrong roles selected", groups={"Default"})
      * @Serializer\Type("array")
+     * @OA\Property(type="array", @OA\Items(type="string"), description="User roles")
      */
     protected $roles;
 

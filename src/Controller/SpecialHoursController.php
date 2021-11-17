@@ -2,10 +2,16 @@
 
 namespace App\Controller;
 
+use App\Entity\SpecialHours;
+use App\Model\DTO\Response\Error\ValidationFailed;
 use App\Model\DTO\SpecialHours\SpecialHoursDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Model\Manager\SpecialHoursManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -13,6 +19,7 @@ use Symfony\Component\Routing\Annotation\Route;
 /**
  * Class SpecialHoursController.
  *
+ * @OA\Tag(name="SpecialHours")
  * @Route("/special-hours", name="api_special_hours_")
  */
 class SpecialHoursController extends AbstractBaseController
@@ -33,6 +40,31 @@ class SpecialHoursController extends AbstractBaseController
      * @Rest\Get("/search", name="search")
      * @ParamConverter("specialHoursFindDTO", converter="query_converter", options={"paramName"="filter", "validationGroups"="Default"})
      *
+     * @Operation(description="Search speial hours", operationId="api_special_hours_search")
+     * @OA\Parameter(
+     *     name="filter",
+     *     in="query",
+     *     description="The filter options",
+     *     @OA\Schema(type="object", ref=@Model(type=SpecialHoursFindDTO::class))
+     * )
+     * @OA\Response(response="200", description="Returns list of special hours",
+     *  @OA\JsonContent(
+     *     type="object",
+     *     @OA\Property( type="number", property="total", example="20" ),
+     *     @OA\Property(
+     *          type="array",
+     *          property="data",
+     *          @OA\Items(
+     *              type="object",
+     *              ref=@Model(type=SpecialHours::class, groups={"special_hours"})
+     *          ),
+     *          description="Special hours list"
+     *     ),
+     *     description="Special hours list object"
+     *  )
+     * )
+     * @Security(name="Bearer")
+     *
      * @param SpecialHoursFindDTO $specialHoursFindDTO
      *
      * @return Response
@@ -49,6 +81,23 @@ class SpecialHoursController extends AbstractBaseController
     /**
      * @Rest\Put("/update-list", name="update_list")
      * @ParamConverter("list", class="array<App\Model\DTO\SpecialHours\SpecialHoursDTO>", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     *
+     * @Operation(description="Update special hours list", operationId="api_special_hours_update_list")
+     * @OA\RequestBody(
+     *     required=true,
+     *     description="Special hours data array",
+     *     @OA\JsonContent(
+     *          type="array",
+     *          @OA\Items(
+     *              type="object",
+     *              ref=@Model(type=SpecialHoursDTO::class)
+     *          ),
+     *          description="Special hours data"
+     *     )
+     * )
+     * @OA\Response(response="200", description="Returns updated special hours data", @OA\JsonContent(type="array", @OA\Items(type="object", ref=@Model(type=SpecialHours::class, groups={"special_hours", "special_hours_schedule", "schedule_id"}))))
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
+     * @Security(name="Bearer")
      *
      * @param SpecialHoursDTO[] $list
      *
@@ -67,6 +116,12 @@ class SpecialHoursController extends AbstractBaseController
      * @Rest\Put("/update/{id}", name="update")
      * @ParamConverter("specialHoursDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
      *
+     * @Operation(description="Update special hours", operationId="api_special_hours_update")
+     * @OA\RequestBody(required=true, description="Special hours data", @OA\JsonContent(type="object", ref=@Model(type=SpecialHoursDTO::class)))
+     * @OA\Response(response="200", description="Returns updated special hours data", @OA\JsonContent(type="object", ref=@Model(type=SpecialHours::class, groups={"special_hours"})))
+     * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
+     * @Security(name="Bearer")
+     *
      * @param SpecialHoursDTO $specialHoursDTO
      *
      * @return Response
@@ -82,6 +137,10 @@ class SpecialHoursController extends AbstractBaseController
 
     /**
      * @Rest\Delete("/{id}", name="delete")
+     *
+     * @Operation(description="Delete special hours", operationId="api_special_hours_delete")
+     * @OA\Response(response="200", description="Special hours deleted successfully")
+     * @Security(name="Bearer")
      *
      * @param string $id
      *

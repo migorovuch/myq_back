@@ -290,6 +290,7 @@ class CompanyClient implements EntityInterface
 
     /**
      * @param int $deleted
+     *
      * @return CompanyClient
      */
     public function setDeleted(int $deleted): self
@@ -306,6 +307,4 @@ class CompanyClient implements EntityInterface
     {
         return $this->deleted;
     }
-
-
 }

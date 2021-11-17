@@ -3,6 +3,7 @@
 namespace App\Model\Manager;
 
 use App\Exception\AccessDeniedException;
+use App\Exception\EntryNotFoundException;
 use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\DTOInterface;
 use App\Model\Model\EntityInterface;
@@ -17,7 +18,6 @@ use Symfony\Component\Security\Core\Security;
  */
 abstract class AbstractCRUDManager
 {
-
     /**
      * CRUDManager constructor.
      *
@@ -31,7 +31,8 @@ abstract class AbstractCRUDManager
         protected EntityRepositoryInterface $entityRepository,
         protected Security $security,
         protected DTOExporterInterface $DTOExporter
-    ) {}
+    ) {
+    }
 
     /**
      * @param string $id
@@ -147,6 +148,9 @@ abstract class AbstractCRUDManager
     public function update(string $id, DTOInterface $data)
     {
         $entity = $this->find($id);
+        if (!$entity) {
+            throw new EntryNotFoundException('Entry not found');
+        }
         $entity = $this->prepareEntity($entity, $data);
         $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $this->save($entity);
@@ -163,6 +167,9 @@ abstract class AbstractCRUDManager
     public function change(string $id, DTOInterface $data): EntityInterface
     {
         $entity = $this->find($id);
+        if (!$entity) {
+            throw new EntryNotFoundException('Entry not found');
+        }
         $entity = $this->prepareEntity($entity, $data, false);
         $this->denyAccessUnlessGranted(AbstractVoter::UPDATE, $entity);
         $this->save($entity);
@@ -172,6 +179,7 @@ abstract class AbstractCRUDManager
 
     /**
      * @param array $ids
+     *
      * @return array
      */
     public function getListByIDs(array $ids): array

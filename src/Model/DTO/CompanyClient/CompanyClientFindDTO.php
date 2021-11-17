@@ -76,19 +76,19 @@ class CompanyClientFindDTO extends AbstractFindDTO
     /**
      * CompanyClientFindDTO constructor.
      *
-     * @param string|null $id
-     * @param string|null $name
-     * @param string|null $phone
-     * @param User|null $user
+     * @param string|null  $id
+     * @param string|null  $name
+     * @param string|null  $phone
+     * @param User|null    $user
      * @param Company|null $company
-     * @param string|null $companyName
-     * @param int|null $status
-     * @param string|null $pseudonym
-     * @param int|null $numberOfBookings
-     * @param int|null $deleted
-     * @param array|null $sort
+     * @param string|null  $companyName
+     * @param int|null     $status
+     * @param string|null  $pseudonym
+     * @param int|null     $numberOfBookings
+     * @param int|null     $deleted
+     * @param array|null   $sort
      * @param PageDTO|null $pageDTO
-     * @param string|null $condition
+     * @param string|null  $condition
      */
     public function __construct(
         ?string $id = null,

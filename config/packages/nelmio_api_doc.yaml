@@ -1,0 +1,21 @@
+nelmio_api_doc:
+    documentation:
+        info:
+            title: MyQ App
+            description: MyQ App API documentation!
+            version: 1.0.0
+        components:
+            schemas:
+                ValidationFailedException:
+                    description: "Validation failed exception"
+                    type: object
+                    ref: App\Model\DTO\Response\Error\ValidationFailed
+            securitySchemes:
+                Bearer:
+                    type: http
+                    scheme: bearer
+                    bearerFormat: JWT
+
+    areas: # to filter documented areas
+        path_patterns:
+            - ^/api(?!/doc$) # Accepts routes under /api except /api/doc
