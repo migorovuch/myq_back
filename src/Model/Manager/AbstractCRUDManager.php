@@ -18,7 +18,6 @@ use Symfony\Component\Security\Core\Security;
  */
 abstract class AbstractCRUDManager
 {
-
     /**
      * CRUDManager constructor.
      *
@@ -32,7 +31,8 @@ abstract class AbstractCRUDManager
         protected EntityRepositoryInterface $entityRepository,
         protected Security $security,
         protected DTOExporterInterface $DTOExporter
-    ) {}
+    ) {
+    }
 
     /**
      * @param string $id
@@ -179,6 +179,7 @@ abstract class AbstractCRUDManager
 
     /**
      * @param array $ids
+     *
      * @return array
      */
     public function getListByIDs(array $ids): array

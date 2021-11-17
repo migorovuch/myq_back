@@ -52,7 +52,7 @@ class CompanyClientRepository extends EntityRepository
                 ->orWhere('t.pseudonym LIKE :pseudonym')
                 ->setParameter('pseudonym', $data->getName());
         }
-        if (!is_null($data->getDeleted())) {
+        if (null !== $data->getDeleted()) {
             $qb
                 ->andWhere('t.deleted = :deleted')
                 ->setParameter('deleted', $data->getDeleted());

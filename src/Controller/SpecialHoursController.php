@@ -2,19 +2,19 @@
 
 namespace App\Controller;
 
+use App\Entity\SpecialHours;
+use App\Model\DTO\Response\Error\ValidationFailed;
 use App\Model\DTO\SpecialHours\SpecialHoursDTO;
 use App\Model\DTO\SpecialHours\SpecialHoursFindDTO;
 use App\Model\Manager\SpecialHoursManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use App\Model\DTO\Response\Error\ValidationFailed;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use Nelmio\ApiDocBundle\Annotation\Operation;
-use App\Entity\SpecialHours;
 
 /**
  * Class SpecialHoursController.

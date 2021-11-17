@@ -20,11 +20,11 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
     /**
      * CompanyManager constructor.
      *
-     * @param EntityManagerInterface $entityManager
+     * @param EntityManagerInterface  $entityManager
      * @param CompanyClientRepository $comapnyClientRepository
-     * @param Security $security
-     * @param DTOExporterInterface $companyDtoExporter
-     * @param BookingRepository $bookingRepository
+     * @param Security                $security
+     * @param DTOExporterInterface    $companyDtoExporter
+     * @param BookingRepository       $bookingRepository
      */
     public function __construct(
         EntityManagerInterface $entityManager,
@@ -109,6 +109,7 @@ class CompanyClientManager extends AbstractCRUDManager implements CompanyClientM
 
     /**
      * @param array|null $clientsIDs
+     *
      * @return CompanyClient[]
      */
     public function updateUserClientsList(?array $clientsIDs): array

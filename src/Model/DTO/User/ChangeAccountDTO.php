@@ -17,24 +17,24 @@ use Symfony\Component\Validator\Constraints as Assert;
 class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
 {
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      * @Serializer\Groups({"user", "user_id"})
      */
-    protected string $id;
+    protected ?string $id = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      * @Serializer\Groups({"user", "user_nickname"})
      */
-    protected string $nickname;
+    protected ?string $nickname = null;
     /**
      * @var string|null
      *
@@ -69,7 +69,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
     protected ?string $oldPassword = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\Length(
      *     min="6",
@@ -84,7 +84,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
     protected ?string $password = null;
 
     /**
-     * @var string
+     * @var string|null
      *
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Email(groups={"Default"}, message="Invalid email format")
@@ -92,7 +92,7 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
      * @Serializer\Type("string")
      * @Serializer\Groups({"user", "user_email"})
      */
-    protected $email;
+    protected ?string $email = null;
 
     /**
      * ChangeAccountDTO constructor.
@@ -117,33 +117,33 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getId(): string
+    public function getId(): ?string
     {
         return $this->id;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getNickname(): string
+    public function getNickname(): ?string
     {
         return $this->nickname;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getFullName(): string
+    public function getFullName(): ?string
     {
         return $this->fullName;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getPhone(): string
+    public function getPhone(): ?string
     {
         return $this->phone;
     }
@@ -165,9 +165,9 @@ class ChangeAccountDTO implements DTOInterface, PasswordAwareInterface
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getEmail(): string
+    public function getEmail(): ?string
     {
         return $this->email;
     }

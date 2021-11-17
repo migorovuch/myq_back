@@ -6,18 +6,18 @@ use App\Entity\CompanyClient;
 use App\Exception\EntryNotFoundException;
 use App\Model\DTO\CompanyClient\ChangeCompanyClientDTO;
 use App\Model\DTO\CompanyClient\CompanyClientFindDTO;
+use App\Model\DTO\Response\Error\ValidationFailed;
 use App\Model\DTO\User\ChangeUserClientsListDTO;
 use App\Model\Manager\CompanyClientManagerInterface;
 use App\Security\CompanyClientVoter;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use App\Model\DTO\Response\Error\ValidationFailed;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use Nelmio\ApiDocBundle\Annotation\Operation;
 
 /**
  * Class CompanyClientController.
@@ -38,7 +38,7 @@ class CompanyClientController extends AbstractBaseController
     }
 
     /**
-     * Keep it as it is. Using this endpoint we can check if client has existing account
+     * Keep it as it is. Using this endpoint we can check if client has existing account.
      *
      * @Rest\Get ("/{id}/app", name="client_details")
      *
@@ -105,7 +105,6 @@ class CompanyClientController extends AbstractBaseController
      *
      * @return Response
      */
-
     public function search(CompanyClientFindDTO $companyClientFindDTO): Response
     {
         $client = (new CompanyClient())->setCompany($companyClientFindDTO->getCompany());
@@ -135,7 +134,7 @@ class CompanyClientController extends AbstractBaseController
      * @OA\Response(response="422", description="Validation error data", @OA\JsonContent(type="object",ref=@Model(type=ValidationFailed::class)))
      * @Security(name="Bearer")
      *
-     * @param string $id
+     * @param string                 $id
      * @param ChangeCompanyClientDTO $companyClientDTO
      *
      * @return Response
@@ -157,7 +156,6 @@ class CompanyClientController extends AbstractBaseController
      * @OA\RequestBody(required=true, description="Clients id list", @OA\JsonContent(type="object", ref=@Model(type=ChangeUserClientsListDTO::class)))
      * @OA\Response(response="200", description="Clients succesfully merged")
      * @Security(name="Bearer")
-     *
      */
     public function updateUserClientsList(ChangeUserClientsListDTO $changeUserClientsListDTO): Response
     {

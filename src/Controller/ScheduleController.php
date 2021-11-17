@@ -2,20 +2,20 @@
 
 namespace App\Controller;
 
+use App\Entity\Schedule;
+use App\Model\DTO\Response\Error\ValidationFailed;
 use App\Model\DTO\Schedule\ScheduleDTO;
 use App\Model\DTO\Schedule\ScheduleFindDTO;
 use App\Model\Manager\ScheduleManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use App\Model\DTO\Response\Error\ValidationFailed;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use Nelmio\ApiDocBundle\Annotation\Operation;
-use App\Entity\Schedule;
 
 /**
  * Class ScheduleController.

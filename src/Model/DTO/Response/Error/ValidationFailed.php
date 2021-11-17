@@ -7,7 +7,7 @@ use Nelmio\ApiDocBundle\Annotation\Model;
 use OpenApi\Annotations as OA;
 
 /**
- * Class ValidationFailed
+ * Class ValidationFailed.
  */
 class ValidationFailed implements DTOInterface
 {
@@ -20,12 +20,13 @@ class ValidationFailed implements DTOInterface
      *      ),
      *      description="Error fields"
      * )
+     *
      * @var ValidationFieldFailed[]
      */
     private array $errors;
 
     /**
-     * @param string $title
+     * @param string                  $title
      * @param ValidationFieldFailed[] $errors
      */
     public function __construct(protected string $title, array $errors)

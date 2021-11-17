@@ -25,7 +25,7 @@ class BookingRepository extends EntityRepository
     }
 
     /**
-     * @param Criteria $criteria
+     * @param Criteria       $criteria
      * @param BookingFindDTO $data
      *
      * @return Criteria
@@ -44,7 +44,7 @@ class BookingRepository extends EntityRepository
     }
 
     /**
-     * @param QueryBuilder $queryBuilder
+     * @param QueryBuilder   $queryBuilder
      * @param BookingFindDTO $data
      *
      * @return QueryBuilder
@@ -131,6 +131,7 @@ class BookingRepository extends EntityRepository
     /**
      * @param CompanyClient $companyClientFrom
      * @param CompanyClient $companyClientTo
+     *
      * @return int|mixed|string
      */
     public function changeBookingsClient(CompanyClient $companyClientFrom, CompanyClient $companyClientTo)
@@ -147,5 +148,4 @@ class BookingRepository extends EntityRepository
 
         return $query->execute();
     }
-
 }

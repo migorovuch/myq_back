@@ -6,8 +6,8 @@ use App\Model\DTO\AbstractFindDTO;
 use App\Model\DTO\PageDTO;
 use DateTime;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\Validator\Constraints as Assert;
 use OpenApi\Annotations as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class UserFindDTO extends AbstractFindDTO
 {

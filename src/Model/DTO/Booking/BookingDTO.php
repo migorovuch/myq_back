@@ -25,6 +25,7 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
+     * @Serializer\Groups({"Default"})
      *
      * @var string|null
      */
@@ -34,6 +35,7 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      * @Assert\Type("int", groups={"Default"})
      * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})
      * @Serializer\Type("integer")
+     * @Serializer\Groups({"Default"})
      *
      * @var int|null
      */
@@ -43,42 +45,42 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      * @Assert\Type("App\Entity\Schedule", groups={"Default"})
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Serializer\Type("Relation<App\Entity\Schedule>")
-     * @Serializer\Groups({"booking_schedule"})
+     * @Serializer\Groups({"booking_schedule", "Default"})
      */
     protected ?Schedule $schedule = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
      * @Serializer\Type("DateTime<'U'>")
-     * @Serializer\Groups({"booking", "booking_start"})
+     * @Serializer\Groups({"Default", "booking_start"})
      */
     protected ?DateTime $start = null;
 
     /**
      * @Assert\Type("\DateTimeInterface", groups={"Default"})
      * @Serializer\Type("DateTime<'U'>")
-     * @Serializer\Groups({"booking", "booking_end"})
+     * @Serializer\Groups({"Default", "booking_end"})
      */
     protected ?DateTime $end = null;
 
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
-     * @Serializer\Groups({"booking_title"})
+     * @Serializer\Groups({"booking_title", "Default"})
      */
     protected ?string $title = null;
 
     /**
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
-     * @Serializer\Groups({"booking_comment"})
+     * @Serializer\Groups({"booking_comment", "Default"})
      */
     protected ?string $customerComment = null;
 
     /**
      * @Assert\Type("App\Entity\CompanyClient", groups={"Default"})
      * @Serializer\Type("Relation<App\Entity\CompanyClient, 'notrequired'>")
-     * @Serializer\Groups({"booking_client"})
+     * @Serializer\Groups({"booking_client", "Default"})
      */
     protected ?CompanyClient $client = null;
 
@@ -86,7 +88,7 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
-     * @Serializer\Groups({"booking_client_name"})
+     * @Serializer\Groups({"booking_client_name", "Default"})
      */
     protected ?string $userName = null;
 
@@ -94,14 +96,14 @@ class BookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      * @Assert\NotBlank(groups={"Default"}, message="This value should not be blank")
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
-     * @Serializer\Groups({"booking_client_phone"})
+     * @Serializer\Groups({"booking_client_phone", "Default"})
      */
     protected ?string $userPhone = null;
 
     /**
      * @Assert\Type("boolean", groups={"Default"})
      * @Serializer\Type("boolean")
-     * @Serializer\Groups({"booking_new_client"})
+     * @Serializer\Groups({"booking_new_client", "Default"})
      */
     protected ?bool $newClient = false;
 

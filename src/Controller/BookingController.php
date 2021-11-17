@@ -2,21 +2,21 @@
 
 namespace App\Controller;
 
+use App\Entity\Booking;
 use App\Exception\EntryNotFoundException;
 use App\Model\DTO\Booking\BookingDTO;
 use App\Model\DTO\Booking\BookingFindDTO;
 use App\Model\DTO\Booking\ChangeBookingDTO;
+use App\Model\DTO\Response\Error\ValidationFailed;
 use App\Model\Manager\BookingManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use Nelmio\ApiDocBundle\Annotation\Security;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use App\Model\DTO\Response\Error\ValidationFailed;
-use App\Entity\Booking;
-use Nelmio\ApiDocBundle\Annotation\Security;
-use Nelmio\ApiDocBundle\Annotation\Operation;
 
 /**
  * Class BookingController.
@@ -52,7 +52,7 @@ class BookingController extends AbstractBaseController
 
     /**
      * @Rest\Post("/", name="create")
-     * @ParamConverter("bookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"validationGroups"="Default"}})
+     * @ParamConverter("bookingDTO", converter="fos_rest.request_body", options={"deserializationContext"={"groups"={"Default"}, "validationGroups"="Default"}})
      *
      * @Operation(description="Create booking", operationId="api_bookings_create")
      * @OA\RequestBody(required=true, description="Booking data", @OA\JsonContent(type="object", ref=@Model(type=BookingDTO::class, groups={"booking_schedule", "booking_start", "booking_end", "booking_title", "booking_comment", "booking_client", "booking_client_name", "booking_client_phone", "booking_new_client"})))
@@ -94,7 +94,6 @@ class BookingController extends AbstractBaseController
      *
      * @return Response
      */
-
     public function update(string $id, BookingDTO $bookingDTO): Response
     {
         $booking = $this->bookingManager->update($id, $bookingDTO);
@@ -188,7 +187,7 @@ class BookingController extends AbstractBaseController
         return $this->response(
             [
                 'data' => $data,
-                'total' => $total
+                'total' => $total,
             ],
             Response::HTTP_OK,
             $serializationGroups

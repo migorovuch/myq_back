@@ -4,7 +4,6 @@ namespace App\Model\DTO\User;
 
 use App\Model\DTO\DTOInterface;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\Validator\Constraints as Assert;
 use OpenApi\Annotations as OA;
 
 class ChangeUserClientsListDTO implements DTOInterface
@@ -23,6 +22,7 @@ class ChangeUserClientsListDTO implements DTOInterface
 
     /**
      * ChangeUserClientsListDTO constructor.
+     *
      * @param array|null $clients
      */
     public function __construct(?array $clients)

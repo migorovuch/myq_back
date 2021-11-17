@@ -25,7 +25,6 @@ class ChangeBookingDTO implements DTOInterface, BookingAvailabilityDTOInterface
      */
     protected ?string $id = null;
 
-
     /**
      * @Assert\Type("int", groups={"Default"})
      * @Assert\Choice(choices=App\Entity\Booking::STATUS_LIST, message="Wrong status selected", groups={"Default"})

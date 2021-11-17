@@ -6,17 +6,17 @@ use App\Model\DTO\User\ChangePasswordDTO;
 use App\Model\DTO\User\ResetPasswordDTO;
 use App\Model\Manager\UserManagerInterface;
 use FOS\RestBundle\Controller\Annotations as Rest;
+use Nelmio\ApiDocBundle\Annotation\Model;
+use Nelmio\ApiDocBundle\Annotation\Operation;
+use OpenApi\Annotations as OA;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Mailer\Exception\TransportExceptionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use OpenApi\Annotations as OA;
-use Nelmio\ApiDocBundle\Annotation\Model;
-use Nelmio\ApiDocBundle\Annotation\Operation;
 
 /**
- * Class ResetPasswordController
+ * Class ResetPasswordController.
  *
  * @OA\Tag(name="ResetPassword")
  */
@@ -48,8 +48,9 @@ class ResetPasswordController extends AbstractBaseController
      *  )
      * )
      *
-     * @param ResetPasswordDTO $resetPasswordDTO
+     * @param ResetPasswordDTO    $resetPasswordDTO
      * @param TranslatorInterface $translator
+     *
      * @return Response
      *
      * @throws TransportExceptionInterface

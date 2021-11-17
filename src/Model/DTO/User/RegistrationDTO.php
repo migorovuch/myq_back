@@ -5,8 +5,8 @@ namespace App\Model\DTO\User;
 use App\Model\DTO\DTOInterface;
 use App\Validator\ConstraintAccountUniqueEmail;
 use JMS\Serializer\Annotation as Serializer;
-use Symfony\Component\Validator\Constraints as Assert;
 use OpenApi\Annotations as OA;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Class RegistrationDTO.
