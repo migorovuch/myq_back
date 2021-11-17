@@ -189,7 +189,6 @@ class ScheduleController extends AbstractBaseController
      *     description="Schedules list object"
      *  )
      * )
-     * @Security(name="Bearer")
      *
      * @param ScheduleFindDTO $scheduleFindDTO
      *
