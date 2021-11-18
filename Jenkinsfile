@@ -101,9 +101,9 @@ pipeline {
             sh 'docker exec myq_php bin/console lexik:jwt:generate-keypair || true'
             sh 'docker exec myq_php chown -R www-data:www-data /var/www/html/var'
 
-            sh 'mkdir ./public_bundles_nelmioapidoc'
+            sh 'mkdir -p ./public_bundles_nelmioapidoc'
             sh 'docker cp myq_php:/var/www/html/vendor/nelmio/api-doc-bundle/Resources/public/. ./public_bundles_nelmioapidoc/'
-            sh 'docker exec myq_nginx mkdir /var/www/html/public/bundles'
+            sh 'docker exec myq_nginx mkdir -p /var/www/html/public/bundles'
             sh 'docker cp ./public_bundles_nelmioapidoc/. myq_nginx:/var/www/html/public/bundles/nelmioapidoc/'
         }
     }
