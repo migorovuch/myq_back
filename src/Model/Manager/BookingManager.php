@@ -212,16 +212,27 @@ class BookingManager extends AbstractCRUDManager implements BookingManagerInterf
                 !($companyClient = $this->companyClientManager->checkExistingClientForBooking($entity->getClient(), $currentUser))
             )
         ) {
-            $companyClientDTO = new CompanyClientDTO(
-                $currentUser,
-                $data->getUserName(),
-                $data->getUserPhone(),
-                $data->getSchedule()->getCompany(),
-                Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS === $entity->getSchedule()->getAcceptBookingCondition() ?
-                    CompanyClient::STATUS_OFF :
-                    CompanyClient::STATUS_ON
-            );
-            $companyClient = $this->companyClientManager->create($companyClientDTO);
+            if (!$currentUser) {
+                // find client by phone number if client id or any details wasn't provided
+                $companyClient = $this->companyClientManager->findOneBy([
+                    'company' => $data->getSchedule()->getCompany(),
+                    'phone' => $data->getUserPhone(),
+                    'deleted' => CompanyClient::STATE_NOT_DELETED,
+                ]);
+            }
+            if (!$companyClient) {
+                $companyClientDTO = new CompanyClientDTO(
+                    $currentUser,
+                    $data->getUserName(),
+                    $data->getUserPhone(),
+                    $data->getSchedule()->getCompany(),
+                    Schedule::ACCEPT_BOOKING_ACCEPT_APPROVED_USERS === $entity->getSchedule(
+                    )->getAcceptBookingCondition() ?
+                        CompanyClient::STATUS_OFF :
+                        CompanyClient::STATUS_ON
+                );
+                $companyClient = $this->companyClientManager->create($companyClientDTO);
+            }
         } elseif (
             $companyClient->getName() != $data->getUserName() ||
             $companyClient->getPhone() != $data->getUserPhone()
