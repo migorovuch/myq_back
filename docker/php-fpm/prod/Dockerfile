@@ -1,4 +1,4 @@
-FROM php:8-fpm AS php
+FROM php:8.0.0-fpm AS php
 
 #install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
