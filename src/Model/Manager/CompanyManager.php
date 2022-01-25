@@ -12,9 +12,12 @@ use App\Util\DTOExporter\DTOExporterInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\AuthenticatedVoter;
 use Symfony\Component\Security\Core\Security;
+use Sunrise\Slugger\Slugger;
 
 class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterface
 {
+    protected Slugger $slugger;
+
     /**
      * CompanyManager constructor.
      *
@@ -28,8 +31,11 @@ class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterf
         CompanyRepository $comapnyRepository,
         Security $security,
         DTOExporterInterface $companyDtoExporter,
+        Slugger $slugger
     ) {
         parent::__construct($entityManager, $comapnyRepository, $security, $companyDtoExporter);
+        $this->slugger = $slugger;
+
     }
 
     /**
@@ -75,5 +81,30 @@ class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterf
         $this->save($entity);
 
         return $entity;
+    }
+
+    protected function prepareEntity(
+        EntityInterface $entity,
+        DTOInterface $dto,
+        bool $setNullProperty = true
+    ): EntityInterface {
+        /** @var Company $entity */
+        $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
+        if (!$entity->getSlug() && $entity->getName()) {
+            $slug = urlencode(strtolower($this->slugger->slugify($entity->getName())));
+            if (!$this->isSlugExists($slug, $entity->getId())) {
+                $entity->setSlug($slug);
+            }
+        }
+
+        return $entity;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function isSlugExists(string $slug, string $exceptId = null): bool
+    {
+        return null !== $this->entityRepository->findBySlug($slug, $exceptId);
     }
 }

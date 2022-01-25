@@ -8,10 +8,10 @@ RUN apt-get update \
     iputils-ping
 
 RUN docker-php-ext-install \
-    pdo_mysql mysqli opcache bcmath sockets zip bz2
+    pdo_mysql mysqli opcache bcmath sockets zip bz2 intl
 
 RUN pecl install xdebug
-RUN docker-php-ext-enable xdebug
+RUN docker-php-ext-enable xdebug intl
 
 COPY ./docker/php-fpm/symfony.ini /usr/local/etc/php/conf.d
 COPY ./docker/php-fpm/symfony.ini /usr/local/etc/php/cli/conf.d

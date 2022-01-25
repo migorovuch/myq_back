@@ -12,6 +12,12 @@ class CompanyDTO implements DTOInterface
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
+    protected ?string $id = null;
+
+    /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
     protected ?string $name = null;
 
     /**
@@ -57,6 +63,13 @@ class CompanyDTO implements DTOInterface
     protected ?string $logo = null;
 
     /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Assert\Regex("/^[a-z0-9]+(-?[a-z0-9]+)*$/i")
+     * @Serializer\Type("string")
+     */
+    protected ?string $slug;
+
+    /**
      * CompanyDTO constructor.
      *
      * @param string|null $name
@@ -65,6 +78,9 @@ class CompanyDTO implements DTOInterface
      * @param string|null $address
      * @param string|null $addressLink
      * @param string|null $description
+     * @param string|null $logo
+     * @param int|null $timezoneoffset
+     * @param string|null $slug
      */
     public function __construct(
         ?string $name = null,
@@ -74,7 +90,8 @@ class CompanyDTO implements DTOInterface
         ?string $addressLink = null,
         ?string $description = null,
         ?string $logo = null,
-        ?int $timezoneoffset = null
+        ?int $timezoneoffset = null,
+        ?string $slug = null
     ) {
         $this->email = $email;
         $this->phone = $phone;
@@ -84,6 +101,15 @@ class CompanyDTO implements DTOInterface
         $this->name = $name;
         $this->logo = $logo;
         $this->timezoneoffset = $timezoneoffset;
+        $this->slug = $slug;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getId(): ?string
+    {
+        return $this->id;
     }
 
     /**
@@ -148,5 +174,13 @@ class CompanyDTO implements DTOInterface
     public function getTimezoneoffset(): ?int
     {
         return $this->timezoneoffset;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }

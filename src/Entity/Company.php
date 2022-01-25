@@ -117,7 +117,13 @@ class Company implements EntityInterface
     /**
      * @ORM\Column(type="integer", nullable=true)
      */
-    private $timezoneoffset;
+    protected $timezoneoffset;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true, unique=true)
+     * @Serializer\Groups({"company", "company_slug"})
+     */
+    protected $slug;
 
     public function __construct()
     {
@@ -354,6 +360,18 @@ class Company implements EntityInterface
     public function setTimezoneoffset(?int $timezoneoffset): self
     {
         $this->timezoneoffset = $timezoneoffset;
+
+        return $this;
+    }
+
+    public function getSlug(): ?string
+    {
+        return $this->slug;
+    }
+
+    public function setSlug(string $slug): self
+    {
+        $this->slug = $slug;
 
         return $this;
     }

@@ -112,3 +112,6 @@ services:
         class: App\Model\Manager\CompanyChatManager
         arguments:
             $appUrl: '%env(VUE_APP_APP_URL)%'
+
+    Sunrise\Slugger\Slugger:
+        class: Sunrise\Slugger\Slugger

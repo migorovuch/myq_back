@@ -11,10 +11,11 @@ RUN docker-php-ext-install pdo_mysql \
     bcmath \
     sockets \
     zip \
-    bz2
+    bz2 \
+    intl
 
 RUN pecl install xdebug
-RUN docker-php-ext-enable xdebug
+RUN docker-php-ext-enable xdebug intl
 #RUN pecl install mongodb
 #RUN docker-php-ext-enable mongodb
 RUN curl -sS https://get.symfony.com/cli/installer | bash
