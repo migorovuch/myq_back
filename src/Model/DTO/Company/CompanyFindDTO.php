@@ -20,6 +20,12 @@ class CompanyFindDTO extends AbstractFindDTO
      * @Assert\Type("string", groups={"Default"})
      * @Serializer\Type("string")
      */
+    protected ?string $slug = null;
+
+    /**
+     * @Assert\Type("string", groups={"Default"})
+     * @Serializer\Type("string")
+     */
     protected ?string $name = null;
 
     /**
@@ -69,6 +75,7 @@ class CompanyFindDTO extends AbstractFindDTO
     public function __construct(
         string $id = null,
         string $name = null,
+        string $slug = null,
         string $email = null,
         string $phone = null,
         string $address = null,
@@ -86,6 +93,7 @@ class CompanyFindDTO extends AbstractFindDTO
         $this->user = $user;
         $this->status = $status;
         $this->id = $id;
+        $this->slug = $slug;
     }
 
     /**
@@ -142,5 +150,13 @@ class CompanyFindDTO extends AbstractFindDTO
     public function getUser(): User | string | null
     {
         return $this->user;
+    }
+
+    /**
+     * @return string|null
+     */
+    public function getSlug(): ?string
+    {
+        return $this->slug;
     }
 }

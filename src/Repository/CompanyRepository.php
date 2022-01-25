@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Company;
+use App\Model\DTO\AbstractFindDTO;
 use App\Util\Factory\PropertyInfoExtractorFactory;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -39,5 +40,16 @@ class CompanyRepository extends EntityRepository
         }
 
         return $queryBuilder->getQuery()->getOneOrNullResult();
+    }
+
+    public function findPublicByDTO(AbstractFindDTO $data)
+    {
+        $qb = $this->createQueryBuilder('t');
+        $qb = $this->buildQueryByDTO($qb, $data);
+        $qb->andWhere('t.status=:status')->setParameter('status', Company::STATUS_ON);
+        $qb = $this->paginationQueryByDTO($qb, $data);
+        $query = $qb->getQuery();
+
+        return $query->getResult();
     }
 }

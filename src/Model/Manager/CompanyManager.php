@@ -50,18 +50,7 @@ class CompanyManager extends AbstractCRUDManager implements CompanyManagerInterf
             $data->getUser() &&
             $this->security->getUser()->getId() == $data->getUser()->getId()
         )) {
-            $data = new CompanyFindDTO(
-                $data->getId(),
-                $data->getName(),
-                $data->getEmail(),
-                $data->getPhone(),
-                $data->getAddress(),
-                Company::STATUS_ON,
-                $data->getUser(),
-                $data->getSort(),
-                $data->getPage(),
-                $data->getCondition()
-            );
+            return $this->entityRepository->findPublicByDTO($data);
         }
 
         return $this->findByDTO($data);
