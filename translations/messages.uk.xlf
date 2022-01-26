@@ -41,6 +41,16 @@
         <target state="new">Бронювання %bookingTime% скасовано</target>
         <jms:reference-file line="216">/../../../.././src/Model/Manager/TelegramBotRequestHandler.php</jms:reference-file>
       </trans-unit>
+      <trans-unit id="8ddc009925b0b05e9ef0756460b10a8177b1a7e1" resname="Booking not found">
+        <source>Booking not found</source>
+        <target state="new">Бронювання незнайдено</target>
+        <jms:reference-file line="266">/../../../.././src/Model/Manager/BookingManager.php</jms:reference-file>
+      </trans-unit>
+      <trans-unit id="23e10df5abd32a0980eca7aa47742ce4a3c9d965" resname="The company with this slug already exists">
+        <source>The company with this slug already exists</source>
+        <target state="new">Компанія з таким слагом вже існує</target>
+        <jms:reference-file line="44">/../../../.././src/Validator/ConstraintCompanyUniqueSlugValidator.php</jms:reference-file>
+      </trans-unit>
       <trans-unit id="f0a4bda63528e4caf7baf090579f1da41d7a92e9" resname="Chat language has been changed">
         <source>Chat language has been changed</source>
         <target state="new">Мова чату змінена</target>
