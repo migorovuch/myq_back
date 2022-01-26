@@ -33,7 +33,8 @@ class CompanyRepository extends EntityRepository
     {
         $slug = strtolower($slug);
         $queryBuilder = $this->createQueryBuilder('c')
-            ->where('u.slug = :slug')
+            ->where('c.slug = :slug')
+            ->orWhere('c.id = :slug')
             ->setParameter('slug', $slug);
         if ($exceptId) {
             $queryBuilder->andWhere('c.id != :id')->setParameter(':id', $exceptId);

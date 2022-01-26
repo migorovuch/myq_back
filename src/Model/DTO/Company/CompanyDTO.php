@@ -3,9 +3,13 @@
 namespace App\Model\DTO\Company;
 
 use App\Model\DTO\DTOInterface;
+use App\Validator\ConstraintCompanyUniqueSlug;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
 
+/**
+ * @ConstraintCompanyUniqueSlug
+ */
 class CompanyDTO implements DTOInterface
 {
     /**
