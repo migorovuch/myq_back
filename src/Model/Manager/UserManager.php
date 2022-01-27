@@ -4,6 +4,7 @@ namespace App\Model\Manager;
 
 use App\Entity\User;
 use App\Exception\ApiException;
+use App\Exception\User\WrongApproveEmailTokenException;
 use App\Model\DTO\DTOInterface;
 use App\Model\DTO\User\ApproveEmailDTO;
 use App\Model\DTO\User\ChangeAccountDTO;
@@ -211,6 +212,8 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
             if (hash_equals($checkToken, urldecode($approveEmailDTO->getToken()))) {
                 $user->setStatus(User::STATUS_ON);
                 $this->save($user);
+            } else {
+                throw new WrongApproveEmailTokenException();
             }
         }
 
