@@ -209,7 +209,7 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         $user = $this->entityRepository->findOneBy(['id' => $approveEmailDTO->getId(), 'status' => User::STATUS_OFF]);
         if ($user) {
             $checkToken = $this->createToken($user);
-            if (hash_equals($checkToken, urldecode($approveEmailDTO->getToken()))) {
+            if (hash_equals($checkToken, $approveEmailDTO->getToken())) {
                 $user->setStatus(User::STATUS_ON);
                 $this->save($user);
             } else {
