@@ -71,7 +71,7 @@ class CompanyDTO implements DTOInterface
      * @Assert\Regex("/^[a-z0-9]+(-?[a-z0-9]+)*$/i")
      * @Serializer\Type("string")
      */
-    protected ?string $slug;
+    protected ?string $slug = null;
 
     /**
      * CompanyDTO constructor.

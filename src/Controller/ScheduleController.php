@@ -154,7 +154,7 @@ class ScheduleController extends AbstractBaseController
         return $this->response(
             $this->scheduleManager->findByDTO($scheduleFindDTO),
             Response::HTTP_OK,
-            ['schedule', 'schedule_company', 'company_id']
+            ['schedule', 'schedule_company', 'company_id', 'company_name']
         );
     }
 

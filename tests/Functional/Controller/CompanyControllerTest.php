@@ -16,6 +16,7 @@ class CompanyControllerTest extends AbstractBaseController
             'phone' => '+380983726299',
             'address' => 'Test company address',
             'address_link' => '',
+            'slug' => 'company',
             'description' => 'Test company description',
         ];
         $response = $this->sendPostRequest('/api/companies/', [], $data + ['token' => $token]);
@@ -32,7 +33,7 @@ class CompanyControllerTest extends AbstractBaseController
     public function testUpdateCompanySuccess()
     {
         $token = $this->login([
-            'username' => 'user1@site.com',
+            'username' => 'company1@site.com',
             'password' => '12345678',
         ]);
         $response = $this->sendGetRequest('/api/companies/my', [], ['token' => $token]);
@@ -46,6 +47,7 @@ class CompanyControllerTest extends AbstractBaseController
             'phone' => '+380983726277',
             'address' => 'Test company address UPDATE',
             'address_link' => 'UPDATE',
+            'slug' => 'company1',
             'description' => 'Test company description UPDATE',
         ];
         $response = $this->sendPutRequest('/api/companies/'.$myCompanyContent['id'], [], $data + ['token' => $token]);

@@ -128,6 +128,7 @@ class Company implements EntityInterface
     public function __construct()
     {
         $this->schedules = new ArrayCollection();
+        $this->generateAccessToken();
     }
 
     public function getId(): ?string
