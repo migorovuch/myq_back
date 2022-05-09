@@ -5,13 +5,9 @@ pipeline {
 
     stage('Build environment') {
       steps {
-        sh 'cd ./docker/php-fpm'
-        sh 'docker build --target stage -t myq_php -f ./Dockerfile ../../'
-        sh 'cd ../nginx'
-        sh 'docker build -t myq_nginx -f ./Dockerfile ../../'
-        sh 'cd ../mysql'
-        sh 'docker build -t myq_mysql -f ./Dockerfile ./'
-        sh 'cd ../../'
+        sh 'docker build --target stage -t myq_php -f ./docker/php-fpm/Dockerfile ./'
+        sh 'docker build -t myq_nginx -f ./docker/nginx/Dockerfile ./'
+        sh 'docker build -t myq_mysql -f ./docker/mysql/Dockerfile ./docker/mysql'
       }
     }
 
