@@ -20,7 +20,10 @@ COPY ./docker/php-fpm/xdebug.ini  /usr/local/etc/php/conf.d
 RUN pecl install xdebug
 RUN docker-php-ext-enable xdebug intl
 
-FROM prod AS dev
+FROM stage AS dev
+#configure xdebug
+RUN sed -i "2s/.*/xdebug.mode=debug/" /usr/local/etc/php/conf.d/xdebug.ini
+RUN sed -i "4s/.*/xdebug.start_with_request=yes/" /usr/local/etc/php/conf.d/xdebug.ini
 #install php-cs-fixer
 RUN curl -L https://cs.symfony.com/download/php-cs-fixer-v2.phar -o php-cs-fixer
 RUN chmod a+x php-cs-fixer
