@@ -1,0 +1,32 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Logging in to Amazon ECR...
+      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Building the Docker image...
+      - sh AWS-ssm.sh
+      - docker build --target stage -t php-fpm8 -f ./docker/php-fpm/Dockerfile ./
+      - docker build -t symfony_nginx -f ./docker/php-fpm/prod/Dockerfile ./
+  dependencies:
+    commands:
+      - echo Install dependencies
+      - docker run --rm -t -d --name php --env-file .env.local php-fpm8 php-fpm
+      - docker exec php composer install
+      - docker exec php bin/console assets:install --symlink || true
+      - docker exec php bin/console lexik:jwt:generate-keypair || true
+      - docker exec php chown -R www-data:www-data /var/www/html/var
+      - docker commit php php-fpm8
+      - docker stop php
+  post_build:
+    commands:
+      - echo Build completed on `date`
+      - echo Pushing the Docker image...
+      - docker tag php-fpm8 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/php-fpm8
+      - docker tag symfony_nginx $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/symfony_nginx
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/php-fpm8
+      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/symfony_nginx
