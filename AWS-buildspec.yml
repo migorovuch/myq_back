@@ -10,10 +10,8 @@ phases:
       - echo Build started on `date`
       - echo Building the Docker image...
       - sh AWS-ssm.sh
-      - docker build --target stage -t php-fpm8 -f ./docker/php-fpm/Dockerfile ./
+      - docker build --target prod -t php-fpm8 -f ./docker/php-fpm/Dockerfile ./
       - docker build -t symfony_nginx -f ./docker/php-fpm/prod/Dockerfile ./
-  install:
-    commands:
       - echo Install dependencies
       - docker run --rm -t -d --name php --env-file .env.local php-fpm8 php-fpm
       - docker exec php composer install
