@@ -25,5 +25,8 @@ aws ssm get-parameters-by-path --with-decryption --path $myService --query "Para
 # (.env)
 # RANDOM_NUMBER=99
 # RANDOM_SECRET=324546JYHBERGYTUDHGsANEFRGW5cerhuwdfshd
+
+#WITH QUOTES
+#jq -jr '.[]|.Name,"='"'"'",.Value,"'"'"'\n"' < env.json >> .env.local
 jq -jr '.[]|.Name,"=",.Value,"\n"' < env.json >> .env.local
 rm env.json
