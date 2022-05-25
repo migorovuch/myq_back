@@ -1,0 +1,45 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [],
+  "containerDefinitions": [
+    {
+      "name": "myq_php",
+      "image": "708071919711.dkr.ecr.us-east-1.amazonaws.com/php-fpm8",
+      "essential": true,
+      "memory": null,
+      "memoryReservation": 300,
+      "mountPoints": []
+    },
+    {
+      "name": "myq_nginx",
+      "image": "708071919711.dkr.ecr.us-east-1.amazonaws.com/symfony_nginx",
+      "essential": true,
+      "memory": null,
+      "memoryReservation": 300,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": [
+        "myq_php"
+      ],
+      "mountPoints": [],
+      "dependsOn": [
+        {
+          "containerName": "myq_php",
+          "condition": "START"
+        }
+      ]
+    }
+  ],
+  "compatibilities": [
+    "EXTERNAL",
+    "EC2"
+  ],
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "networkMode": "bridge"
+}
