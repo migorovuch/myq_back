@@ -3,7 +3,7 @@
   "volumes": [],
   "containerDefinitions": [
     {
-      "name": "myq_php",
+      "name": "php",
       "image": "708071919711.dkr.ecr.us-east-1.amazonaws.com/php-fpm8",
       "essential": true,
       "memory": null,
@@ -32,12 +32,12 @@
         }
       ],
       "links": [
-        "myq_php"
+        "php"
       ],
       "mountPoints": [],
       "dependsOn": [
         {
-          "containerName": "myq_php",
+          "containerName": "php",
           "condition": "START"
         }
       ],
