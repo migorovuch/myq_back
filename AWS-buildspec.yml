@@ -5,7 +5,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Install dependencies
-      - composer install
+      - composer install --ignore-platform-req=ext-sodium
       - php bin/console assets:install --symlink || true
       - php bin/console lexik:jwt:generate-keypair || true
       - php chown -R www-data:www-data /var/www/html/var
