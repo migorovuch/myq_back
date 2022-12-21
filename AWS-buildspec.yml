@@ -5,6 +5,7 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Install dependencies
+      - sh AWS-ssm.sh
       - composer install --ignore-platform-req=ext-sodium
       - php bin/console assets:install --symlink || true
       - php bin/console lexik:jwt:generate-keypair || true
