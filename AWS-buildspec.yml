@@ -1,32 +1,15 @@
 version: 0.2
 
 phases:
-  pre_build:
-    commands:
-      - echo Logging in to Amazon ECR...
-#      - aws ecr get-login-password --region $AWS_DEFAULT_REGION | docker login --username AWS --password-stdin $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com
-      - echo ${DOCKERHUB_PASSWORD} | docker login -u ${DOCKERHUB_USERNAME} --password-stdin
   build:
     commands:
       - echo Build started on `date`
-      - echo Building the Docker image...
-      - sh AWS-ssm.sh
-      - docker build --target prod -t php-fpm8 -f ./docker/php-fpm/Dockerfile ./
-      - docker build -t symfony_nginx -f ./docker/nginx/Dockerfile ./
       - echo Install dependencies
-      - docker run --rm -t -d --name php --env-file .env.local php-fpm8 php-fpm
-      - docker exec php composer install
-      - docker exec php bin/console assets:install --symlink || true
-      - docker exec php bin/console lexik:jwt:generate-keypair || true
-      - docker exec php chown -R www-data:www-data /var/www/html/var
-      - docker exec php bin/console doctrine:migrations:migrate
-      - docker commit php php-fpm8
-      - docker stop php
+      - composer install
+      - php bin/console assets:install --symlink || true
+      - php bin/console lexik:jwt:generate-keypair || true
+      - php chown -R www-data:www-data /var/www/html/var
+      - php bin/console doctrine:migrations:migrate
   post_build:
     commands:
       - echo Build completed on `date`
-      - echo Pushing the Docker image...
-      - docker tag php-fpm8 $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/php-fpm8:latest
-      - docker tag symfony_nginx $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/symfony_nginx:latest
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/php-fpm8:latest
-      - docker push $AWS_ACCOUNT_ID.dkr.ecr.$AWS_DEFAULT_REGION.amazonaws.com/symfony_nginx:latest
