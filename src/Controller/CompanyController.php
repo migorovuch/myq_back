@@ -194,6 +194,7 @@ class CompanyController extends AbstractBaseController
             [
                 'data' => $data,
                 'total' => $total,
+                'searchQuery' => $companyFindDTO
             ],
             Response::HTTP_OK,
             ['company', 'company_user', 'user_id']
