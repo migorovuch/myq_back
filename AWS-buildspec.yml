@@ -1,6 +1,12 @@
 version: 0.2
 
+env:
+  variables:
+    COMPOSER_CACHE_DIR: .cache/composer
 phases:
+  install:
+    commands:
+      - mkdir -p .cache/composer
   build:
     commands:
       - echo Build started on `date`
@@ -13,6 +19,6 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
-artifacts:
-  files:
-    - '**/*'
+cache:
+  paths:
+    - .cache/composer/**/*
