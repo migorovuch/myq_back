@@ -24,5 +24,4 @@ cache:
     - .cache/composer/**/*
 artifacts:
   files:
-    - "dist/*"
-    - "dist/**/*"
+    - "**/*"
