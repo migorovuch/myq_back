@@ -6,7 +6,7 @@
 # separated by the newline character
 # and write to a .env file
 
-myService=/myq/prod
+myService=${ENV_PATH}
 # Get variables from SSM and chop off the service name from the variable names (/myservice_name/stage_name/PORT to PORT) and write to a JSON file
 # (env.json)
 # [   {

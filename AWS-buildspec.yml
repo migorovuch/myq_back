@@ -22,3 +22,7 @@ phases:
 cache:
   paths:
     - .cache/composer/**/*
+artifacts:
+  files:
+    - "dist/*"
+    - "dist/**/*"
