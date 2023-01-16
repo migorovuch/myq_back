@@ -11,39 +11,39 @@ class InstanceIdentityDTO
     /**
      * @Serializer\Type("string")
      */
-    private ?string $accountId = '';
+    private ?string $accountId = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $architecture;
+    private ?string $architecture = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $availabilityZone;
+    private ?string $availabilityZone = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $imageId;
+    private ?string $imageId = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $instanceId;
+    private ?string $instanceId = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $instanceType;
+    private ?string $instanceType = null;
     /**
      * @Serializer\Type("DateTime<'U'>")
      */
-    private ?DateTime $pendingTime;
+    private ?DateTime $pendingTime = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $region;
+    private ?string $region = null;
     /**
      * @Serializer\Type("string")
      */
-    private ?string $version;
+    private ?string $version = null;
 
     /**
      * @param string|null $accountId
