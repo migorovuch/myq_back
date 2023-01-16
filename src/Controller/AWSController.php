@@ -17,7 +17,7 @@ class AWSController extends AbstractBaseController
     }
 
     /**
-     * @Rest\Get("/ii", name="ii")
+     * @Rest\Get("/ii/app", name="ii")
      * @return Response
      */
     public function instanceIdentity(): Response
