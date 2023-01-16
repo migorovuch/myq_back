@@ -35,7 +35,7 @@ class InstanceMetadataService
     protected function generateToken(): string
     {
         $response = $this->client->request(
-            'GET',
+            'PUT',
             self::INSTANCE_METADATA_URL.'latest/api/token',
             [
                 'headers' => [

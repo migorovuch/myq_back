@@ -11,50 +11,61 @@ class InstanceIdentityDTO
     /**
      * @Serializer\Type("string")
      */
-    private string $accountId;
+    private ?string $accountId = '';
     /**
      * @Serializer\Type("string")
      */
-    private string $architecture;
+    private ?string $architecture;
     /**
      * @Serializer\Type("string")
      */
-    private string $availabilityZone;
+    private ?string $availabilityZone;
     /**
      * @Serializer\Type("string")
      */
-    private string $imageId;
+    private ?string $imageId;
     /**
      * @Serializer\Type("string")
      */
-    private string $instanceId;
+    private ?string $instanceId;
     /**
      * @Serializer\Type("string")
      */
-    private string $instanceType;
+    private ?string $instanceType;
     /**
      * @Serializer\Type("DateTime<'U'>")
      */
-    private DateTime $pendingTime;
+    private ?DateTime $pendingTime;
     /**
      * @Serializer\Type("string")
      */
-    private string $region;
+    private ?string $region;
     /**
      * @Serializer\Type("string")
      */
-    private string $version;
+    private ?string $version;
 
+    /**
+     * @param string|null $accountId
+     * @param string|null $architecture
+     * @param string|null $availabilityZone
+     * @param string|null $imageId
+     * @param string|null $instanceId
+     * @param string|null $instanceType
+     * @param DateTime|null $pendingTime
+     * @param string|null $region
+     * @param string|null $version
+     */
     public function __construct(
-        string $accountId,
-        string $architecture,
-        string $availabilityZone,
-        string $imageId,
-        string $instanceId,
-        string $instanceType,
-        DateTime $pendingTime,
-        string $region,
-        string $version
+        ?string $accountId,
+        ?string $architecture,
+        ?string $availabilityZone,
+        ?string $imageId,
+        ?string $instanceId,
+        ?string $instanceType,
+        ?DateTime $pendingTime,
+        ?string $region,
+        ?string $version
     ) {
         $this->accountId = $accountId;
         $this->architecture = $architecture;
@@ -68,73 +79,73 @@ class InstanceIdentityDTO
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAccountId(): string
+    public function getAccountId(): ?string
     {
         return $this->accountId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getArchitecture(): string
+    public function getArchitecture(): ?string
     {
         return $this->architecture;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getAvailabilityZone(): string
+    public function getAvailabilityZone(): ?string
     {
         return $this->availabilityZone;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getImageId(): string
+    public function getImageId(): ?string
     {
         return $this->imageId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getInstanceId(): string
+    public function getInstanceId(): ?string
     {
         return $this->instanceId;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getInstanceType(): string
+    public function getInstanceType(): ?string
     {
         return $this->instanceType;
     }
 
     /**
-     * @return DateTime
+     * @return DateTime|null
      */
-    public function getPendingTime(): DateTime
+    public function getPendingTime(): ?DateTime
     {
         return $this->pendingTime;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getRegion(): string
+    public function getRegion(): ?string
     {
         return $this->region;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getVersion(): string
+    public function getVersion(): ?string
     {
         return $this->version;
     }
