@@ -3,6 +3,8 @@
 namespace App\Service\AWS;
 
 use App\Model\DTO\AWS\InstanceIdentityDTO;
+use JMS\Serializer\Naming\IdenticalPropertyNamingStrategy;
+use JMS\Serializer\SerializerBuilder;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 
@@ -12,10 +14,12 @@ class InstanceMetadataService
     private HttpClientInterface $client;
     private SerializerInterface $serializer;
 
-    public function __construct(HttpClientInterface $client, SerializerInterface $serializer)
+    public function __construct(HttpClientInterface $client)
     {
         $this->client = $client;
-        $this->serializer = $serializer;
+        $serializeBuilder = SerializerBuilder::create();
+        $serializeBuilder->setPropertyNamingStrategy(new IdenticalPropertyNamingStrategy());
+        $this->serializer = $serializeBuilder->build();
     }
 
     public function getInstanceIdentity(): InstanceIdentityDTO

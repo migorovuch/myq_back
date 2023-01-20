@@ -33,10 +33,6 @@ class InstanceIdentityDTO
      */
     private ?string $instanceType = null;
     /**
-     * @Serializer\Type("DateTime<'U'>")
-     */
-    private ?DateTime $pendingTime = null;
-    /**
      * @Serializer\Type("string")
      */
     private ?string $region = null;
@@ -44,6 +40,14 @@ class InstanceIdentityDTO
      * @Serializer\Type("string")
      */
     private ?string $version = null;
+    /**
+     * @Serializer\Type("string")
+     */
+    private ?string $testFormat = null;
+    /**
+     * @Serializer\Type("string")
+     */
+    private ?string $test_string = null;
 
     /**
      * @param string|null $accountId
@@ -52,7 +56,6 @@ class InstanceIdentityDTO
      * @param string|null $imageId
      * @param string|null $instanceId
      * @param string|null $instanceType
-     * @param DateTime|null $pendingTime
      * @param string|null $region
      * @param string|null $version
      */
@@ -63,7 +66,6 @@ class InstanceIdentityDTO
         ?string $imageId,
         ?string $instanceId,
         ?string $instanceType,
-        ?DateTime $pendingTime,
         ?string $region,
         ?string $version
     ) {
@@ -73,7 +75,6 @@ class InstanceIdentityDTO
         $this->imageId = $imageId;
         $this->instanceId = $instanceId;
         $this->instanceType = $instanceType;
-        $this->pendingTime = $pendingTime;
         $this->region = $region;
         $this->version = $version;
     }
@@ -124,14 +125,6 @@ class InstanceIdentityDTO
     public function getInstanceType(): ?string
     {
         return $this->instanceType;
-    }
-
-    /**
-     * @return DateTime|null
-     */
-    public function getPendingTime(): ?DateTime
-    {
-        return $this->pendingTime;
     }
 
     /**
