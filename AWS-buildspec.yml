@@ -1,0 +1,27 @@
+version: 0.2
+
+env:
+  variables:
+    COMPOSER_CACHE_DIR: .cache/composer
+phases:
+  install:
+    commands:
+      - mkdir -p .cache/composer
+  build:
+    commands:
+      - echo Build started on `date`
+      - echo Install dependencies
+      - sh AWS-ssm.sh
+      - composer install --ignore-platform-req=ext-sodium
+      - php bin/console assets:install --symlink || true
+      - php bin/console lexik:jwt:generate-keypair || true
+      - php bin/console doctrine:migrations:migrate
+  post_build:
+    commands:
+      - echo Build completed on `date`
+cache:
+  paths:
+    - .cache/composer/**/*
+artifacts:
+  files:
+    - "**/*"

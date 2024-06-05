@@ -1,0 +1,63 @@
+{
+  "AWSEBDockerrunVersion": 2,
+  "volumes": [],
+  "containerDefinitions": [
+    {
+      "name": "php",
+      "image": "708071919711.dkr.ecr.us-east-1.amazonaws.com/php-fpm8",
+      "essential": true,
+      "memory": null,
+      "memoryReservation": 300,
+      "mountPoints": [],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/php-fpm8",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    },
+    {
+      "name": "myq_nginx",
+      "image": "708071919711.dkr.ecr.us-east-1.amazonaws.com/symfony_nginx",
+      "essential": true,
+      "memory": null,
+      "memoryReservation": 300,
+      "portMappings": [
+        {
+          "hostPort": 80,
+          "containerPort": 80
+        }
+      ],
+      "links": [
+        "php"
+      ],
+      "mountPoints": [],
+      "dependsOn": [
+        {
+          "containerName": "php",
+          "condition": "START"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "secretOptions": null,
+        "options": {
+          "awslogs-group": "/ecs/symfony_nginx",
+          "awslogs-region": "us-east-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      }
+    }
+  ],
+  "compatibilities": [
+    "EXTERNAL",
+    "EC2"
+  ],
+  "requiresCompatibilities": [
+    "EC2"
+  ],
+  "networkMode": "bridge"
+}
