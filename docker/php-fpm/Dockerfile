@@ -1,4 +1,4 @@
-FROM php:8.0.0-fpm AS prod
+FROM php:8.0-fpm AS prod
 
 #install composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
@@ -30,5 +30,6 @@ RUN chmod a+x php-cs-fixer
 RUN mv php-cs-fixer /usr/local/bin/php-cs-fixer
 #RUN pecl install mongodb
 #RUN docker-php-ext-enable mongodb
-RUN curl -sS https://get.symfony.com/cli/installer | bash
-RUN mv /root/.symfony/bin/symfony /usr/local/bin/symfony
+RUN curl -sS https://get.symfony.com/cli/installer | bash -s -- --install-dir=/usr/local/bin
+
+CMD ["php-fpm"]
