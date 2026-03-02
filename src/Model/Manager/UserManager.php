@@ -355,10 +355,13 @@ class UserManager extends AbstractCRUDManager implements UserManagerInterface
         bool $setNullProperty = true
     ): EntityInterface {
         $oldStatus = $entity->getStatus();
+        $oldPassword = $entity->getPassword();
         /** @var User $entity */
         $entity = parent::prepareEntity($entity, $dto, $setNullProperty);
         if ($dto instanceof PasswordAwareInterface && !empty($dto->getPassword())) {
             $entity->setPassword($this->userPasswordEncoder->encodePassword($entity, $dto->getPassword()));
+        } else {
+            $entity->setPassword($oldPassword);
         }
         if (!$this->security->isGranted(User::ROLE_ADMIN)) {
             $entity->setStatus($oldStatus);
