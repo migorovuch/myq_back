@@ -44,9 +44,9 @@ pipeline {
 
     stage('Run PHP Unit tests') {
       steps {
-        sh 'docker exec php_test bin/phpunit --log-junit var/testResults/phpunit.xml --coverage-clover var/testResults/clover.xml'
-        sh 'docker cp php_test:/var/www/html/var/testResults/phpunit.xml ./testResults.xml'
-        sh 'docker cp php_test:/var/www/html/var/testResults/clover.xml ./clover.xml'
+        sh "docker exec php_test bin/phpunit --log-junit var/testResults/phpunit.xml --coverage-clover var/testResults/clover.xml"
+        sh "docker cp php_test:/var/www/html/var/testResults/phpunit.xml ${env.WORKSPACE}/testResults.xml"
+        sh "docker cp php_test:/var/www/html/var/testResults/clover.xml ${env.WORKSPACE}/clover.xml"
         junit '**/testResults.xml'
       }
     }
@@ -55,7 +55,7 @@ pipeline {
       steps {
         step([
           $class: 'CloverPublisher',
-          cloverReportDir: '.',
+          cloverReportDir: "${env.WORKSPACE}",
           cloverReportFileName: 'clover.xml',
           healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
           unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
@@ -66,9 +66,9 @@ pipeline {
 
     stage('Stop TEST environment') {
       steps {
-        sh 'docker stop myq_mysql_test'
-        sh 'docker stop php_test'
-        sh 'docker stop myq_nginx_test'
+        sh 'docker stop myq_mysql_test || true'
+        sh 'docker stop php_test || true'
+        sh 'docker stop myq_nginx_test || true'
         sh 'docker network rm myq_network_test'
       }
     }

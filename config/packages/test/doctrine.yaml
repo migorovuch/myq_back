@@ -8,7 +8,7 @@ doctrine:
         host:     "%env(string:MYSQL_HOST)%"
         port:     "%env(int:MYSQL_PORT)%"
         dbname:   "%env(string:MYSQL_DATABASE)%"
-        user:     "%env(string:MYSQL_USER)%"
+        user:     "%env(string:DB_USER)%"
         password: "%env(string:MYSQL_PASSWORD)%"
 
         # IMPORTANT: You MUST configure your server version,
