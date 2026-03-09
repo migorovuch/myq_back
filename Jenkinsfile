@@ -67,8 +67,11 @@ pipeline {
     stage('Stop TEST environment') {
       steps {
         sh 'docker stop myq_mysql_test || true'
+        sh 'docker rm -f myq_mysql_test || true'
         sh 'docker stop php_test || true'
+        sh 'docker rm -f php_test || true'
         sh 'docker stop myq_nginx_test || true'
+        sh 'docker rm -f myq_nginx_test || true'
         sh 'docker network rm myq_network_test'
       }
     }
