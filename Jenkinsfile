@@ -45,8 +45,8 @@ pipeline {
     stage('Run PHP Unit tests') {
       steps {
         sh 'docker exec php_test bin/phpunit --log-junit var/testResults/phpunit.xml --coverage-clover var/testResults/clover.xml'
-        sh 'docker cp php_test:/var/www/html/var/testResults/phpunit.xml ./testResults.xml'
-        sh 'docker cp php_test:/var/www/html/var/testResults/clover.xml ./clover.xml'
+        sh 'docker cp php_test:/var/www/html/var/testResults/phpunit.xml ${env.WORKSPACE}/testResults.xml'
+        sh 'docker cp php_test:/var/www/html/var/testResults/clover.xml ${env.WORKSPACE}/clover.xml'
         junit '**/testResults.xml'
       }
     }
@@ -55,7 +55,7 @@ pipeline {
       steps {
         step([
           $class: 'CloverPublisher',
-          cloverReportDir: '.',
+          cloverReportDir: "${env.WORKSPACE}",
           cloverReportFileName: 'clover.xml',
           healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
           unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
