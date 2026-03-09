@@ -18,11 +18,11 @@ pipeline {
         }
         sh 'docker stop myq_mysql_test || true && docker stop php_test || true &&  docker stop myq_nginx_test || true && docker network rm myq_network_test || true'
         sh 'docker network create myq_network_test'
-        sh 'docker run -t -d --network=myq_network_test --name myq_mysql_test --env-file .env.test myq_mysql'
+        sh 'docker run --rm -t -d --network=myq_network_test --name myq_mysql_test --env-file .env.test myq_mysql'
 //         sh 'until docker exec myq_mysql bash "mysqladmin ping"; do >&2 "MySQL is unavailable - sleeping"; sleep 2; done'
         sleep 30
-        sh 'docker run -t -d --network=myq_network_test --name php_test -e XDEBUG_CONFIG="start_with_request=no mode=coverage" --env-file .env.test myq_php php-fpm'
-        sh 'docker run -t -d --network=myq_network_test --name myq_nginx_test --env-file .env.test myq_nginx bash'
+        sh 'docker run --rm -t -d --network=myq_network_test --name php_test -e XDEBUG_CONFIG="start_with_request=no mode=coverage" --env-file .env.test myq_php php-fpm'
+        sh 'docker run --rm -t -d --network=myq_network_test --name myq_nginx_test --env-file .env.test myq_nginx bash'
         sh 'docker exec myq_nginx_test bash -c \'echo "upstream php-upstream { server php_test:9000; }" > /etc/nginx/conf.d/upstream.conf\''
         sh 'docker exec myq_nginx_test nginx'
       }
@@ -51,18 +51,18 @@ pipeline {
       }
     }
 
-//     stage('Code coverage') {
-//       steps {
-//         step([
-//           $class: 'CloverPublisher',
-//           cloverReportDir: "${env.WORKSPACE}",
-//           cloverReportFileName: 'clover.xml',
-//           healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
-//           unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
-//           failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
-//         ])
-//       }
-//     }
+    stage('Code coverage') {
+      steps {
+        step([
+          $class: 'CloverPublisher',
+          cloverReportDir: "${env.WORKSPACE}",
+          cloverReportFileName: 'clover.xml',
+          healthyTarget: [methodCoverage: 80, conditionalCoverage: 80, statementCoverage: 80],
+          unhealthyTarget: [methodCoverage: 50, conditionalCoverage: 50, statementCoverage: 50],
+          failingTarget: [methodCoverage: 0, conditionalCoverage: 0, statementCoverage: 0]
+        ])
+      }
+    }
 
     stage('Stop TEST environment') {
       steps {
